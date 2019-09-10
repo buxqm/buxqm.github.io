@@ -4,10 +4,14 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   
-    <title>buxqm</title>
+    <title>docker学习 | buxqm</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="Ycj">
+    
+    <meta name="description" content="Dockerfile环境搭建1.LAMP最近学完了docker,准备用dockerfile定制一个LAMP（linux+apache+mysql+php）镜像来练练手，
+2.python3+tornado最近写了一道tornado模板注入的题目，于是想把它复现出来。
+首先推荐一个学习tornado的">
     
     
     
@@ -63,15 +67,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2019/09/10/xss-quiz/" title="" itemprop="url"></a>
+      <a href="/2019/08/08/docker学习记录/" title="docker学习" itemprop="url">docker学习</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="Ycj">Ycj</a>
     </p>
   <p class="article-time">
-    <time datetime="2019-09-10T12:31:32.686Z" itemprop="datePublished">2019-09-10</time>
-    Updated:<time datetime="2019-08-18T05:56:00.798Z" itemprop="dateModified">2019-08-18</time>
+    <time datetime="2019-08-07T16:00:00.000Z" itemprop="datePublished">2019-08-08</time>
+    Updated:<time datetime="2019-09-10T13:11:53.793Z" itemprop="dateModified">2019-09-10</time>
     
   </p>
 </header>
@@ -80,19 +84,45 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
-		
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Dockerfile环境搭建"><span class="toc-number">1.</span> <span class="toc-text">Dockerfile环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-LAMP"><span class="toc-number">1.1.</span> <span class="toc-text">1.LAMP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-python3-tornado"><span class="toc-number">1.2.</span> <span class="toc-text">2.python3+tornado</span></a></li></ol></li></ol>
 		</div>
 		
-		  
+		<h1 id="Dockerfile环境搭建"><a href="#Dockerfile环境搭建" class="headerlink" title="Dockerfile环境搭建"></a>Dockerfile环境搭建</h1><h2 id="1-LAMP"><a href="#1-LAMP" class="headerlink" title="1.LAMP"></a>1.LAMP</h2><p>最近学完了docker,准备用dockerfile定制一个LAMP（linux+apache+mysql+php）镜像来练练手，</p>
+<h2 id="2-python3-tornado"><a href="#2-python3-tornado" class="headerlink" title="2.python3+tornado"></a>2.python3+tornado</h2><p>最近写了一道tornado模板注入的题目，于是想把它复现出来。</p>
+<p>首先推荐一个学习tornado的网站，如果感兴趣的话可以首先学习，方便理解。</p>
+<p><a href="https://www.kancloud.cn/kancloud/python-basic/41709" target="_blank" rel="noopener">tornado学习</a></p>
+<p>然后是搭建环境，作为一个搬运工，这里推荐一篇<a href="https://juejin.im/entry/59828961518825353f246d9c" target="_blank" rel="noopener">文章</a>，里面说的是用Docker的多部构建来创建Python应用的超小镜像，于是想学一学操作，下面说说自己的理解。</p>
+<p>Demo目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">python-tornado/</span><br><span class="line">    Dockerfile</span><br><span class="line">    requirements.txt</span><br><span class="line">    run.py</span><br></pre></td></tr></table></figure>
+
+<p>requirements.txt</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tornado==4.5.1</span><br></pre></td></tr></table></figure>
+
+<p>这里面是一些依赖包，必要的依赖包都可以写到里面，不喜欢用也可以，不过dockerfile里的命令就要改一下。</p>
+<p>接下来是重点的dockerfile，我会挑重点分析</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> python:<span class="number">3.5</span> as builder</span><br><span class="line"><span class="keyword">WORKDIR</span> /app/</span><br><span class="line"><span class="keyword">ADD</span> . /app/</span><br><span class="line"><span class="keyword">ADD</span> https://github.com/pyinstaller/pyinstaller/archive/develop.zip /app/pyinstaller-develop.zip</span><br><span class="line"><span class="keyword">RUN</span> pip install -r requirements.txt &amp;&amp; \</span><br><span class="line">    pip install pyinstaller-develop.zip</span><br><span class="line"><span class="keyword">RUN</span> pyinstaller --hidden-import=tornado --onefile  -y run.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> frolvlad/alpine-glibc</span><br><span class="line"><span class="keyword">WORKDIR</span> /app/</span><br><span class="line"><span class="keyword">COPY</span> --from=builder /app/dist/run .</span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8000</span></span><br><span class="line"><span class="keyword">ENTRYPOINT</span> ["./run"]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ADD</span> https://github.com/pyinstaller/pyinstaller/archive/develop.zip /app/pyinstaller-develop.zip</span><br></pre></td></tr></table></figure>
+
+<p>安装pyinstaller，把python文件打包成exe文件。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">RUN</span> pyinstaller --hidden-import=tornado --onefile  -y run.py</span><br></pre></td></tr></table></figure>
+
+<p>这一步是打包操作</p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/docker/">docker</a>
+</div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2019/09/10/xss-quiz/" data-title="buxqm" data-tsina="" class="share clearfix">
+  <div data-url="http://yoursite.com/2019/08/08/docker学习记录/" data-title="docker学习 | buxqm" data-tsina="" class="share clearfix">
   </div>
 
 </div>
@@ -102,21 +132,13 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2019/09/10/xss-quiz练习记录/" title="">
+ <a href="/2019/09/10/BUUCTF/" title="BUUCTF">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  (no title)</span>
+  BUUCTF</span>
 </a>
 </div>
 
-
-<div class="next">
-<a href="/2019/09/10/docker学习记录/"  title="">
- <strong>NEXT:</strong><br/> 
- <span>(no title)
-</span>
-</a>
-</div>
 
 </nav>
 
@@ -126,7 +148,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
-  
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Dockerfile环境搭建"><span class="toc-number">1.</span> <span class="toc-text">Dockerfile环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-LAMP"><span class="toc-number">1.1.</span> <span class="toc-text">1.LAMP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-python3-tornado"><span class="toc-number">1.2.</span> <span class="toc-text">2.python3+tornado</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
@@ -137,6 +159,8 @@
 <div class="categorieslist">
 	<p class="asidetitle">Categories</p>
 		<ul>
+		
+			<li><a href="/categories/docker/" title="docker">docker<sup>1</sup></a></li>
 		
 			<li><a href="/categories/writeup/" title="writeup">writeup<sup>1</sup></a></li>
 		
