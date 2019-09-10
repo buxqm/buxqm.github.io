@@ -4,12 +4,14 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   
-    <title>Hello World | Hexo</title>
+    <title>Hexo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="John Doe">
     
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in ">
+    <meta name="description" content="Date :2018/8/8Dockerfile环境搭建1.LAMP最近学完了docker,准备用dockerfile定制一个LAMP（linux+apache+mysql+php）镜像来练练手，
+2.python3+tornado最近写了一道tornado模板注入的题目，于是想把它复现出来。
+首先">
     
     
     
@@ -65,15 +67,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2019/09/10/hello-world/" title="Hello World" itemprop="url">Hello World</a>
+      <a href="/2019/09/10/docker学习记录/" title="" itemprop="url"></a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="John Doe">John Doe</a>
     </p>
   <p class="article-time">
-    <time datetime="2019-09-10T10:55:41.055Z" itemprop="datePublished">2019-09-10</time>
-    Updated:<time datetime="2019-09-10T10:55:41.055Z" itemprop="dateModified">2019-09-10</time>
+    <time datetime="2019-09-10T12:31:32.684Z" itemprop="datePublished">2019-09-10</time>
+    Updated:<time datetime="2019-08-19T12:16:12.241Z" itemprop="dateModified">2019-08-19</time>
     
   </p>
 </header>
@@ -82,22 +84,31 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Date-2018-8-8"><span class="toc-number">1.</span> <span class="toc-text">Date :2018/8/8</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Dockerfile环境搭建"><span class="toc-number"></span> <span class="toc-text">Dockerfile环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-LAMP"><span class="toc-number">1.</span> <span class="toc-text">1.LAMP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-python3-tornado"><span class="toc-number">2.</span> <span class="toc-text">2.python3+tornado</span></a></li></ol>
 		</div>
 		
-		<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+		<hr>
+<h2 id="Date-2018-8-8"><a href="#Date-2018-8-8" class="headerlink" title="Date :2018/8/8"></a>Date :2018/8/8</h2><h1 id="Dockerfile环境搭建"><a href="#Dockerfile环境搭建" class="headerlink" title="Dockerfile环境搭建"></a>Dockerfile环境搭建</h1><h2 id="1-LAMP"><a href="#1-LAMP" class="headerlink" title="1.LAMP"></a>1.LAMP</h2><p>最近学完了docker,准备用dockerfile定制一个LAMP（linux+apache+mysql+php）镜像来练练手，</p>
+<h2 id="2-python3-tornado"><a href="#2-python3-tornado" class="headerlink" title="2.python3+tornado"></a>2.python3+tornado</h2><p>最近写了一道tornado模板注入的题目，于是想把它复现出来。</p>
+<p>首先推荐一个学习tornado的网站，如果感兴趣的话可以首先学习，方便理解。</p>
+<p><a href="https://www.kancloud.cn/kancloud/python-basic/41709" target="_blank" rel="noopener">tornado学习</a></p>
+<p>然后是搭建环境，作为一个搬运工，这里推荐一篇<a href="https://juejin.im/entry/59828961518825353f246d9c" target="_blank" rel="noopener">文章</a>，里面说的是用Docker的多部构建来创建Python应用的超小镜像，于是想学一学操作，下面说说自己的理解。</p>
+<p>Demo目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">python-tornado/</span><br><span class="line">    Dockerfile</span><br><span class="line">    requirements.txt</span><br><span class="line">    run.py</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>requirements.txt</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tornado==4.5.1</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>这里面是一些依赖包，必要的依赖包都可以写到里面，不喜欢用也可以，不过dockerfile里的命令就要改一下。</p>
+<p>接下来是重点的dockerfile，我会挑重点分析</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> python:<span class="number">3.5</span> as builder</span><br><span class="line"><span class="keyword">WORKDIR</span> /app/</span><br><span class="line"><span class="keyword">ADD</span> . /app/</span><br><span class="line"><span class="keyword">ADD</span> https://github.com/pyinstaller/pyinstaller/archive/develop.zip /app/pyinstaller-develop.zip</span><br><span class="line"><span class="keyword">RUN</span> pip install -r requirements.txt &amp;&amp; \</span><br><span class="line">    pip install pyinstaller-develop.zip</span><br><span class="line"><span class="keyword">RUN</span> pyinstaller --hidden-import=tornado --onefile  -y run.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> frolvlad/alpine-glibc</span><br><span class="line"><span class="keyword">WORKDIR</span> /app/</span><br><span class="line"><span class="keyword">COPY</span> --from=builder /app/dist/run .</span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8000</span></span><br><span class="line"><span class="keyword">ENTRYPOINT</span> ["./run"]</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ADD</span> https://github.com/pyinstaller/pyinstaller/archive/develop.zip /app/pyinstaller-develop.zip</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+<p>安装pyinstaller，把python文件打包成exe文件。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">RUN</span> pyinstaller --hidden-import=tornado --onefile  -y run.py</span><br></pre></td></tr></table></figure>
+
+<p>这一步是打包操作</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -107,7 +118,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2019/09/10/hello-world/" data-title="Hello World | Hexo" data-tsina="" class="share clearfix">
+  <div data-url="http://yoursite.com/2019/09/10/docker学习记录/" data-title="Hexo" data-tsina="" class="share clearfix">
   </div>
 
 </div>
@@ -117,13 +128,21 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2019/09/10/BUUCTF/" title="">
+ <a href="/2019/09/10/xss-quiz/" title="">
   <strong>PREVIOUS:</strong><br/>
   <span>
   (no title)</span>
 </a>
 </div>
 
+
+<div class="next">
+<a href="/2019/09/10/BUUCTF/"  title="">
+ <strong>NEXT:</strong><br/> 
+ <span>(no title)
+</span>
+</a>
+</div>
 
 </nav>
 
@@ -133,7 +152,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Date-2018-8-8"><span class="toc-number">1.</span> <span class="toc-text">Date :2018/8/8</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Dockerfile环境搭建"><span class="toc-number"></span> <span class="toc-text">Dockerfile环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-LAMP"><span class="toc-number">1.</span> <span class="toc-text">1.LAMP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-python3-tornado"><span class="toc-number">2.</span> <span class="toc-text">2.python3+tornado</span></a></li></ol>
   </div>
 
 <div id="asidepart">
