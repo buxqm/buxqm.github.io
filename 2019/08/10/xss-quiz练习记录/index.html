@@ -76,7 +76,7 @@ Stage-2  首先输入1，然后查看源代码
     </p>
   <p class="article-time">
     <time datetime="2019-08-09T16:00:00.000Z" itemprop="datePublished">2019-08-10</time>
-    Updated:<time datetime="2019-09-10T13:17:51.697Z" itemprop="dateModified">2019-09-10</time>
+    Updated:<time datetime="2019-09-11T13:21:32.680Z" itemprop="dateModified">2019-09-11</time>
     
   </p>
 </header>
@@ -90,7 +90,7 @@ Stage-2  首先输入1，然后查看源代码
 		
 		<h1 id="xss-quiz练习记录"><a href="#xss-quiz练习记录" class="headerlink" title="xss-quiz练习记录"></a>xss-quiz练习记录</h1><h2 id="Stage-1"><a href="#Stage-1" class="headerlink" title="Stage-1"></a>Stage-1</h2><p>  直接输入<code>&lt;script&gt;alert(document.domain);</code>得到下一关的链接。</p>
 <h2 id="Stage-2"><a href="#Stage-2" class="headerlink" title="Stage-2"></a>Stage-2</h2><p>  首先输入1，然后查看源代码</p>
-<p><img src="C:%5CUsers%5CYCJ%5CAppData%5CLocal%5CTemp%5C1566108707021.png" alt="1566108707021"></p>
+<p><img src="https://i.loli.net/2019/09/11/uvcqetd47MwOzxC.jpg" alt></p>
 <p>  发现输入的值保存在value属性中，于是可以构造<code>&quot;/&gt;&lt;script&gt;alert(document.domain);&lt;/script&gt;</code>，前面的“闭合了value属性,/&gt;闭合了input标签，然后就成功得到下一关链接。</p>
 <h2 id="Stage-3"><a href="#Stage-3" class="headerlink" title="Stage-3"></a>Stage-3</h2>  
 	</div>

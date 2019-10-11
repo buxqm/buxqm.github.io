@@ -67,11 +67,9 @@
     <h1 itemprop="name">BUUCTF</h1>
     
      
-           <p itemprop="description" >checkin  提示中有源码，首先看看源码，发现ph和htaccess都被过滤，文件内容也不能有&amp;lt;?，在网上看到了一个姿势，
-user.ini构建后门 在这里记录一下用这个姿势的条件
-1.上传目录下要有可执行的php文件。
-2.服务器使用CGI/FastCGI模式
-创建u</p>
+           <p itemprop="description" >checkin​    是一道文件上传题，首先抓包分析一波，发现&amp;lt;?,php,等都不行，直接上传基本凉凉，于是考虑解析漏洞。
+​    发现题目服务端是nginx，htaccess也不行，在网上看到了一个姿势，user.ini构建后门 在这里记录一下用这个姿势的条件
+​  </p>
         
     
     <time datetime="2019-09-09T16:00:00.000Z" itemprop="datePublished">2019-09-10</time>
