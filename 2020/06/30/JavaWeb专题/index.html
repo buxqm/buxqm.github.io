@@ -4,12 +4,15 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   
-    <title>sql注入总结 | buxqm</title>
+    <title>TomCat | buxqm</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="Ycj">
     
-    <meta name="description" content="SQL注入知识点过多，在这里总结一下万能密码​    直接型：’or 1=1#">
+    <meta name="description" content="前言​    没有系统的研究过JaVaWeb，碰到题总是一脸懵逼，现在在这里做一个专题探究。
+WEB-INF​    重点讲web.xml和classes目录，详解请看此处
+​    /WEB-INF/web.xml，这是一个XML文件，其中描述了servlet和其他的应用组件配置及命名规则
+​  ">
     
     
     
@@ -65,15 +68,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2019/11/11/SQL注入总结一哈/" title="sql注入总结" itemprop="url">sql注入总结</a>
+      <a href="/2020/06/30/JavaWeb专题/" title="TomCat" itemprop="url">TomCat</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="Ycj">Ycj</a>
     </p>
   <p class="article-time">
-    <time datetime="2019-11-10T16:00:00.000Z" itemprop="datePublished">2019-11-11</time>
-    Updated:<time datetime="2020-06-03T12:03:08.508Z" itemprop="dateModified">2020-06-03</time>
+    <time datetime="2020-06-29T16:00:00.000Z" itemprop="datePublished">2020-06-30</time>
+    Updated:<time datetime="2020-06-30T08:48:38.448Z" itemprop="dateModified">2020-06-30</time>
     
   </p>
 </header>
@@ -82,10 +85,15 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL注入知识点过多，在这里总结一下"><span class="toc-number">1.</span> <span class="toc-text">SQL注入知识点过多，在这里总结一下</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#万能密码"><span class="toc-number">1.1.</span> <span class="toc-text">万能密码</span></a></li></ol></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#WEB-INF"><span class="toc-number">2.</span> <span class="toc-text">WEB-INF</span></a></li></ol>
 		</div>
 		
-		<h1 id="SQL注入知识点过多，在这里总结一下"><a href="#SQL注入知识点过多，在这里总结一下" class="headerlink" title="SQL注入知识点过多，在这里总结一下"></a>SQL注入知识点过多，在这里总结一下</h1><h2 id="万能密码"><a href="#万能密码" class="headerlink" title="万能密码"></a>万能密码</h2><p>​    直接型：’or 1=1#</p>
+		<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>​    没有系统的研究过JaVaWeb，碰到题总是一脸懵逼，现在在这里做一个专题探究。</p>
+<h1 id="WEB-INF"><a href="#WEB-INF" class="headerlink" title="WEB-INF"></a>WEB-INF</h1><p>​    重点讲web.xml和classes目录，<a href="https://www.cnblogs.com/luminccs-5308/p/8694938.html" target="_blank" rel="noopener">详解请看此处</a></p>
+<p>​    /WEB-INF/web.xml，这是一个XML文件，其中描述了servlet和其他的应用组件配置及命名规则</p>
+<p>​    /WEB- INF/classes/ ，这个目录包含了站点所用的class文件，包括servlet class和非servelt class 他们不能包含在 .jar文件中。<br>        站点的类的存放规则应该按照Java的打包规则执行。例如： 有一个类命名为     com.mycompany.mypackage.MyServlet， 你应该按照以下形式部署： /WEB-INF/classes/com /mycompany/mypackage/MyServlet.class </p>
+<p># </p>
+<p>​    </p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -93,14 +101,14 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/sql注入/">sql注入</a>
+  <a class="article-category-link" href="/categories/专题-JavaWeb/">专题  JavaWeb</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2019/11/11/SQL注入总结一哈/" data-title="sql注入总结 | buxqm" data-tsina="" class="share clearfix">
+  <div data-url="http://yoursite.com/2020/06/30/JavaWeb专题/" data-title="TomCat | buxqm" data-tsina="" class="share clearfix">
   </div>
 
 </div>
@@ -110,18 +118,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2020/06/03/WebBook/" title="Web">
+ <a href="/2020/06/30/XXE专题/" title="XML学习">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  Web</span>
+  XML学习</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2019/09/22/学pwn日记1/"  title="pwn日记">
+<a href="/2019/11/11/SQL注入专题/"  title="sql注入总结">
  <strong>NEXT:</strong><br/> 
- <span>pwn日记
+ <span>sql注入总结
 </span>
 </a>
 </div>
@@ -138,7 +146,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL注入知识点过多，在这里总结一下"><span class="toc-number">1.</span> <span class="toc-text">SQL注入知识点过多，在这里总结一下</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#万能密码"><span class="toc-number">1.1.</span> <span class="toc-text">万能密码</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#WEB-INF"><span class="toc-number">2.</span> <span class="toc-text">WEB-INF</span></a></li></ol>
   </div>
 
 <div id="asidepart">
@@ -150,7 +158,7 @@
 	<p class="asidetitle">Categories</p>
 		<ul>
 		
-			<li><a href="/categories/WebBook/" title="WebBook">WebBook<sup>1</sup></a></li>
+			<li><a href="/categories/WebBook/" title="WebBook">WebBook<sup>0</sup></a></li>
 		
 			<li><a href="/categories/docker/" title="docker">docker<sup>1</sup></a></li>
 		
@@ -158,7 +166,11 @@
 		
 			<li><a href="/categories/writeup/" title="writeup">writeup<sup>1</sup></a></li>
 		
-			<li><a href="/categories/xss学习/" title="xss学习">xss学习<sup>1</sup></a></li>
+			<li><a href="/categories/xss学习/" title="xss学习">xss学习<sup>0</sup></a></li>
+		
+			<li><a href="/categories/专题-JavaWeb/" title="专题  JavaWeb">专题  JavaWeb<sup>1</sup></a></li>
+		
+			<li><a href="/categories/专题-XXE/" title="专题  XXE">专题  XXE<sup>1</sup></a></li>
 		
 		</ul>
 </div>

