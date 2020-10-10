@@ -74,7 +74,7 @@
     </p>
   <p class="article-time">
     <time datetime="2019-10-01T16:00:00.000Z" itemprop="datePublished">2019-10-02</time>
-    Updated:<time datetime="2020-10-04T06:29:54.495Z" itemprop="dateModified">2020-10-04</time>
+    Updated:<time datetime="2020-10-07T12:51:38.522Z" itemprop="dateModified">2020-10-07</time>
     
   </p>
 </header>
@@ -83,7 +83,7 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CISCN2019-华北赛区-Day1-Web5-CyberPunk"><span class="toc-number">1.</span> <span class="toc-text">[CISCN2019 华北赛区 Day1 Web5]CyberPunk</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zer0pts2020-Can-you-guess-it"><span class="toc-number">2.</span> <span class="toc-text">[Zer0pts2020]Can you guess it?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HFCTF2020-EasyLogin"><span class="toc-number">3.</span> <span class="toc-text">[HFCTF2020]EasyLogin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BJDCTF-2nd-文件探测"><span class="toc-number">4.</span> <span class="toc-text">[BJDCTF 2nd]文件探测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GYCTF2020-Ezsqli"><span class="toc-number">5.</span> <span class="toc-text">[GYCTF2020]Ezsqli</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CISCN2019-华北赛区-Day1-Web5-CyberPunk"><span class="toc-number">1.</span> <span class="toc-text">[CISCN2019 华北赛区 Day1 Web5]CyberPunk</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zer0pts2020-Can-you-guess-it"><span class="toc-number">2.</span> <span class="toc-text">[Zer0pts2020]Can you guess it?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HFCTF2020-EasyLogin"><span class="toc-number">3.</span> <span class="toc-text">[HFCTF2020]EasyLogin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BJDCTF-2nd-文件探测"><span class="toc-number">4.</span> <span class="toc-text">[BJDCTF 2nd]文件探测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GYCTF2020-Ezsqli"><span class="toc-number">5.</span> <span class="toc-text">[GYCTF2020]Ezsqli</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#N1CTF-2018-eating-cms"><span class="toc-number">6.</span> <span class="toc-text">[N1CTF 2018]eating_cms</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RoarCTF-2019-Online-Proxy"><span class="toc-number">7.</span> <span class="toc-text">[RoarCTF 2019]Online Proxy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GKCTF2020-EZ三剑客-EzNode"><span class="toc-number">8.</span> <span class="toc-text">[GKCTF2020]EZ三剑客-EzNode</span></a></li></ol>
 		</div>
 		
 		<h2 id="CISCN2019-华北赛区-Day1-Web5-CyberPunk"><a href="#CISCN2019-华北赛区-Day1-Web5-CyberPunk" class="headerlink" title="[CISCN2019 华北赛区 Day1 Web5]CyberPunk"></a>[CISCN2019 华北赛区 Day1 Web5]CyberPunk</h2><p>打开题目，查看界面源码发现提示?file，于是将源码读取，发现address处没有过滤，在change.php中发现二次注入点<img src="https://i.loli.net/2020/10/02/Nt4MJyQTmqIBuzb.png" alt></p>
@@ -135,6 +135,44 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">((1,&apos;g&apos;)&gt;(select * from f1ag_1s_h3r3_hhhhh))</span><br></pre></td></tr></table></figure>
 
 <p>可以按照这样的思路去爆破，不过爆破出来的结果需要减去1。</p>
+<h2 id="N1CTF-2018-eating-cms"><a href="#N1CTF-2018-eating-cms" class="headerlink" title="[N1CTF 2018]eating_cms"></a>[N1CTF 2018]eating_cms</h2><p>注册一个账号登录进去发现可以用伪协议读源码，发现使用parseurl提取处数据过滤</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$keywords = [&quot;flag&quot;,&quot;manage&quot;,&quot;ffffllllaaaaggg&quot;];</span><br><span class="line">$uri = parse_url($_SERVER[&quot;REQUEST_URI&quot;]);</span><br><span class="line">parse_str($uri[&apos;query&apos;], $query);</span><br></pre></td></tr></table></figure>
+
+<p>parse_url在碰到格式错误的url时，会返回False,所以我们构造</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://ip:port//user.php?page=php://filter/convert.base64-encode/resource=m4aaannngggeee</span><br></pre></td></tr></table></figure>
+
+<p>就可以绕过过滤，直接包含文件，发现一个templates/upload.html，访问一下，是一个文件上传的点，发现了一个文件<code>upllloadddd.php</code>，上传文件发现这个文件好像并不在当前目录下，使用伪协议读取源码，发现upload在templates的前一级目录。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php://filter/convert.base64-encode/resource=upllloadddd</span><br></pre></td></tr></table></figure>
+
+<p>所以我们只能使用文件包含m4aaannngggeee来上传文件，通过读取源码发现，filename并不存在过滤，所以直接使用filename进行命令执行（PS:文件路径会在/处截断），所以我们不能使用/。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">filename=&quot;glag;cd ..;ls;cat flag_233333 ;#&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="RoarCTF-2019-Online-Proxy"><a href="#RoarCTF-2019-Online-Proxy" class="headerlink" title="[RoarCTF 2019]Online Proxy"></a>[RoarCTF 2019]Online Proxy</h2><p>抓包看见了IP地址，XFF可以伪造，会输出当前IP地址与上次的IP地址，当当前IP地址不变时，上次的IP也不会变，感觉应该是储存型SQL注入，后台逻辑应该是前两次输入时，存入数据库，按照输入顺序输出输入变量，当两次输入后，就从数据库读取IP数据，这就造成了注入。</p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CBUUCTF2%5Cimage-20201006220822431.png" alt="image-20201006220822431"></p>
+<p>将Payload存入Current Ip</p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CBUUCTF2%5Cimage-20201006220846345.png" alt="image-20201006220846345"></p>
+<p>再次输入变成Last Ip</p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CBUUCTF2%5Cimage-20201006220918336.png" alt="image-20201006220918336"></p>
+<p>再次输入同样的值，就触发了储存型sql注入，而且没有WAF。</p>
+<p>这题的flag存在别的数据库中，所以我们先要爆破一下数据库，然后再一套流程下来，拿到flag。</p>
+<p>在最后查flag时，由于是跨库操作，需要指定数据库名，不然会找不到表<code>数据库名.表名</code>。</p>
+<h2 id="GKCTF2020-EZ三剑客-EzNode"><a href="#GKCTF2020-EZ三剑客-EzNode" class="headerlink" title="[GKCTF2020]EZ三剑客-EzNode"></a>[GKCTF2020]EZ三剑客-EzNode</h2><p>查看源码，发现使用了safer-eval库，版本是1.3.6，safer-eval通过vm模块做沙箱环境执行代码，隔离代码的上下文环境，也就是说沙箱内部无法访问外部非global变量，但是外部可以访问到沙箱内部变量。</p>
+<p>刚说到可以使用全局变量，我们就可以通过process全局对象的mainModule属性来获取当前Module，然后加载child_process子进程模块，该模块中有许多命令执行的方法比如execSync。</p>
+<p>safer-eval对会对vm沙箱中的变量值进行过滤，如果碰到global变量就将它赋值为undefined，process显然在其中，那怎么办呢，变量中不能直接有process，我们还可以使用构造函数Function(“return process”);这样也能返回process的值，但是Function也在黑名单中，通过观察safer-eval的源码，我们可以发现safer-eval在沙箱的上下文中添加了6个可使用函数</p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CBUUCTF2%5Cimage-20201007204404024.png" alt="image-20201007204404024"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;clearImmediate&apos;,&apos;clearInterval&apos;,&apos;clearTimeout&apos;,&apos;setImmediate&apos;,&apos;setInterval&apos;,&apos;setTimeout&apos;</span><br></pre></td></tr></table></figure>
+
+<p>所以我们可以使用<code>clearImmediate.constructor</code>来获得Function。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const a=clearImmediate.constructor(&quot;return process;&quot;)();</span><br></pre></td></tr></table></figure>
+
+<p>构造函数并执行返回process。</p>
+<p>但是即使一个函数都没有，也可以这样构造(PS:可以自己去试试)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const a=&apos;&apos;.constructor.constructor(&quot;return process;&quot;)();</span><br></pre></td></tr></table></figure>
+
+<p>既然有了process，那一切都好办了</p>
+<p>通过process.mainModule获得当前模块<a href="http://nodejs.cn/api/modules.html#modules_module_require_id" target="_blank" rel="noopener">可以用当前模块调用require</a>，引入child_process模块，在child_process模块中有许多命令执行的函数能够使用，最后，由于题目显示的是返回值，所以我们需要以函数返回的形式返回命令执行结果。最终的payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(function()&#123;const a=clearImmediate.constructor(&quot;return process;&quot;)(); return a.mainModule.require(&quot;child_process&quot;).execSync(&quot;whoami&quot;).toString();&#125;)()</span><br></pre></td></tr></table></figure>
+
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -159,18 +197,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2020/06/30/TP5.0.24漏洞复现合集/" title="TP5.0.24">
+ <a href="/2019/10/08/BUUCTF3/" title="BUUCTF">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  TP5.0.24</span>
+  BUUCTF</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2019/09/28/SSRF学习/"  title="SSRF">
+<a href="/2019/10/02/PDO学习/"  title="pdo学习">
  <strong>NEXT:</strong><br/> 
- <span>SSRF
+ <span>pdo学习
 </span>
 </a>
 </div>
@@ -187,7 +225,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CISCN2019-华北赛区-Day1-Web5-CyberPunk"><span class="toc-number">1.</span> <span class="toc-text">[CISCN2019 华北赛区 Day1 Web5]CyberPunk</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zer0pts2020-Can-you-guess-it"><span class="toc-number">2.</span> <span class="toc-text">[Zer0pts2020]Can you guess it?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HFCTF2020-EasyLogin"><span class="toc-number">3.</span> <span class="toc-text">[HFCTF2020]EasyLogin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BJDCTF-2nd-文件探测"><span class="toc-number">4.</span> <span class="toc-text">[BJDCTF 2nd]文件探测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GYCTF2020-Ezsqli"><span class="toc-number">5.</span> <span class="toc-text">[GYCTF2020]Ezsqli</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CISCN2019-华北赛区-Day1-Web5-CyberPunk"><span class="toc-number">1.</span> <span class="toc-text">[CISCN2019 华北赛区 Day1 Web5]CyberPunk</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zer0pts2020-Can-you-guess-it"><span class="toc-number">2.</span> <span class="toc-text">[Zer0pts2020]Can you guess it?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HFCTF2020-EasyLogin"><span class="toc-number">3.</span> <span class="toc-text">[HFCTF2020]EasyLogin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BJDCTF-2nd-文件探测"><span class="toc-number">4.</span> <span class="toc-text">[BJDCTF 2nd]文件探测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GYCTF2020-Ezsqli"><span class="toc-number">5.</span> <span class="toc-text">[GYCTF2020]Ezsqli</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#N1CTF-2018-eating-cms"><span class="toc-number">6.</span> <span class="toc-text">[N1CTF 2018]eating_cms</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RoarCTF-2019-Online-Proxy"><span class="toc-number">7.</span> <span class="toc-text">[RoarCTF 2019]Online Proxy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GKCTF2020-EZ三剑客-EzNode"><span class="toc-number">8.</span> <span class="toc-text">[GKCTF2020]EZ三剑客-EzNode</span></a></li></ol>
   </div>
 
 <div id="asidepart">
@@ -201,9 +239,11 @@
 		
 			<li><a href="/categories/XXE/" title="XXE">XXE<sup>1</sup></a></li>
 		
+			<li><a href="/categories/pdo/" title="pdo">pdo<sup>1</sup></a></li>
+		
 			<li><a href="/categories/trick/" title="trick">trick<sup>1</sup></a></li>
 		
-			<li><a href="/categories/writeup/" title="writeup">writeup<sup>2</sup></a></li>
+			<li><a href="/categories/writeup/" title="writeup">writeup<sup>3</sup></a></li>
 		
 			<li><a href="/categories/专题-writeup/" title="专题  writeup">专题  writeup<sup>1</sup></a></li>
 		

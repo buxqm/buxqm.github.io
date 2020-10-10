@@ -1,0 +1,372 @@
+
+ <!DOCTYPE HTML>
+<html lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  
+    <title>pdo学习 | buxqm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Ycj">
+    
+    <meta name="description" content="PDO预处理学习前言在代码审计的时候，经常会碰到与pdo有关的sql注入，通过看各种文章，感觉还是弄不懂预处理是如何预防sql注入的，于是就通过抓取流量包的形式，更加深入的了解pdo预处理。
+环境配置使用WireShark，选择Adapter for loopback traffic capture">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="buxqm" title="buxqm"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="buxqm">buxqm</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2019/10/02/PDO学习/" title="pdo学习" itemprop="url">pdo学习</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="Ycj">Ycj</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2019-10-01T16:00:00.000Z" itemprop="datePublished">2019-10-02</time>
+    Updated:<time datetime="2020-10-06T07:14:32.250Z" itemprop="dateModified">2020-10-06</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#PDO预处理学习"><span class="toc-number">1.</span> <span class="toc-text">PDO预处理学习</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境配置"><span class="toc-number">1.2.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#深入学习"><span class="toc-number">1.3.</span> <span class="toc-text">深入学习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#本地预处理"><span class="toc-number">1.3.1.</span> <span class="toc-text">本地预处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模拟预处理"><span class="toc-number">1.3.2.</span> <span class="toc-text">模拟预处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.4.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
+		</div>
+		
+		<h1 id="PDO预处理学习"><a href="#PDO预处理学习" class="headerlink" title="PDO预处理学习"></a>PDO预处理学习</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在代码审计的时候，经常会碰到与pdo有关的sql注入，通过看各种文章，感觉还是弄不懂预处理是如何预防sql注入的，于是就通过抓取流量包的形式，更加深入的了解pdo预处理。</p>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>使用WireShark，选择Adapter for loopback traffic capture网卡即可抓取本地流量包。</p>
+<h2 id="深入学习"><a href="#深入学习" class="headerlink" title="深入学习"></a>深入学习</h2><p>由于并不是所有的数据库驱动都支持预编译模式，所以PDO有模拟预处理功能，就是PDO内部会模逆参数绑定的过程，最后在execute时发送完整的sql语句给数据库执行，PDO的模逆预处理功能是默认打开的，可以通过设置<code>ATTR_EMULATE_PREPARES=false</code>来关闭模逆。</p>
+<p>直接上代码演示两种模式</p>
+<h3 id="本地预处理"><a href="#本地预处理" class="headerlink" title="本地预处理"></a>本地预处理</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$pdo=<span class="keyword">new</span> PDO(<span class="string">"mysql:host=localhost;dbname=pdotest"</span>,<span class="string">"root"</span>,<span class="string">"root"</span>);</span><br><span class="line">$pdo-&gt;setAttribute(PDO::ATTR_EMULATE_PREPARES,<span class="keyword">false</span>)</span><br><span class="line">$user=<span class="string">"lili"</span>;</span><br><span class="line">$sql=<span class="string">"select * from user where username=?"</span>;</span><br><span class="line">$st=$pdo-&gt;prepare($sql);</span><br><span class="line">$st-&gt;bindParam(<span class="number">1</span>,$user);</span><br><span class="line">$st-&gt;execute();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>抓取流量包</p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005214411675.png" alt="image-20201005214411675"></p>
+<p>发现在prepare时，会发送一个带有占位符的mysql预处理语句，在execute时，将绑定的参数发送给数据库。</p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005214731021.png" alt="image-20201005214731021"></p>
+<p>尝试一下sql注入</p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201006134328847.png" alt="image-20201006134328847"></p>
+<p>发送数据时未经过任何处理，但是得不到返回结果，查看mysql查询日志。</p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201006134416919.png" alt="image-20201006134416919"></p>
+<p>看来在mysql本地的预处理，也会将数据转义，那么尝试一下宽字节注入，发现无法得到结果，查看日志</p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201006141225775.png" alt="image-20201006141225775"></p>
+<p>看来当编码设置为GBK时，mysql会将字符串转换成16进制，所以无法注入。</p>
+<p>当使用本地预处理时，能使用报错注入，而且只需要执行到prepare就能够将用户名，版本这些信息爆出来，前提是能够控制参数内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$pdo=new PDO(&quot;mysql:host=localhost;dbname=pdotest&quot;,&quot;root&quot;,&quot;root&quot;);</span><br><span class="line">$user=&quot;lili&quot;;</span><br><span class="line">$pdo-&gt;setAttribute(pdo::ATTR_EMULATE_PREPARES, false);</span><br><span class="line">$pdo-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);</span><br><span class="line">$sql=&quot;select * from user where username=(updatexml(0,concat(0xa,user()),0))&quot;;</span><br><span class="line">$st=$pdo-&gt;prepare($sql);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>尝试爆出数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql=&quot;select * from user where username=(updatexml(0,concat(0xa,(select * from user limit 1)),0))&quot;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201006145729946.png" alt="image-20201006145729946"></p>
+<p>这里非常奇怪，因为需要执行到execute才会在流量包中返回错误，但是PDO并不会报错，去网上搜都说PDO不支持子查询，但我这里确实返回了报错，不解。</p>
+<h3 id="模拟预处理"><a href="#模拟预处理" class="headerlink" title="模拟预处理"></a>模拟预处理</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$pdo=<span class="keyword">new</span> PDO(<span class="string">"mysql:host=localhost;dbname=pdotest"</span>,<span class="string">"root"</span>,<span class="string">"root"</span>);</span><br><span class="line">$user=<span class="string">"1' or 1=1 #"</span>;</span><br><span class="line">$sql=<span class="string">"select * from user where username=?"</span>;</span><br><span class="line">$st=$pdo-&gt;prepare($sql);</span><br><span class="line">$st-&gt;bindParam(<span class="number">1</span>,$user);</span><br><span class="line">$st-&gt;execute();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>抓取流量包</p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005211830170.png" alt="image-20201005211830170"></p>
+<p>发现字符串被转义了，这是因为使用bindParam时，会进行字符串转义操作，同<code>mysql_real_escape_string</code>。</p>
+<p>既然是转义，感觉也能进行宽字节注入。</p>
+<p>首先需要设置一下编码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$pdo-&gt;query(<span class="string">'SET NAMES GBK'</span>);</span><br></pre></td></tr></table></figure>
+
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005213001535.png" alt="image-20201005213001535"></p>
+<p>抓包发现成功返回结果，宽字节注入成功。</p>
+<p>pdo的mysql语句多行执行也是默认打开的，所以在可以控制参数前提下，能够使用多行来进行注入。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总之，只要使用参数绑定，并设置本地预处理优先，基本上就完美防御了sql注入。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/pdo/">pdo</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2019/10/02/PDO学习/" data-title="pdo学习 | buxqm" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2019/10/02/BUUCTF2/" title="BUUCTF1">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  BUUCTF1</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2019/09/28/SSRF学习/"  title="SSRF">
+ <strong>NEXT:</strong><br/> 
+ <span>SSRF
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#PDO预处理学习"><span class="toc-number">1.</span> <span class="toc-text">PDO预处理学习</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境配置"><span class="toc-number">1.2.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#深入学习"><span class="toc-number">1.3.</span> <span class="toc-text">深入学习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#本地预处理"><span class="toc-number">1.3.1.</span> <span class="toc-text">本地预处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模拟预处理"><span class="toc-number">1.3.2.</span> <span class="toc-text">模拟预处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.4.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+			<li><a href="/categories/XXE/" title="XXE">XXE<sup>1</sup></a></li>
+		
+			<li><a href="/categories/pdo/" title="pdo">pdo<sup>1</sup></a></li>
+		
+			<li><a href="/categories/trick/" title="trick">trick<sup>1</sup></a></li>
+		
+			<li><a href="/categories/writeup/" title="writeup">writeup<sup>3</sup></a></li>
+		
+			<li><a href="/categories/专题-writeup/" title="专题  writeup">专题  writeup<sup>1</sup></a></li>
+		
+			<li><a href="/categories/协议学习/" title="协议学习">协议学习<sup>1</sup></a></li>
+		
+			<li><a href="/categories/漏洞复现/" title="漏洞复现">漏洞复现<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello <br/>
+			似水流年</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2020 
+		
+		<a href="http://yoursite.com" target="_blank" title="Ycj">Ycj</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:""};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>
