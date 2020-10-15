@@ -77,7 +77,7 @@ jsonp接口是为了方便动态添加跨站脚本而存在的，jsonp接口返�
     </p>
   <p class="article-time">
     <time datetime="2019-10-11T16:00:00.000Z" itemprop="datePublished">2019-10-12</time>
-    Updated:<time datetime="2020-10-15T07:49:18.030Z" itemprop="dateModified">2020-10-15</time>
+    Updated:<time datetime="2020-10-15T07:55:50.875Z" itemprop="dateModified">2020-10-15</time>
     
   </p>
 </header>
@@ -110,7 +110,7 @@ jsonp接口是为了方便动态添加跨站脚本而存在的，jsonp接口返�
 <p>登入admin，获取flag。</p>
 <h1 id="NewUpload"><a href="#NewUpload" class="headerlink" title="NewUpload"></a>NewUpload</h1><p>这道题是一个普通的文件上传加上了宝塔的WAF和disable_function、open_basedir。</p>
 <p>发现PHP不能上传，对这种WAF一般换行可以通杀，WAF还有文件头检测，GET、POST传值检测，所以需要将马简单编码一下（base64或者三次urlencode全编码都行），简单绕一下open_basedir，发现读取flag需要通过readflag获取flag。</p>
-<p><img src="/images/%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/image-20201008173925961.png" alt="image-20201008173925961"></p>
+<p><img src="images/%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/image-20201008173925961.png" alt="image-20201008173925961"></p>
 <p>本题有两种做法</p>
 <ul>
 <li><h2 id="php-fpm绕过disable-function"><a href="#php-fpm绕过disable-function" class="headerlink" title="php-fpm绕过disable_function"></a>php-fpm绕过disable_function</h2></li>
@@ -137,9 +137,9 @@ jsonp接口是为了方便动态添加跨站脚本而存在的，jsonp接口返�
 <h1 id="Flagshop"><a href="#Flagshop" class="headerlink" title="Flagshop"></a>Flagshop</h1><p>这题是一道WebPwn，赛后复现了一下，发现还挺基础的。</p>
 <p>通过backend.php读取源码发现存在一个文件写入(能指定偏移)和文件读取，赛后看<a href="http://www.plasf.cn/articles/d5a07c1f3f.html" target="_blank" rel="noopener">师傅的WP</a>，发现是通过改写当前进程内存内容，将open函数的地址(file_get_contents基于open函数实现)改写成system函数的地址，那么调用file_get_contents函数就相当于调用system函数。</p>
 <p>首先需要读取内存信息<code>/proc/self/maps</code>，该文件包含了当前进程映射的内存区域，我们可以从中得值当前程序调用libc库和偏移地址。</p>
-<p><img src="/images/%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/image-20201015133048740.png" alt="image-20201015133048740"></p>
+<p><img src="images/%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/image-20201015133048740.png" alt="image-20201015133048740"></p>
 <p>可以得知动态链接库在内存中的地址是<code>0x7ffff5f40000</code>，将该libc库下载下来，可以得到system函数在libc库中的偏移地址，内存地址+偏移地址=真实地址。</p>
-<p><img src="/images/%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/image-20201015133429716.png" alt="image-20201015133429716"></p>
+<p><img src="images/%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/image-20201015133429716.png" alt="image-20201015133429716"></p>
 <p>使用ida打开，找到system函数在libc库中的偏移地址<code>0x0000000000046590</code>，所以system在内存中的真实地址=<code>0x7ffff5f86590</code>。</p>
 <p>得到了system函数的地址，我们还需要得到open函数的地址，可见，当前libc库中并没有open函数，可以去<code>/proc/self/exe</code>文件找一找，该文件存放的是当前进程执行的二进制文件，同样的，将其下载下来，ida打开，可以发现open函数在内存中的偏移为<code>0x0000000000E9F998</code>，也就是15333784。</p>
 <p>payload:</p>
