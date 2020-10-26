@@ -9,9 +9,9 @@
     
     <meta name="author" content="Ycj">
     
-    <meta name="description" content="TP漏洞复现合计前言随心复现，在审计代码前，可以先看看开发手册，大致了解一下框架结构能够使你更快入手。
+    <meta name="description" content="TP漏洞复现合计前言该文章是各种TP漏洞复现的合集，刚开始复现的小伙伴最好先看看开发手册，仔细了解一下框架结构，能够使你更快入手。
 TP5.0.15SQL注入复现环境配置使用composer安装TP5.0.15
-composer能够更加方便、快速的安装准确的框架版本，windows环境在官网下载安装程序，选择PHP版本(最好是">
+composer能够更加方便、快速的安装准确的框架版本，windows环境在官网下载安装">
     
     
     
@@ -77,7 +77,7 @@ composer能够更加方便、快速的安装准确的框架版本，windows环�
     </p>
   <p class="article-time">
     <time datetime="2020-09-29T16:00:00.000Z" itemprop="datePublished">2020-09-30</time>
-    Updated:<time datetime="2020-10-16T11:26:05.628Z" itemprop="dateModified">2020-10-16</time>
+    Updated:<time datetime="2020-10-20T07:02:16.698Z" itemprop="dateModified">2020-10-20</time>
     
   </p>
 </header>
@@ -86,10 +86,10 @@ composer能够更加方便、快速的安装准确的框架版本，windows环�
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#TP漏洞复现合计"><span class="toc-number">1.</span> <span class="toc-text">TP漏洞复现合计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TP5-0-15SQL注入复现"><span class="toc-number">1.2.</span> <span class="toc-text">TP5.0.15SQL注入复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置"><span class="toc-number">1.2.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据库配置"><span class="toc-number">1.2.2.</span> <span class="toc-text">数据库配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现"><span class="toc-number">1.2.3.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析"><span class="toc-number">1.2.4.</span> <span class="toc-text">漏洞分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TP6-0session-任意文件创建-amp-删除漏洞复现"><span class="toc-number">1.3.</span> <span class="toc-text">TP6.0session 任意文件创建&amp;删除漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现-1"><span class="toc-number">1.3.2.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析-1"><span class="toc-number">1.3.3.</span> <span class="toc-text">漏洞分析</span></a></li></ol></li></ol></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#TP漏洞复现合计"><span class="toc-number">1.</span> <span class="toc-text">TP漏洞复现合计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TP5-0-15SQL注入复现"><span class="toc-number">1.2.</span> <span class="toc-text">TP5.0.15SQL注入复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置"><span class="toc-number">1.2.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据库配置"><span class="toc-number">1.2.2.</span> <span class="toc-text">数据库配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现"><span class="toc-number">1.2.3.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析"><span class="toc-number">1.2.4.</span> <span class="toc-text">漏洞分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TP5-0-任意代码执行-amp-任意文件写入漏洞复现"><span class="toc-number">1.3.</span> <span class="toc-text">TP5.0.*任意代码执行&amp;任意文件写入漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现-1"><span class="toc-number">1.3.2.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析-1"><span class="toc-number">1.3.3.</span> <span class="toc-text">漏洞分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TP6-0session-任意文件创建-amp-删除漏洞复现"><span class="toc-number">1.4.</span> <span class="toc-text">TP6.0session 任意文件创建&amp;删除漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置-2"><span class="toc-number">1.4.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现-2"><span class="toc-number">1.4.2.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析-2"><span class="toc-number">1.4.3.</span> <span class="toc-text">漏洞分析</span></a></li></ol></li></ol></li></ol>
 		</div>
 		
-		<h1 id="TP漏洞复现合计"><a href="#TP漏洞复现合计" class="headerlink" title="TP漏洞复现合计"></a>TP漏洞复现合计</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>随心复现，在审计代码前，可以先看看<a href="https://www.kancloud.cn/manual/thinkphp5/122950" target="_blank" rel="noopener">开发手册</a>，大致了解一下框架结构能够使你更快入手。</p>
+		<h1 id="TP漏洞复现合计"><a href="#TP漏洞复现合计" class="headerlink" title="TP漏洞复现合计"></a>TP漏洞复现合计</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>该文章是各种TP漏洞复现的合集，刚开始复现的小伙伴最好先看看<a href="https://www.kancloud.cn/manual/thinkphp5/122950" target="_blank" rel="noopener">开发手册</a>，仔细了解一下框架结构，能够使你更快入手。</p>
 <h2 id="TP5-0-15SQL注入复现"><a href="#TP5-0-15SQL注入复现" class="headerlink" title="TP5.0.15SQL注入复现"></a>TP5.0.15SQL注入复现</h2><h3 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h3><p>使用composer安装TP5.0.15</p>
 <p>composer能够更加方便、快速的安装准确的框架版本，windows环境在官网下载安装程序，选择PHP版本(最好是大于7.2)，安装时可以配置一下代理，不然会很慢。</p>
 <p>安装好后执行</p>
@@ -126,13 +126,54 @@ composer能够更加方便、快速的安装准确的框架版本，windows环�
 <p>经过调试，发现thinkphp对输入的数据进行了过滤，exp排在黑名单榜首。</p>
 <p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201005193636907.png" alt="image-20201005193636907"></p>
 <p>在exp后加了一个空格，导致case判断失败。</p>
-<h2 id="TP6-0session-任意文件创建-amp-删除漏洞复现"><a href="#TP6-0session-任意文件创建-amp-删除漏洞复现" class="headerlink" title="TP6.0session 任意文件创建&amp;删除漏洞复现"></a>TP6.0session 任意文件创建&amp;删除漏洞复现</h2><h3 id="环境配置-1"><a href="#环境配置-1" class="headerlink" title="环境配置"></a>环境配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer create-project topthink/think tp 6.0.0</span><br></pre></td></tr></table></figure>
+<h2 id="TP5-0-任意代码执行-amp-任意文件写入漏洞复现"><a href="#TP5-0-任意代码执行-amp-任意文件写入漏洞复现" class="headerlink" title="TP5.0.*任意代码执行&amp;任意文件写入漏洞复现"></a>TP5.0.*任意代码执行&amp;任意文件写入漏洞复现</h2><h3 id="环境配置-1"><a href="#环境配置-1" class="headerlink" title="环境配置"></a>环境配置</h3><p>本次以TP5.0.0版本作为复现版本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer create-project topthink/think tp 5.0.0</span><br></pre></td></tr></table></figure>
+
+<p>按照之前的方法，将composer.json中的版本信息修改为5.0.0。</p>
+<h3 id="漏洞复现-1"><a href="#漏洞复现-1" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>搭建好服务，并发送如下请求</p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201019204946854.png" alt="image-20201019204946854"></p>
+<p>filter中为你想执行的函数，s(任意变量名都行)为参数，即可实现任意代码执行。</p>
+<h3 id="漏洞分析-1"><a href="#漏洞分析-1" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p>TP5.0.*<a href="https://www.kancloud.cn/manual/thinkphp5/160568" target="_blank" rel="noopener">支持请求伪装</a>，在获取路由时，使用think\Requests类的method方法实现。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[Config::get(<span class="string">'var_method'</span>)])) &#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;method = strtoupper($_POST[Config::get(<span class="string">'var_method'</span>)]);</span><br><span class="line">    <span class="keyword">$this</span>-&gt;&#123;<span class="keyword">$this</span>-&gt;method&#125;($_POST);</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，它在使用了可变函数，为的是调用类中的其他请求方法，比如get、post方法，实现请求伪装但是这也让我们可以任意调用该类中的函数。</p>
+<p>我们可以发现，在该类的__construct方法中，由于$option参数可控，我们可以任意覆盖该类中的参数。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (property_exists(<span class="keyword">$this</span>, $name)) &#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;$name = $item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们要覆盖的参数有两个</p>
+<ul>
+<li>filter参数</li>
+</ul>
+<p>filter定义在Requests类中，作为全局的过滤器，一般使用htmlspecialchars之类的函数过滤用户输入的参数，意思就是说会将挨次的将的GET、POST的所有数据作为该函数的参数执行一次，所以我们可以覆盖filter函数为我们想要执行的恶意函数system之类的。</p>
+<ul>
+<li>method参数</li>
+</ul>
+<p>在获取路由后，thinkphp会获取当前的路由规则</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$method = $request-&gt;method();</span><br><span class="line"><span class="comment">// 获取当前请求类型的路由规则</span></span><br><span class="line">$rules = <span class="keyword">self</span>::$rules[$method];</span><br></pre></td></tr></table></figure>
+
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201019211153978.png" alt="image-20201019211153978"></p>
+<p>当路由规则不在rules数组中，会产生报错，为了防止报错，我们可以将method设为上图中的任意值。</p>
+<p>thinkphp在执行用户调用控制器的方法前会使用过滤器将全局参数过滤一遍，而这时，filter函数已经被我们改成了而已函数system。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">filterValue</span><span class="params">(&amp;$value, $key, $filters)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   $default = array_pop($filters);</span><br><span class="line">   <span class="keyword">foreach</span> ($filters <span class="keyword">as</span> $filter) &#123;</span><br><span class="line">       <span class="keyword">if</span> (is_callable($filter)) &#123;</span><br><span class="line">          <span class="comment">// 调用函数或者方法过滤</span></span><br><span class="line">          $value = call_user_func($filter, $value);</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到，程序在这里使用is_callable检测函数是否可调用，然后用不断用call_user_func执行该函数，知道将用户输入的变量过滤完，这时我们的恶意代码system(‘whoami’)就成功被执行。</p>
+<p>在最近的nu1lctf中，有一道tp5的题目设置了disable_function，只能通过写马来绕过disable_function（蚁剑），赛后根据<a href="https://mp.weixin.qq.com/s?__biz=MzUyMDEyNTkwNA==&mid=2247484802&idx=1&sn=7db0b7acc809bc312f4ad89a718cd2d7&chksm=f9ee693dce99e02b3c6e61f0202e7916adb1fd706901b7820140677914c793570a596c5b2554&mpshare=1&scene=23&srcid=1020UndEN2WxWj2EYVvvovZZ&sharer_sharetime=1603154487174&sharer_shareid=a3b3f154db92e8d09cdde92bdb778322#rd" target="_blank" rel="noopener">出题师傅写的wp</a>，复现一下。</p>
+<p>上面说到，filter使用is_calble检测filter函数是否可以调用，而is_callble支持使用someClass::someMethod的方式检测类中的静态方法，所以我们也能通过thinkphp的类的自动加载机制，执行thinkphp中的任意静态方法（前提是public），全局搜索一下有没有文件写入的方法。</p>
+<p>我们可以发现在think\Build类中，存在module静态方法可以用来写入文件。</p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201020145027341.png" alt="image-20201020145027341"></p>
+<p>当module不等于runtime时，会调用buildHello静态方法，创建按hello tp界面。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$content = str_replace([<span class="string">'&#123;$app&#125;'</span>, <span class="string">'&#123;$module&#125;'</span>, <span class="string">'&#123;layer&#125;'</span>, <span class="string">'&#123;$suffix&#125;'</span>], [$namespace, $module ? $module . <span class="string">'\\'</span> : <span class="string">''</span>,<span class="string">'controller'</span>, $suffix ? <span class="string">'Controller'</span> : <span class="string">''</span>], $content);</span><br></pre></td></tr></table></figure>
+
+<p>注意这行代码，我们可以控制的变量是$module</p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201020145652540.png" alt="image-20201020145652540"></p>
+<p>红圈中的内容是我们可以控制的，</p>
+<h2 id="TP6-0session-任意文件创建-amp-删除漏洞复现"><a href="#TP6-0session-任意文件创建-amp-删除漏洞复现" class="headerlink" title="TP6.0session 任意文件创建&amp;删除漏洞复现"></a>TP6.0session 任意文件创建&amp;删除漏洞复现</h2><h3 id="环境配置-2"><a href="#环境配置-2" class="headerlink" title="环境配置"></a>环境配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer create-project topthink/think tp 6.0.0</span><br></pre></td></tr></table></figure>
 
 <p>下载好后，将composer.json中的数据修改成如下图所示</p>
 <p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201016150629322.png" alt="image-20201016150629322"></p>
 <p>在app\middleware.php中开启session功能</p>
 <p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201016150801682.png" alt="image-20201016150801682"></p>
-<h3 id="漏洞复现-1"><a href="#漏洞复现-1" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>漏洞利用点是在session保存时，session文件名可控导致的任意文件创建。</p>
+<h3 id="漏洞复现-2"><a href="#漏洞复现-2" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>漏洞利用点是在session保存时，session文件名可控导致的任意文件创建。</p>
 <p>在index控制器引入Session类并添加如下测试方法。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">facade</span>\<span class="title">Session</span>;  </span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">session_test</span><span class="params">()</span></span>&#123;</span><br><span class="line">    Session::set(<span class="string">'id'</span>,<span class="string">'name'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -142,7 +183,7 @@ composer能够更加方便、快速的安装准确的框架版本，windows环�
 <p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201016155905781.png" alt="image-20201016155905781"></p>
 <p>尝试一下目录穿越，<code>/../../../public/aaaaaaaaaaa.php</code>成功写入public文件夹中。</p>
 <p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201016162011090.png" alt="image-20201016162011090"></p>
-<h3 id="漏洞分析-1"><a href="#漏洞分析-1" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p>当执行Session::set方法时，会调用\vendor\topthink\framework\src\think\session\Store.php中的setId方法</p>
+<h3 id="漏洞分析-2"><a href="#漏洞分析-2" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p>当执行Session::set方法时，会调用\vendor\topthink\framework\src\think\session\Store.php中的setId方法</p>
 <p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201016163335534.png" alt="image-20201016163335534"></p>
 <p>当传入的SessionId满足32位长度时，就将id设为SessionId，否则就重设SessionId。</p>
 <p>之后进入save方法保存用户session。</p>
@@ -153,6 +194,7 @@ composer能够更加方便、快速的安装准确的框架版本，windows环�
 
 <p>它使用file_put_contents函数将sessionID作为文件名写入文件，所以可以通过目录穿越实现任意文件上传，利用条件是用户能够控制Session内容。</p>
 <p>在执行save方法时，可以看到当session内容为空时。使用unlink删除文件，文件名控制方法与上面一样。</p>
+<p>## </p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -205,7 +247,7 @@ composer能够更加方便、快速的安装准确的框架版本，windows环�
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#TP漏洞复现合计"><span class="toc-number">1.</span> <span class="toc-text">TP漏洞复现合计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TP5-0-15SQL注入复现"><span class="toc-number">1.2.</span> <span class="toc-text">TP5.0.15SQL注入复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置"><span class="toc-number">1.2.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据库配置"><span class="toc-number">1.2.2.</span> <span class="toc-text">数据库配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现"><span class="toc-number">1.2.3.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析"><span class="toc-number">1.2.4.</span> <span class="toc-text">漏洞分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TP6-0session-任意文件创建-amp-删除漏洞复现"><span class="toc-number">1.3.</span> <span class="toc-text">TP6.0session 任意文件创建&amp;删除漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现-1"><span class="toc-number">1.3.2.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析-1"><span class="toc-number">1.3.3.</span> <span class="toc-text">漏洞分析</span></a></li></ol></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#TP漏洞复现合计"><span class="toc-number">1.</span> <span class="toc-text">TP漏洞复现合计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TP5-0-15SQL注入复现"><span class="toc-number">1.2.</span> <span class="toc-text">TP5.0.15SQL注入复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置"><span class="toc-number">1.2.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据库配置"><span class="toc-number">1.2.2.</span> <span class="toc-text">数据库配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现"><span class="toc-number">1.2.3.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析"><span class="toc-number">1.2.4.</span> <span class="toc-text">漏洞分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TP5-0-任意代码执行-amp-任意文件写入漏洞复现"><span class="toc-number">1.3.</span> <span class="toc-text">TP5.0.*任意代码执行&amp;任意文件写入漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现-1"><span class="toc-number">1.3.2.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析-1"><span class="toc-number">1.3.3.</span> <span class="toc-text">漏洞分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TP6-0session-任意文件创建-amp-删除漏洞复现"><span class="toc-number">1.4.</span> <span class="toc-text">TP6.0session 任意文件创建&amp;删除漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置-2"><span class="toc-number">1.4.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现-2"><span class="toc-number">1.4.2.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析-2"><span class="toc-number">1.4.3.</span> <span class="toc-text">漏洞分析</span></a></li></ol></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
@@ -217,6 +259,8 @@ composer能够更加方便、快速的安装准确的框架版本，windows环�
 	<p class="asidetitle">Categories</p>
 		<ul>
 		
+			<li><a href="/categories/Nu1lCtf/" title="Nu1lCtf">Nu1lCtf<sup>1</sup></a></li>
+		
 			<li><a href="/categories/XXE/" title="XXE">XXE<sup>1</sup></a></li>
 		
 			<li><a href="/categories/pdo/" title="pdo">pdo<sup>1</sup></a></li>
@@ -225,7 +269,7 @@ composer能够更加方便、快速的安装准确的框架版本，windows环�
 		
 			<li><a href="/categories/writeup/" title="writeup">writeup<sup>2</sup></a></li>
 		
-			<li><a href="/categories/专题-writeup/" title="专题  writeup">专题  writeup<sup>1</sup></a></li>
+			<li><a href="/categories/专题-writeup/" title="专题  writeup">专题  writeup<sup>2</sup></a></li>
 		
 			<li><a href="/categories/协议学习/" title="协议学习">协议学习<sup>1</sup></a></li>
 		
