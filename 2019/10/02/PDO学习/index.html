@@ -15,19 +15,10 @@
 <meta property="og:site_name" content="buxqm">
 <meta property="og:description" content="PDO预处理学习前言在代码审计的时候，经常会碰到与pdo有关的sql注入，通过看各种文章，感觉还是弄不懂预处理是如何预防sql注入的，于是就通过抓取流量包的形式，更加深入的了解pdo预处理。 环境配置使用WireShark，选择Adapter for loopback traffic capture网卡即可抓取本地流量包。 深入学习由于并不是所有的数据库驱动都支持预编译模式，所以PDO有模拟预处理">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005214411675.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005214731021.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201006134328847.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201006134416919.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201006141225775.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201006145729946.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005211830170.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005213001535.png">
-<meta property="og:updated_time" content="2020-10-06T07:14:32.250Z">
+<meta property="og:updated_time" content="2020-11-28T14:31:06.226Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pdo学习">
 <meta name="twitter:description" content="PDO预处理学习前言在代码审计的时候，经常会碰到与pdo有关的sql注入，通过看各种文章，感觉还是弄不懂预处理是如何预防sql注入的，于是就通过抓取流量包的形式，更加深入的了解pdo预处理。 环境配置使用WireShark，选择Adapter for loopback traffic capture网卡即可抓取本地流量包。 深入学习由于并不是所有的数据库驱动都支持预编译模式，所以PDO有模拟预处理">
-<meta name="twitter:image" content="g:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005214411675.png">
   
     <link rel="alternative" href="/atom.xml" title="buxqm" type="application/atom+xml">
   
@@ -198,15 +189,15 @@
 <h3 id="本地预处理"><a href="#本地预处理" class="headerlink" title="本地预处理"></a>本地预处理</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$pdo=<span class="keyword">new</span> PDO(<span class="string">"mysql:host=localhost;dbname=pdotest"</span>,<span class="string">"root"</span>,<span class="string">"root"</span>);</span><br><span class="line">$pdo-&gt;setAttribute(PDO::ATTR_EMULATE_PREPARES,<span class="keyword">false</span>)</span><br><span class="line">$user=<span class="string">"lili"</span>;</span><br><span class="line">$sql=<span class="string">"select * from user where username=?"</span>;</span><br><span class="line">$st=$pdo-&gt;prepare($sql);</span><br><span class="line">$st-&gt;bindParam(<span class="number">1</span>,$user);</span><br><span class="line">$st-&gt;execute();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>抓取流量包</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005214411675.png" alt="image-20201005214411675"></p>
+<p>![image-20201005214411675]/images/PDO学习/image-20201005214411675.png)</p>
 <p>发现在prepare时，会发送一个带有占位符的mysql预处理语句，在execute时，将绑定的参数发送给数据库。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005214731021.png" alt="image-20201005214731021"></p>
+<p>![image-20201005214731021]/images/PDO学习/image-20201005214731021.png)</p>
 <p>尝试一下sql注入</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201006134328847.png" alt="image-20201006134328847"></p>
+<p>![image-20201006134328847]/images/PDO学习/image-20201006134328847.png)</p>
 <p>发送数据时未经过任何处理，但是得不到返回结果，查看mysql查询日志。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201006134416919.png" alt="image-20201006134416919"></p>
+<p>![image-20201006134416919]/images/PDO学习/image-20201006134416919.png)</p>
 <p>看来在mysql本地的预处理，也会将数据转义，那么尝试一下宽字节注入，发现无法得到结果，查看日志</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201006141225775.png" alt="image-20201006141225775"></p>
+<p>![image-20201006141225775]/images/PDO学习/image-20201006141225775.png)</p>
 <p>看来当编码设置为GBK时，mysql会将字符串转换成16进制，所以无法注入。</p>
 <p>当使用本地预处理时，能使用报错注入，而且只需要执行到prepare就能够将用户名，版本这些信息爆出来，前提是能够控制参数内容。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$pdo=new PDO(&quot;mysql:host=localhost;dbname=pdotest&quot;,&quot;root&quot;,&quot;root&quot;);</span><br><span class="line">$user=&quot;lili&quot;;</span><br><span class="line">$pdo-&gt;setAttribute(pdo::ATTR_EMULATE_PREPARES, false);</span><br><span class="line">$pdo-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);</span><br><span class="line">$sql=&quot;select * from user where username=(updatexml(0,concat(0xa,user()),0))&quot;;</span><br><span class="line">$st=$pdo-&gt;prepare($sql);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
@@ -214,18 +205,18 @@
 <p>尝试爆出数据</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql=&quot;select * from user where username=(updatexml(0,concat(0xa,(select * from user limit 1)),0))&quot;;</span><br></pre></td></tr></table></figure>
 
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201006145729946.png" alt="image-20201006145729946"></p>
+<p>![image-20201006145729946]/images/PDO学习/image-20201006145729946.png)</p>
 <p>这里非常奇怪，因为需要执行到execute才会在流量包中返回错误，但是PDO并不会报错，去网上搜都说PDO不支持子查询，但我这里确实返回了报错，不解。</p>
 <h3 id="模拟预处理"><a href="#模拟预处理" class="headerlink" title="模拟预处理"></a>模拟预处理</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$pdo=<span class="keyword">new</span> PDO(<span class="string">"mysql:host=localhost;dbname=pdotest"</span>,<span class="string">"root"</span>,<span class="string">"root"</span>);</span><br><span class="line">$user=<span class="string">"1' or 1=1 #"</span>;</span><br><span class="line">$sql=<span class="string">"select * from user where username=?"</span>;</span><br><span class="line">$st=$pdo-&gt;prepare($sql);</span><br><span class="line">$st-&gt;bindParam(<span class="number">1</span>,$user);</span><br><span class="line">$st-&gt;execute();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>抓取流量包</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005211830170.png" alt="image-20201005211830170"></p>
+<p>![image-20201005211830170]/images/PDO学习/image-20201005211830170.png)</p>
 <p>发现字符串被转义了，这是因为使用bindParam时，会进行字符串转义操作，同<code>mysql_real_escape_string</code>。</p>
 <p>既然是转义，感觉也能进行宽字节注入。</p>
 <p>首先需要设置一下编码</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$pdo-&gt;query(<span class="string">'SET NAMES GBK'</span>);</span><br></pre></td></tr></table></figure>
 
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005213001535.png" alt="image-20201005213001535"></p>
+<p>![image-20201005213001535]/images/PDO学习/image-20201005213001535.png)</p>
 <p>抓包发现成功返回结果，宽字节注入成功。</p>
 <p>pdo的mysql语句多行执行也是默认打开的，所以在可以控制参数前提下，能够使用多行来进行注入。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总之，只要使用参数绑定，并设置本地预处理优先，基本上就完美防御了sql注入。</p>
@@ -363,6 +354,19 @@
             </div>
         </div>
         
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#PDO预处理学习"><span class="toc-number">1.</span> <span class="toc-text">PDO预处理学习</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境配置"><span class="toc-number">1.2.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#深入学习"><span class="toc-number">1.3.</span> <span class="toc-text">深入学习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#本地预处理"><span class="toc-number">1.3.1.</span> <span class="toc-text">本地预处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模拟预处理"><span class="toc-number">1.3.2.</span> <span class="toc-text">模拟预处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.4.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
         
     </div>
 </aside>

