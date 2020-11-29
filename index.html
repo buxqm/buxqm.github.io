@@ -243,90 +243,6 @@
 
 
   
-    <article id="post-湖湘杯&amp;xnuca复现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/03/湖湘杯&xnuca复现/">湖湘杯&amp;xnuca</a>
-    </h1>
-  
-
-        
-        <a href="/2020/11/03/湖湘杯&xnuca复现/" class="archive-article-date">
-  	<time datetime="2020-11-02T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-03</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="湖湘杯-amp-xnuca复现"><a href="#湖湘杯-amp-xnuca复现" class="headerlink" title="湖湘杯&amp;xnuca复现"></a>湖湘杯&amp;xnuca复现</h1><p>因为是一起打的，就一起复现吧，都蛮自闭的。</p>
-<h1 id="ooooodjs"><a href="#ooooodjs" class="headerlink" title="ooooodjs"></a>ooooodjs</h1><p>下载源码，提示说由于express-validator中的lodash库版本问题导致存在原型链污染漏洞，看一下package-lock.json发现express-validator中lodash的版本为^4.17.15。</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5C%E6%B9%96%E6%B9%98%E6%9D%AF&xnuca%E5%A4%8D%E7%8E%B0%5Cimage-20201104161956032.png" alt="image-20201104161956032"></p>
-<p>在网上发现该版本的set方法存在原型链污染，审计express-validator的源码发现在处理post变量时，会调用lodash的set方法</p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5C%E6%B9%96%E6%B9%98%E6%9D%AF&xnuca%E5%A4%8D%E7%8E%B0%5Cimage-20201104162133609.png" alt="image-20201104162133609"></p>
-<p>path的值就是post参数的变量名，但是经过调试发现，如果参数名含有<code>.</code>的话，会将它变成如下格式<code>[&quot;${segment}&quot;]</code></p>
-<p><img src="G:%5CMyBlog%5Csource%5Cimages%5C%E6%B9%96%E6%B9%98%E6%9D%AF&xnuca%E5%A4%8D%E7%8E%B0%5Cimage-20201104162556443.png" alt="image-20201104162556443"></p>
-<p>不过可以通过拼接绕过,提交<code>&quot;.__proto.[aa</code>,经过拼接就得到</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&quot;&quot;.__proto.[aa&quot;]</span><br></pre></td></tr></table></figure>
-
-<p>我们就能控制原型链中的任意值，由于newvalue的值是以path作为键在requests.body中找值，由于path已经被拼接，所以newvalue的值无法控制，只能为空。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/专题-writeup//" class="article-tag-list-link color2">专题  writeup</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/03/湖湘杯&xnuca复现/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-BUUCTF3" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -948,6 +864,88 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2020/09/21/Pickle反序列化/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-XXE专题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/30/XXE专题/">XML学习</a>
+    </h1>
+  
+
+        
+        <a href="/2020/06/30/XXE专题/" class="archive-article-date">
+  	<time datetime="2020-06-29T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="XXE学习记录"><a href="#XXE学习记录" class="headerlink" title="XXE学习记录"></a>XXE学习记录</h1><p>XXE也就是XML外部实体注入，这主要是DTD文件导致的。</p>
+<h2 id="DTD简介"><a href="#DTD简介" class="headerlink" title="DTD简介"></a>DTD简介</h2><p>​    文档类型定义（DTD）可定义合法的XML文档构建模块。它使用一系列合法的元素来定义文档的结构。</p>
+<p>DTD 可被成行地声明于 XML 文档中，也可作为一个外部引用。假如 DTD 被包含在您的 XML 源文件中，它应当通过下面的语法包装在一个 DOCTYPE 声明中： <code>&lt;!DOCTYPE 根元素名 [element-declarations]&gt;</code>，如果DTD位于XML源文件外，那么它应通过下面的语法被封装在一个 DOCTYPE 定义中： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE 根元素名称 SYSTEM &quot;filename&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE 根元素名称 PUBLIC “DTD标识名” “公用DTD的URI”&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​    这个SYSTEM/PUBLIC关键字就是导致XXE注入的关键，经过研究JAVA解析DTD文件时，通过文件流将SYSTEM关键字后面的值当作URL读取文件，而JAVA文件流支持HTTP、FTP、JAR、FILE等等协议，在PHP中情况也类似，支持PHP伪协议、phar等等协议。</p>
+<p>​    在DTD中可以定义通用实体和参数实体。</p>
+        
+          <a class="article-more-a" href="/2020/06/30/XXE专题/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/XXE//" class="article-tag-list-link color4">XXE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/06/30/XXE专题/">展开全文 >></a>
         </p>
       
 
