@@ -25,7 +25,7 @@
 <meta property="og:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020155406623.png">
 <meta property="og:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020161405045.png">
 <meta property="og:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020164325592.png">
-<meta property="og:updated_time" content="2020-11-28T14:19:03.593Z">
+<meta property="og:updated_time" content="2020-11-29T06:53:03.353Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nu1lCtf2020">
 <meta name="twitter:description" content="easyTP5关闭报错，写入文件下载源码看下版本，发现是5.0.0，存在任意代码执行漏洞，具体可以看看我的另一篇tp5.0.*漏洞复现，看看phpinfo。 1a=10&amp;amp;_method=__construct&amp;amp;method=GET&amp;amp;filter[]=phpinfo  发现存在disable_function和open_basedir，无法直接getshell，赛后根据出题师">
@@ -202,6 +202,8 @@
 <p>当module不等于runtime时，会调用buildHello静态方法，创建按hello tp界面。</p>
 <p><img src="/images/nu1lctf2020/image-20201020152230362.png" alt="image-20201020152230362"></p>
 <p>注意这行代码，我们可以控制的变量是$module</p>
+<a id="more"></a>
+
 <p><img src="/images/nu1lctf2020/image-20201020145652540.png" alt="image-20201020145652540"></p>
 <p>首先我们需要知道红圈中的内容是我们可以控制的，然后在创建目录的地方，我们可以目录穿越到public文件夹，尝试一下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a=../public/555&amp;_method=__construct&amp;method=GET&amp;filter[]=think\Build::module</span><br></pre></td></tr></table></figure>

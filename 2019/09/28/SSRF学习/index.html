@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/09/30/hIwJ29K5qf7TrMV.png">
 <meta property="og:image" content="https://i.loli.net/2020/10/02/iFK6TaIDBmbh1sL.png">
 <meta property="og:image" content="https://i.loli.net/2020/10/02/ieoZNYUIWtafdJm.png">
-<meta property="og:updated_time" content="2020-11-21T13:15:44.634Z">
+<meta property="og:updated_time" content="2020-11-29T06:51:02.397Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SSRF">
 <meta name="twitter:description" content="SSRF学习URL结构url为统一资源定位符。 url标准格式如下： 1[协议类型]://[服务器地址]:[端口号]/[资源层级UNIX文件路径][文件名]?[查询]#[片段ID  url完整格式如下： 1[协议类型]://[访问资源需要的凭证信息]@[服务器地址]:[端口号]/[资源层级UNIX文件路径][文件名]?[查询]#[片段ID]   协议类型：一般含有http,https,file,f">
@@ -200,6 +200,8 @@
 <li>协议类型：一般含有http,https,file,ftp,gopher,wais,news,telent</li>
 <li>凭证信息：username:password，以@结尾</li>
 </ul>
+<a id="more"></a>
+
 <h2 id="Curl与ParseUrl解析url区别"><a href="#Curl与ParseUrl解析url区别" class="headerlink" title="Curl与ParseUrl解析url区别"></a>Curl与ParseUrl解析url区别</h2><p><a href="chrome-extension://cdonnmffkdaoajfknoeeecmchibpmkmg/assets/pdf/web/viewer.html?file=https%3A%2F%2Fwww.blackhat.com%2Fdocs%2Fus-17%2Fthursday%2Fus-17-Tsai-A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf" target="_blank" rel="noopener">blackhat2017</a>中提到了Curl与ParseUrl解析url的区别，要求Curl版本&lt;=7.54.0。</p>
 <p>经过本地7.55.1测试，curl在port后不允许有空格出现<code>Port number ended with &#39; &#39;</code>，准确来说，port后只允许<code>/</code>。</p>
 <p>本地复现一下，我在服务器中放置了1.txt，下面谈谈我的发现。</p>
@@ -425,11 +427,11 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/09/28/协议学习/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/10/02/PDO学习/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          SSRF
+          pdo学习
         
       </div>
     </a>

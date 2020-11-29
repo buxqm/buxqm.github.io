@@ -52,7 +52,7 @@
 <meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120215632993.png">
 <meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120215203006.png">
 <meta property="og:image" content="http://yoursite.com/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201120215324260.png">
-<meta property="og:updated_time" content="2020-11-28T14:30:46.852Z">
+<meta property="og:updated_time" content="2020-11-29T06:53:20.387Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP框架漏洞合集">
 <meta name="twitter:description" content="TP漏洞复现合集前言该文章是各种TP漏洞复现的合集，刚开始复现的小伙伴最好先看看开发手册，仔细了解一下框架结构，能够使你更快入手。 TP5.0.15SQL注入复现环境配置使用composer安装TP5.0.15 composer能够更加方便、快速的安装准确的框架版本，windows环境在官网下载安装程序，选择PHP版本(最好是大于7.2)，安装时可以配置一下代理，不然会很慢。 安装好后执行 com">
@@ -227,6 +227,8 @@
 <pre><code>composer create-project topthink/think tp 5.0.15</code></pre><p>更多的版本也可以在<a href="https://packagist.org/" target="_blank" rel="noopener">composer官网</a>找到。</p>
 <p>使用composer的好处是能够快速切换版本，只需要将framework改成你自己想要的版本，然后执行<code>composer update</code>就好了。</p>
 <p><img src="https://i.loli.net/2020/10/04/EazP48swVgmC6pq.png" alt="image.png"></p>
+<a id="more"></a>
+
 <h3 id="数据库配置"><a href="#数据库配置" class="headerlink" title="数据库配置"></a>数据库配置</h3><p>首先建立一个数据库tptest，然后建立一个user表，字段是id,username。</p>
 <p><img src="/images/TP5.0.24%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%90%88%E9%9B%86/image-20201005191103224.png" alt="image-20201005191103224"></p>
 <h3 id="影响范围"><a href="#影响范围" class="headerlink" title="影响范围"></a>影响范围</h3><p>ThinkPHP 5.0.13~ThinkPHP 5.0.15</p>

@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="buxqm">
 <meta property="og:description" content="Pickle反序列化的分析与利用本文首发于先知https://xz.aliyun.com/t/8342 反序列化过程分析pickle.dump()方法可以将对象序列化。 12345678import pickleclass animal:    def __init__(self,animal):        self.animal=animal        test=pickle.dumps">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-10-23T13:13:07.896Z">
+<meta property="og:updated_time" content="2020-11-29T06:53:10.132Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pickle反序列化">
 <meta name="twitter:description" content="Pickle反序列化的分析与利用本文首发于先知https://xz.aliyun.com/t/8342 反序列化过程分析pickle.dump()方法可以将对象序列化。 12345678import pickleclass animal:    def __init__(self,animal):        self.animal=animal        test=pickle.dumps">
@@ -189,6 +189,8 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b&apos;\x80\x03c__main__\nanimal\nq\x00)\x81q\x01&#125;q\x02X\x06\x00\x00\x00animalq\x03X\x03\x00\x00\x00dogq\x04sb.&apos;</span><br></pre></td></tr></table></figure>
 
 <p>使用pickle.loads()方法反序列化字符串，查看一下loads方法的源码。</p>
+<a id="more"></a>
+
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_loads</span><span class="params">(s, *, fix_imports=True, encoding=<span class="string">"ASCII"</span>, errors=<span class="string">"strict"</span>)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(s, str):</span><br><span class="line">        <span class="keyword">raise</span> TypeError(<span class="string">"Can't load pickle from unicode string"</span>)</span><br><span class="line">    file = io.BytesIO(s)</span><br><span class="line">    <span class="keyword">return</span> _Unpickler(file, fix_imports=fix_imports,</span><br><span class="line">                      encoding=encoding, errors=errors).load()</span><br></pre></td></tr></table></figure>
 
 <p>跟进_Unpickler类的load方法,重点在下面这一段代码：</p>

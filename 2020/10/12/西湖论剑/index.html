@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://yoursite.com/images/%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/image-20201008173925961.png">
 <meta property="og:image" content="http://yoursite.com/images/%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/image-20201015133048740.png">
 <meta property="og:image" content="http://yoursite.com/images/%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/image-20201015133429716.png">
-<meta property="og:updated_time" content="2020-10-16T11:23:54.881Z">
+<meta property="og:updated_time" content="2020-11-29T06:52:36.478Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="西湖论剑赛后复现">
 <meta name="twitter:description" content="HardXss这道题打开发现在loginStatus处有一个jsonp，而且在login处能够控制jsonp返回的内容，首先简要的介绍一下jsonp。 jsonp接口是为了方便动态添加跨站脚本而存在的，jsonp接口返回text/javascript形式的数据，在客户端响应。 而在这题中，并不是简单的控制一下cookie的弹出，题目描述：admin收到邮件后会先点开链接然后登录网站，所以我们的目标">
@@ -192,6 +192,8 @@
 <p>而在这题中，并不是简单的控制一下cookie的弹出，题目描述：admin收到邮件后会先点开链接然后登录网站，所以我们的目标是拦截admin登录网站的请求，并获得请求内容（admin账号与密码），这就需要用到<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Service_Worker_API" target="_blank" rel="noopener">Service Worker</a>。</p>
 <p>如何使用呢？这里有一篇文章介绍了如何使用<a href="https://lightless.me/archives/XSS-With-Service-Worker.html" target="_blank" rel="noopener">Service Worker劫持客户请求</a>。Service Worker需要HTTPS请求，可以使用<a href="https://repl.it/" target="_blank" rel="noopener">repl.it</a>。</p>
 <p>所以我们需要做两件事</p>
+<a id="more"></a>
+
 <ul>
 <li>iframe跨域加载jsonp用恶意代码注册service worker</li>
 <li>使用Service Worker接收fetch事件，并将它弹到自己服务器中</li>

@@ -8,12 +8,12 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>祥云杯 | buxqm</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Web1 Command一道ping的命令执行|没有被过滤，使用||拼接命令，使用%09代替空格，过滤了许多读文件的命令，可以使用/bin/ca?绕过，过滤了*，尝试使用find /遍历目录。 1111||find%09/   发现flag 2333，过滤了*，使用?代替。 1111||/bin/ca?%09/etc/.find????/????.txt   Web2 flaskbot随便测试一下">
+  <meta name="description" content="Web1 Command一道ping的命令执行|没有被过滤，使用||拼接命令，使用%09代替空格，过滤了许多读文件的命令，可以使用/bin/ca?绕过，过滤了*，尝试使用find /遍历目录。 1111||find%09/   发现flag 2333，过滤了*，使用?代替。 1111||/bin/ca?%09/etc/.find????/????.txt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="祥云杯">
 <meta property="og:url" content="http://yoursite.com/2020/11/21/祥云杯/index.html">
 <meta property="og:site_name" content="buxqm">
-<meta property="og:description" content="Web1 Command一道ping的命令执行|没有被过滤，使用||拼接命令，使用%09代替空格，过滤了许多读文件的命令，可以使用/bin/ca?绕过，过滤了*，尝试使用find /遍历目录。 1111||find%09/   发现flag 2333，过滤了*，使用?代替。 1111||/bin/ca?%09/etc/.find????/????.txt   Web2 flaskbot随便测试一下">
+<meta property="og:description" content="Web1 Command一道ping的命令执行|没有被过滤，使用||拼接命令，使用%09代替空格，过滤了许多读文件的命令，可以使用/bin/ca?绕过，过滤了*，尝试使用find /遍历目录。 1111||find%09/   发现flag 2333，过滤了*，使用?代替。 1111||/bin/ca?%09/etc/.find????/????.txt">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://yoursite.com/images/%E7%A5%A5%E4%BA%91%E6%9D%AF/image-20201121131132064.png">
 <meta property="og:image" content="http://yoursite.com/images/%E7%A5%A5%E4%BA%91%E6%9D%AF/image-20201121131506862.png">
@@ -27,10 +27,10 @@
 <meta property="og:image" content="http://yoursite.com/images/%E7%A5%A5%E4%BA%91%E6%9D%AF/image-20201122172052236.png">
 <meta property="og:image" content="http://yoursite.com/images/%E7%A5%A5%E4%BA%91%E6%9D%AF/image-20201122173146743.png">
 <meta property="og:image" content="http://yoursite.com/images/%E7%A5%A5%E4%BA%91%E6%9D%AF/image-20201122172851925.png">
-<meta property="og:updated_time" content="2020-11-28T14:20:00.461Z">
+<meta property="og:updated_time" content="2020-11-29T06:52:39.714Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="祥云杯">
-<meta name="twitter:description" content="Web1 Command一道ping的命令执行|没有被过滤，使用||拼接命令，使用%09代替空格，过滤了许多读文件的命令，可以使用/bin/ca?绕过，过滤了*，尝试使用find /遍历目录。 1111||find%09/   发现flag 2333，过滤了*，使用?代替。 1111||/bin/ca?%09/etc/.find????/????.txt   Web2 flaskbot随便测试一下">
+<meta name="twitter:description" content="Web1 Command一道ping的命令执行|没有被过滤，使用||拼接命令，使用%09代替空格，过滤了许多读文件的命令，可以使用/bin/ca?绕过，过滤了*，尝试使用find /遍历目录。 1111||find%09/   发现flag 2333，过滤了*，使用?代替。 1111||/bin/ca?%09/etc/.find????/????.txt">
 <meta name="twitter:image" content="http://yoursite.com/images/%E7%A5%A5%E4%BA%91%E6%9D%AF/image-20201121131132064.png">
   
     <link rel="alternative" href="/atom.xml" title="buxqm" type="application/atom+xml">
@@ -203,6 +203,8 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">111||/bin/ca?%09/etc/.find????/????.txt</span><br></pre></td></tr></table></figure>
 
 <p><img src="/images/%E7%A5%A5%E4%BA%91%E6%9D%AF/image-20201121131506862.png" alt="image-20201121131506862"></p>
+<a id="more"></a>
+
 <h1 id="Web2-flaskbot"><a href="#Web2-flaskbot" class="headerlink" title="Web2 flaskbot"></a>Web2 flaskbot</h1><p>随便测试一下，发现打开了debug，发现程序读取直接读取cookie中的name，然后base64解密打印出来，但是在<code>/</code>路由下好像被字符串化了，不能直接ssti。</p>
 <p>但是他获取数字使用了float方法<code>num = float(request.form[&#39;num&#39;])</code>。</p>
 <p>Python的float能使用<code>inf,-inf,nan</code>来创造一些特殊浮点数，发现我们输入nan时赢了，并且打出了我们的名字，这里就是ssti点，使用文件读取，发现根目录无flag，只能通过命令执行来获取。</p>
