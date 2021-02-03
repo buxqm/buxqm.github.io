@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/09/15/vMSC63Nt8bnrqKx.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/16/R1lP9QCJOTpxGAb.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/30/3jMRJXl1xnrC5Gg.png">
-<meta property="og:updated_time" content="2020-11-29T06:52:43.391Z">
+<meta property="og:updated_time" content="2021-02-03T07:20:53.901Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="BUUCTF">
 <meta name="twitter:description" content="checkin​    是一道文件上传题，首先抓包分析一波，发现&amp;lt;?,php,等都不行，直接上传基本凉凉，于是考虑解析漏洞。 ​    发现题目服务端是nginx，htaccess也不行，在网上看到了一个姿势，user.ini构建后门 在这里记录一下用这个姿势的条件 ​    1.上传目录下要有可执行的php文件。 ​    2.服务器使用CGI/FastCGI模式 ​    3.php版本">
@@ -396,6 +396,7 @@
 <p>源码中通过putenv设置了PATH环境变量，PATH环境变量存放的是命令搜索路径，所以只能通过绝对路径拿到命令，/bin/cat。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=&#123;%0A&quot;cmd&quot;:%20&quot;/bin/cat%20/home/rceservice/flag&quot;%0A&#125;</span><br></pre></td></tr></table></figure>
 
+<p>本文总阅读量<span id="busuanzi_value_page_pv"></span>次</p>
 
       
 
