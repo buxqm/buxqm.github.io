@@ -21,7 +21,7 @@
 <meta property="og:image" content="http://yoursite.com/images/BUUCTF2/image-20201006220918336.png">
 <meta property="og:image" content="http://yoursite.com/images/BUUCTF2/image-20201007204404024.png">
 <meta property="og:image" content="g:%5CMyBlog%5Csource_posts%5Cimage%5CBUUCTF2%5Cimage-20201010155236979.png">
-<meta property="og:updated_time" content="2020-11-29T06:52:48.294Z">
+<meta property="og:updated_time" content="2021-01-25T15:15:31.959Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="BUUCTF1">
 <meta name="twitter:description" content="[CISCN2019 华北赛区 Day1 Web5]CyberPunk打开题目，查看界面源码发现提示?file，于是将源码读取，发现address处没有过滤，在change.php中发现二次注入点 随便注入以下，发现报错，果然就是报错注入了，数据库逛了一圈，啥也没有，发现题目把load_fileBAN了，就试试直接读flag，因为是ciscn的题目，所以flag都在/flag.txt，由于报错长度">
@@ -239,7 +239,7 @@
 <p>得到表名<code>f1ag_1s_h3r3_hhhhh</code>,由于过滤了union，只能使用<a href="https://dev.mysql.com/doc/refman/8.0/en/row-subqueries.html" target="_blank" rel="noopener">Row Subqueries</a>，在mysql中，字符串的比较是按照字典序来比的即<code>&#39;g&#39;&gt;&#39;fzz&#39;</code>，所以以下表达式成立</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">((1,&apos;g&apos;)&gt;(select * from f1ag_1s_h3r3_hhhhh))</span><br></pre></td></tr></table></figure>
 
-<p>可以按照这样的思路去爆破，不过爆破出来的结果需要减去1。</p>
+<p>可以按照这样的思路去爆破，不过爆破出来的结果需要减去1。    </p>
 <h1 id="N1CTF-2018-eating-cms"><a href="#N1CTF-2018-eating-cms" class="headerlink" title="[N1CTF 2018]eating_cms"></a>[N1CTF 2018]eating_cms</h1><p>注册一个账号登录进去发现可以用伪协议读源码，发现使用parseurl提取处数据过滤</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$keywords = [&quot;flag&quot;,&quot;manage&quot;,&quot;ffffllllaaaaggg&quot;];</span><br><span class="line">$uri = parse_url($_SERVER[&quot;REQUEST_URI&quot;]);</span><br><span class="line">parse_str($uri[&apos;query&apos;], $query);</span><br></pre></td></tr></table></figure>
 
@@ -539,7 +539,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 Ycj
+    		&copy; 2021 Ycj
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten

