@@ -180,8 +180,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><span id="busuanzi_container_page_pv">  本文总阅读量<span id="busuanzi_value_page_pv"></span>次</span></p>
-<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>​    没有系统的研究过JaVaWeb，碰到题总是一脸懵逼，现在在这里做一个专题探究。</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>​    没有系统的研究过JaVaWeb，碰到题总是一脸懵逼，现在在这里做一个专题探究。</p>
 <h2 id="WEB-INF"><a href="#WEB-INF" class="headerlink" title="WEB-INF"></a>WEB-INF</h2><p>​    重点讲web.xml和classes目录，<a href="https://www.cnblogs.com/luminccs-5308/p/8694938.html" target="_blank" rel="noopener">详解请看此处</a></p>
 <p>​    /WEB-INF/web.xml，这是一个XML文件，其中描述了servlet和其他的应用组件配置及命名规则</p>
 <p>​    /WEB- INF/classes/ ，这个目录包含了站点所用的class文件，包括servlet class和非servelt class 他们不能包含在 .jar文件中。<br>​        站点的类的存放规则应该按照Java的打包规则执行。例如： 有一个类命名为     com.mycompany.mypackage.MyServlet， 你应该按照以下形式部署： /WEB-INF/classes/com /mycompany/mypackage/MyServlet.class </p>
