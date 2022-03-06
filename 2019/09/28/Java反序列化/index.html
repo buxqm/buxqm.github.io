@@ -8,12 +8,12 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Java反序列化 | buxqm</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Common-CollectionsCommon-Collections包补充了JAVA标准的Collection API，补充了许多常用的数据结构，比如BidiMap、LazyMap等。 复现环境：  JDK1.7  Commons-collections-3.1   CC1链环境搭建复现环境为Java1.7+commons-collections3.1，使用maven搭建，引入commons-">
+  <meta name="description" content="Common-CollectionsCommon-Collections包补充了JAVA标准的Collection API，补充了许多常用的数据结构，比如BidiMap、LazyMap等。 复现环境：  JDK1.7  Commons-collections-3.1   CC1链环境搭建">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java反序列化">
 <meta property="og:url" content="http://yoursite.com/2019/09/28/Java反序列化/index.html">
 <meta property="og:site_name" content="buxqm">
-<meta property="og:description" content="Common-CollectionsCommon-Collections包补充了JAVA标准的Collection API，补充了许多常用的数据结构，比如BidiMap、LazyMap等。 复现环境：  JDK1.7  Commons-collections-3.1   CC1链环境搭建复现环境为Java1.7+commons-collections3.1，使用maven搭建，引入commons-">
+<meta property="og:description" content="Common-CollectionsCommon-Collections包补充了JAVA标准的Collection API，补充了许多常用的数据结构，比如BidiMap、LazyMap等。 复现环境：  JDK1.7  Commons-collections-3.1   CC1链环境搭建">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://yoursite.com/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20220124154256179.png">
 <meta property="og:image" content="http://yoursite.com/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20220124155018087.png">
@@ -37,10 +37,10 @@
 <meta property="og:image" content="http://yoursite.com/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20220306101609887.png">
 <meta property="og:image" content="http://yoursite.com/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20220306131347579.png">
 <meta property="og:image" content="http://yoursite.com/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20220306131458118.png">
-<meta property="og:updated_time" content="2022-03-06T05:19:20.354Z">
+<meta property="og:updated_time" content="2022-03-06T05:21:34.910Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java反序列化">
-<meta name="twitter:description" content="Common-CollectionsCommon-Collections包补充了JAVA标准的Collection API，补充了许多常用的数据结构，比如BidiMap、LazyMap等。 复现环境：  JDK1.7  Commons-collections-3.1   CC1链环境搭建复现环境为Java1.7+commons-collections3.1，使用maven搭建，引入commons-">
+<meta name="twitter:description" content="Common-CollectionsCommon-Collections包补充了JAVA标准的Collection API，补充了许多常用的数据结构，比如BidiMap、LazyMap等。 复现环境：  JDK1.7  Commons-collections-3.1   CC1链环境搭建">
 <meta name="twitter:image" content="http://yoursite.com/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20220124154256179.png">
   
     <link rel="alternative" href="/atom.xml" title="buxqm" type="application/atom+xml">
@@ -213,7 +213,9 @@
 <li><p>Commons-collections-3.1</p>
 </li>
 </ul>
-<h2 id="CC1链"><a href="#CC1链" class="headerlink" title="CC1链"></a>CC1链</h2><h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><p>复现环境为Java1.7+commons-collections3.1，使用maven搭建，引入commons-collections3.1依赖。</p>
+<h2 id="CC1链"><a href="#CC1链" class="headerlink" title="CC1链"></a>CC1链</h2><h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><a id="more"></a>
+
+<p>复现环境为Java1.7+commons-collections3.1，使用maven搭建，引入commons-collections3.1依赖。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-collections<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-collections<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="反序列化链构造"><a href="#反序列化链构造" class="headerlink" title="反序列化链构造"></a>反序列化链构造</h3><p>  首先介绍此链中的关键类TransformedMap，TransformedMap用于对每一个添加到Map中的元素进行特定的修饰变换，变换逻辑由Transformer类定义，这里我们用到的关键是ConstantTransformer、InvokerTransformer与ChainedTransformer。</p>

