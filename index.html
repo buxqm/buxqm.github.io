@@ -167,13 +167,13 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2022/02/17/Tomcat内存马学习/">TomCat内存马</a>
+      <a class="article-title" href="/2022/02/28/Tomcat内存马学习/">TomCat内存马</a>
     </h1>
   
 
         
-        <a href="/2022/02/17/Tomcat内存马学习/" class="archive-article-date">
-  	<time datetime="2022-02-16T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-17</time>
+        <a href="/2022/02/28/Tomcat内存马学习/" class="archive-article-date">
+  	<time datetime="2022-02-27T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-28</time>
 </a>
         
       </header>
@@ -200,7 +200,7 @@
 </blockquote>
 <p>参考链接：<a href="http://wjlshare.com/archives/1529，本文仅用来记录自己的学习过程。" target="_blank" rel="noopener">http://wjlshare.com/archives/1529，本文仅用来记录自己的学习过程。</a></p>
         
-          <a class="article-more-a" href="/2022/02/17/Tomcat内存马学习/#more">more >></a>
+          <a class="article-more-a" href="/2022/02/28/Tomcat内存马学习/#more">more >></a>
         
       
 
@@ -224,7 +224,85 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2022/02/17/Tomcat内存马学习/">展开全文 >></a>
+          <a class="article-more-a" href="/2022/02/28/Tomcat内存马学习/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JNDI高版本" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/02/07/JNDI高版本/">JNDI LDAP高版本利用分析</a>
+    </h1>
+  
+
+        
+        <a href="/2022/02/07/JNDI高版本/" class="archive-article-date">
+  	<time datetime="2022-02-06T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="JKD高版本LDAP注入利用分析"><a href="#JKD高版本LDAP注入利用分析" class="headerlink" title="JKD高版本LDAP注入利用分析"></a>JKD高版本LDAP注入利用分析</h1><p>  在jdk8u191之后，LDAP也禁止了codebase的远程加载，首先来看看修复。</p>
+<h2 id="JDK8U191限制"><a href="#JDK8U191限制" class="headerlink" title="JDK8U191限制"></a>JDK8U191限制</h2><p>在低版本中，可以从codebase中加载恶意Factory类，并执行其实例化方法从而实现任意代码执行。</p>
+<p>JDK8U191对此做出了修复，在RegistryContext#decodeObject中增加了如下判断，而trustURLCodebase默认值为false，而且Reference对象var8也为空，所以抛出异常。</p>
+        
+          <a class="article-more-a" href="/2022/02/07/JNDI高版本/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/JAVA//" class="article-tag-list-link color5">JAVA</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/02/07/JNDI高版本/">展开全文 >></a>
         </p>
       
 
@@ -882,84 +960,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2020/10/12/西湖论剑/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-BUUCTF2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/02/BUUCTF2/">BUUCTF1</a>
-    </h1>
-  
-
-        
-        <a href="/2020/10/02/BUUCTF2/" class="archive-article-date">
-  	<time datetime="2020-10-01T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="CISCN2019-华北赛区-Day1-Web5-CyberPunk"><a href="#CISCN2019-华北赛区-Day1-Web5-CyberPunk" class="headerlink" title="[CISCN2019 华北赛区 Day1 Web5]CyberPunk"></a>[CISCN2019 华北赛区 Day1 Web5]CyberPunk</h1><p>打开题目，查看界面源码发现提示?file，于是将源码读取，发现address处没有过滤，在change.php中发现二次注入点<img src="https://i.loli.net/2020/10/02/Nt4MJyQTmqIBuzb.png" alt></p>
-<p>随便注入以下，发现报错，果然就是报错注入了，数据库逛了一圈，啥也没有，发现题目把load_fileBAN了，就试试直接读flag，因为是ciscn的题目，所以flag都在/flag.txt，由于报错长度限制，分两次爆。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&apos;,`address`= updatexml(1,concat(0x3a,(select substr(load_file(&apos;/flag.txt&apos;),1,25)),0x3a),1)#</span><br><span class="line">&apos;,`address`= updatexml(1,concat(0x3a,(select substr(load_file(&apos;/flag.txt&apos;),25,50)),0x3a),1)#</span><br></pre></td></tr></table></figure>
-        
-          <a class="article-more-a" href="/2020/10/02/BUUCTF2/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/writeup//" class="article-tag-list-link color3">writeup</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/10/02/BUUCTF2/">展开全文 >></a>
         </p>
       
 
