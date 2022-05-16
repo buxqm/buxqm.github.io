@@ -8,12 +8,12 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>TomCat内存马 | buxqm</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言  这段时间寒假在家刚好有空，就来整体研究一下Tomcat内存马。在网上了解到，Tomcat内存马主要分为以下几类：  servlet-api类  filter型 servlet型 listener  spring类  拦截器 controller型  Java Instrumentation类  agent型   参考链接：http://wjlshare.com/archives/1529，">
+  <meta name="description" content="前言  这段时间在家刚好有空，就来整体研究一下Tomcat内存马。在网上了解到，Tomcat内存马主要分为以下几类：  servlet-api类  filter型 servlet型 listener  spring类  拦截器 controller型  Java Instrumentation类  agent型   参考链接：http://wjlshare.com/archives/1529，本文">
 <meta property="og:type" content="article">
 <meta property="og:title" content="TomCat内存马">
 <meta property="og:url" content="http://yoursite.com/2022/02/28/Tomcat内存马学习/index.html">
 <meta property="og:site_name" content="buxqm">
-<meta property="og:description" content="前言  这段时间寒假在家刚好有空，就来整体研究一下Tomcat内存马。在网上了解到，Tomcat内存马主要分为以下几类：  servlet-api类  filter型 servlet型 listener  spring类  拦截器 controller型  Java Instrumentation类  agent型   参考链接：http://wjlshare.com/archives/1529，">
+<meta property="og:description" content="前言  这段时间在家刚好有空，就来整体研究一下Tomcat内存马。在网上了解到，Tomcat内存马主要分为以下几类：  servlet-api类  filter型 servlet型 listener  spring类  拦截器 controller型  Java Instrumentation类  agent型   参考链接：http://wjlshare.com/archives/1529，本文">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://yoursite.com/images/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0/image-20220228155801189.png">
 <meta property="og:image" content="http://yoursite.com/images/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0/image-20220228160316410.png">
@@ -29,10 +29,10 @@
 <meta property="og:image" content="http://yoursite.com/images/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0/image-20220303172143937.png">
 <meta property="og:image" content="http://yoursite.com/images/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0/image-20220304190208688.png">
 <meta property="og:image" content="http://yoursite.com/images/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0/image-20220304190357853.png">
-<meta property="og:updated_time" content="2022-03-31T03:34:02.454Z">
+<meta property="og:updated_time" content="2022-05-16T03:26:54.943Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TomCat内存马">
-<meta name="twitter:description" content="前言  这段时间寒假在家刚好有空，就来整体研究一下Tomcat内存马。在网上了解到，Tomcat内存马主要分为以下几类：  servlet-api类  filter型 servlet型 listener  spring类  拦截器 controller型  Java Instrumentation类  agent型   参考链接：http://wjlshare.com/archives/1529，">
+<meta name="twitter:description" content="前言  这段时间在家刚好有空，就来整体研究一下Tomcat内存马。在网上了解到，Tomcat内存马主要分为以下几类：  servlet-api类  filter型 servlet型 listener  spring类  拦截器 controller型  Java Instrumentation类  agent型   参考链接：http://wjlshare.com/archives/1529，本文">
 <meta name="twitter:image" content="http://yoursite.com/images/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0/image-20220228155801189.png">
   
     <link rel="alternative" href="/atom.xml" title="buxqm" type="application/atom+xml">
@@ -197,7 +197,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>  这段时间寒假在家刚好有空，就来整体研究一下Tomcat内存马。在网上了解到，Tomcat内存马主要分为以下几类：</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>  这段时间在家刚好有空，就来整体研究一下Tomcat内存马。在网上了解到，Tomcat内存马主要分为以下几类：</p>
 <blockquote>
 <p>servlet-api类</p>
 <ul>
